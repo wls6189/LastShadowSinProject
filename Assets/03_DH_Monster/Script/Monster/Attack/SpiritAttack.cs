@@ -10,13 +10,13 @@ public class SpiritAttack : MonoBehaviour
     {
 
         PlayerController player = other.GetComponent<PlayerController>();
-        if (player != null && player.IsSpiritParrying)
-        {
+        //if (player != null && player.IsSpiritParrying)
+        //{
 
-            parrySuccessful = true; // 패링 성공 상태 기록
-          //playerScript.OnParrySuccess(); // 플레이어에게 패링 성공 알림
-            return; // 이후 처리 중단
-        }
+        //    parrySuccessful = true; // 패링 성공 상태 기록
+        //  //playerScript.OnParrySuccess(); // 플레이어에게 패링 성공 알림
+        //    return; // 이후 처리 중단
+        //}
 
         // Player 태그와 충돌 시
         if (other.CompareTag("Player"))

@@ -22,8 +22,8 @@ public class GrabAttack : MonoBehaviour
                 // 애니메이션 트리거 활성화
                 animator.SetTrigger("GrabSuccess");
                 // 플레이어 잡기 실행
-                player.OnGrabbed(grabPoint, grabDuration);
-                other.GetComponent<Health>().Damage(damage); // 데미지 처리
+                //player.OnGrabbed(grabPoint, grabDuration);
+                //other.GetComponent<Health>().Damage(damage); // 데미지 처리
             }
         }
     }
