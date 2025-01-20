@@ -12,13 +12,13 @@ public class NormalAttack : MonoBehaviour
     {
         // Parry 태그와 충돌 시
         PlayerController player = other.GetComponent<PlayerController>();
-        if (player != null && (player.IsGuarding || player.IsParrying || player.IsSpiritParrying))
-        {
-            Debug.Log($"{other.tag} 콜라이더와 충돌: 패링 성공! 공격 무효화");
-            parrySuccessful = true; // 패링 성공 상태 기록
-            //playerScript.OnParrySuccess(); // 플레이어에게 패링 성공 알림
-            return; // 이후 처리 중단
-        }
+        //if (player != null && (player.IsGuarding || player.IsParrying || player.IsSpiritParrying))
+        //{
+        //    Debug.Log($"{other.tag} 콜라이더와 충돌: 패링 성공! 공격 무효화");
+        //    parrySuccessful = true; // 패링 성공 상태 기록
+        //    //playerScript.OnParrySuccess(); // 플레이어에게 패링 성공 알림
+        //    return; // 이후 처리 중단
+        //}
 
         // Player 태그와 충돌 시
         if (other.CompareTag("Player"))

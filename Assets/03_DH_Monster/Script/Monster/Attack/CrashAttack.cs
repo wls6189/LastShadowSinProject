@@ -29,11 +29,11 @@ public class CrashAttack : MonoBehaviour
         PlayerController player = other.GetComponent<PlayerController>();
         if (player == null) return;
 
-        if (player.IsReadyForClash()) // 플레이어가 격돌 준비 상태인지 확인
-        {
-            Debug.Log("Player is ready for Clash. Starting Clash Event...");
-            StartClash(player);
-        }
+        //if (player.IsReadyForClash()) // 플레이어가 격돌 준비 상태인지 확인
+        //{
+        //    Debug.Log("Player is ready for Clash. Starting Clash Event...");
+        //    StartClash(player);
+        //}
         else
         {
             Debug.Log("Player failed to defend Clash!");
@@ -45,9 +45,9 @@ public class CrashAttack : MonoBehaviour
     {
         if (isClashActive) return; // 중복 실행 방지
         isClashActive = true;
-        PlayerController.clashSuccess = false; // 격돌 성공 플래그 초기화
-        // 플레이어와 격돌 이벤트 처리
-        player.StartClashEvent(this);
+        //PlayerController.clashSuccess = false; // 격돌 성공 플래그 초기화
+        //// 플레이어와 격돌 이벤트 처리
+        //player.StartClashEvent(this);
 
 
         // 제한 시간 후 격돌 결과 확인
@@ -64,16 +64,16 @@ public class CrashAttack : MonoBehaviour
         if (!isClashActive) return; // 격돌이 활성화되지 않았다면 무시
         isClashActive = false; // 격돌 종료
 
-        if (PlayerController.clashSuccess)
-        {
-            Debug.Log("Player defended the Clash Attack successfully!");
-            EndClash(true);
-        }
-        else
-        {
-            Debug.Log("Player failed to defend the Clash Attack!");
-            FailClash(player); // 이미 참조된 플레이어를 전달
-        }
+        //if (PlayerController.clashSuccess)
+        //{
+        //    Debug.Log("Player defended the Clash Attack successfully!");
+        //    EndClash(true);
+        //}
+        //else
+        //{
+        //    Debug.Log("Player failed to defend the Clash Attack!");
+        //    FailClash(player); // 이미 참조된 플레이어를 전달
+        //}
     }
 
     private void EndClash(bool success)
@@ -100,7 +100,7 @@ public class CrashAttack : MonoBehaviour
         }
 
         // 플레이어에게 데미지 적용
-        player.TakeDamage(aoeDamage);
+        //player.TakeDamage(aoeDamage);
     }
 
     private void ToggleAOECollider(bool state)
