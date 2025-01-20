@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d179545519ef7b645b86b535b53022ce, type: 3}
+  m_Name: MainQuestData
+  m_EditorClassIdentifier: 
+  InitialFirstQuestion: "\uAE38\uC744 \uBB3C\uC5B4\uBCF8\uB2E4."
+  InitialSecondQuestion: "\uC601\uD63C\uB099\uC778\uC5D0 \uB300\uD574 \uBB3C\uC5B4\uBCF8\uB2E4."
+  InitialFirstAnswer: "\uAE38\uC774\uB77C..."
+  InitialSecondAnswer: "\uC601\uD63C\uB099\uC778\uC774\uB77C...\uC74C"
+  AcceptCombackAnswer: "\uB0B4\uAC00 \uC900 \uD018\uC2A4\uD2B8\uB294 \uC644\uC218\uD588\uB098?"
+  DeclineAnswer: "\uC0DD\uAC01\uC774 \uBC14\uB010\uB2E4\uBA74 \uB2E4\uC2DC \uB3CC\uC544\uC640\uB77C."
+  FinishAnswer: "\uCD95\uD558\uD574. \uBCF4\uC0C1\uC744 \uC904\uAC8C."
+  CombackFinishAnswer: "\uC789? \uB0B4\uAC00 \uBCF4\uC0C1\uC744 \uC900 \uAC83 \uAC19\uC740\uB370?"
+  AcceptThankyouAnswer: "\uACE0\uB9D9\uB2E4\uB124. \uD018\uC2A4\uD2B8 \uC644\uB8CC
+    \uD6C4 \uB3CC\uC544\uC624\uAC8C\uB098."
+  finalFirstAnswer: "\uD018\uC2A4\uD2B8 \uC218\uB77D"
+  finalSecondAnswer: "\uD018\uC2A4\uD2B8 \uAC70\uBD80"
+  First_Answer1:
+  - "\uC774 \uAE38\uC740 \uC801\uB4E4\uC774 \uC9C0\uB098\uAC04 \uC804\uC7C1\uD130\uC600\uC9C0..\uC9C0\uAE08\uC740
+    \uB9C8\uC744\uC774 \uB418\uC5C8\uB2E4."
+  First_Question1:
+  - "\uAD6C\uCCB4\uC801\uC73C\uB85C \uBB3C\uC5B4\uBCF8\uB2E4."
+  First_Answer2:
+  - "\uC801\uB4E4\uC740 \uC545\uB839\uC774 \uAC00\uB4DD\uD558\uB2E4. \uADFC\uCC98\uC5D0
+    \uAC00\uBA74 \uACF5\uACA9\uC744 \uBC1B\uB294\uB2E4."
+  First_Question2:
+  - "\uC801\uB4E4\uC5D0 \uB300\uD574 \uBB3C\uC5B4\uBCF8\uB2E4."
+  Second_Answer1:
+  - "\uCCB4\uB825 \uBC0F \uC5D0\uB108\uC9C0\uAC00 \uBAA8\uB450 \uAC00\uB4DD\uCC28\uACE0,
+    \uD604 \uC704\uCE58\uB97C \uC138\uC774\uBE0C \uD560 \uC218 \uC788\uB2E4."
+  - "\uBC18\uAC11\uB2E4. \uB098\uB294 \uBE5B\uC758 \uB300\uB9AC\uC790\uB2E4. \uC2A4\uD1A0\uB9AC\uB97C
+    \uC774\uB044\uB294 npc\uC774\uB2E4."
+  Second_Question1:
+  - "\uC601\uD63C\uB099\uC778\uC758 \uAE30\uB2A5\uC5D0 \uB300\uD574 \uBB3C\uC5B4\uBCF8\uB2E4."
+  - "\uB2F9\uC2E0\uC740 \uB204\uAD6C\uC778\uC9C0 \uBB3C\uC5B4\uBCF8\uB2E4."
+  Second_Answer2:
+  - "\uBE44\uC804\uD22C \uACF5\uAC04\uC5D0 \uC874\uC7AC\uD55C\uB2E4."
+  - "\uBE44\uC804\uD22C \uACF5\uAC04\uC740 \uC5EC\uAE30 \uCC98\uB7FC \uB9C8\uC744
+    \uACF5\uAC04\uC758 \uC77C\uBD80\uC774\uB2E4. \uC801\uB4E4\uC740 \uC5C6\uC73C\uB2C8
+    \uC548\uC2EC\uD574\uB77C.\n\uD018\uC2A4\uD2B8 : \uC601\uD63C \uB099\uC778\uACFC
+    \uC0C1\uD638\uC791\uC6A9"
+  Second_Question2:
+  - "\uC601\uD63C \uB099\uC778\uC740 \uC5B4\uB514\uC11C \uC5BB\uC744 \uC218 \uC788\uB294\uC9C0
+    \uBB3C\uC5B4\uBCF8\uB2E4."
+  - "\uBE44\uC804\uD22C \uACF5\uAC04\uC774 \uBB34\uC5C7\uC778\uC9C0 \uBB3C\uC5B4\uBCF8\uB2E4."
+  hintExplain: "\uD78C\uD2B8 \uC124\uBA85 \uC911..."
+  rewardItem1: 3
+  rewardItem2: 3
+  firstRequirmentItem: SoulFragment
+  firstRequirmentAmount: 1
+  secondRequirmentItem: 
+  secondRequirmentAmount: 0
