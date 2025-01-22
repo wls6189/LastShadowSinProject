@@ -17,11 +17,12 @@ public class UIManager : MonoBehaviour
             {
                 GameObject go = new GameObject("UIManager"); //EventBus¶ó´Â ºó °´Ã¼¸¦ ¸¸µé°í
                 instance = go.AddComponent<UIManager>(); //EventBus ºó °´Ã¼¿¡ EventBus ½ºÅ©¸³Æ®(ÄÄÆ÷³ÍÆ®)À» Ãß°¡
-                Debug.Log("instance");
             }
             return instance;
         }
-      
+
+
+
     }
 
     private void Awake()
@@ -36,8 +37,8 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
-
     }
+
     public bool IsGameMenuOpen;
 
     public Button[] TabButtons;

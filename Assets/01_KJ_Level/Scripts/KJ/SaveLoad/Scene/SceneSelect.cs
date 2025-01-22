@@ -35,8 +35,14 @@ public class SceneSelect : MonoBehaviour
                 DataManager.Instance.DataClear();
             }
         }
+
+        previousSlot = DataManager.Instance.nowPlayer.previousSlot;
+    
         //DataManager.Instance.DataClear();
     }
+
+    public int previousSlot;
+
     public void Slot(int number) //버튼 클릭 이벤트 호출
     {
         DataManager.Instance.nowPlayer.previousSlot = number;
@@ -77,13 +83,17 @@ public class SceneSelect : MonoBehaviour
     }
     public void ContinueButton()
     {
-        //Debug.Log(DataManager.Instance.nowPlayer.previousSlot);
 
-        //if(slotsFullImage.activeSelf == false)
-        //{
-        //    GoGame();
-        //}
-       
+        if (slotsFullImage.activeSelf == false)
+        {
+            if (savefile[DataManager.Instance.nowPlayer.previousSlot])
+            {
+                DataManager.Instance.LoadData();
+                GoGame();
+            }
+           
+        }
+
     }
     public void LoadButton()
     {
@@ -116,16 +126,16 @@ public class SceneSelect : MonoBehaviour
             DataManager.Instance.nowPlayer.name = newPlayerName.text;
 
             DataManager.Instance.SaveData(); // 데이터 저장
-            SceneManager.LoadSceneAsync(1);
+            SceneManager.LoadScene(1);
         }
 
         else
         {
-            Debug.Log(DataManager.Instance.nowSlot);
+         
 
             string sceneToLoad = DataManager.Instance.nowPlayer.currentScene;
 
-            SceneManager.LoadSceneAsync(sceneToLoad); // 씬 로드
+            SceneManager.LoadScene(sceneToLoad); // 씬 로드
 
           
            
@@ -137,20 +147,30 @@ public class SceneSelect : MonoBehaviour
     private bool isSlotsFull;
     private void SlotsFullCheack()
     {
-        for(int i = 0; i < savefile.Length; i++)
+        isSlotsFull = false;
+        for (int i = 0; i < savefile.Length; i++)
         {
-            if (!savefile[i]) // 빈 슬롯이 하나라도 있으면
+            if (savefile[i] == false)
             {
-                Debug.Log("빈 슬롯 있긴 함");
-                isSlotsFull = false;
                 return;
             }
-            else if (savefile[i] == true)
-            {
-                Debug.Log(" 슬롯 꽉  차 있긴 함");
-                isSlotsFull = true;
-            }
+          
         }
+        isSlotsFull = true;
     }
 
+    public void SlotDelete(int number)
+    {
+        DataManager.Instance.nowSlot = number;
+
+        if (savefile[number] == true)
+        {
+            savefile[number] = false;
+        }
+        slotText[number].text = "비어있음";
+        slotSceneText[number].text = "슬롯 " + number;
+
+        // 슬롯을 비었으므로 데이터 클리어
+        DataManager.Instance.DataClear();
+    }
 }

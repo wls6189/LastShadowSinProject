@@ -14,25 +14,27 @@ public class QuestManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject go = new GameObject("DialogSystem"); //EventBus라는 빈 객체를 만들고
+                GameObject go = new GameObject("QuestManager"); //EventBus라는 빈 객체를 만들고
                 instance = go.AddComponent<QuestManager>(); //EventBus 빈 객체에 EventBus 스크립트(컴포넌트)을 추가
-                Debug.Log("instance");
-                DontDestroyOnLoad(go);
             }
             return instance;
         }
-    }
 
+
+
+    }
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
+
         }
-        else
+        else // 1. go.AddComponent<EventBus>(); -> 2. Awake 실행이므로 evetbus가 아직 null이다. 그래서 eventbus = this를 해준다. 
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(this.gameObject);
     }
 
     [SerializeField]
