@@ -81,10 +81,10 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    [SerializeField]
+
     private bool isInteraction;
 
-    [SerializeField]
+
     private bool isInteractionStart;
     private void OnTriggerExit(Collider other)
     {
