@@ -122,28 +122,23 @@ public class Enemy : MonoBehaviour
                 animator.SetTrigger("Guard");
                 navMeshAgent.isStopped = true;
 
-                // 가드 지속 시간이 끝나면 다시 추격 상태로 전환
-                if (Time.time - guardStartTime >= guardDuration)
-                {
-                    currentState = State.Chasing;
-                    guardCollider.gameObject.SetActive(false); // 가드 콜라이더 비활성화                                       
-                    navMeshAgent.isStopped = false;
-                    
-                    Debug.Log("Guard ended, switching to Chasing.");
-                }
+
+                    currentState = State.Chasing;  // 가드 상태 종료하고 추격 상태로 전환
+                    guardCollider.gameObject.SetActive(false);  // 가드 콜라이더 비활성화
+                    navMeshAgent.isStopped = false;  // 이동 재개
+                    Debug.Log("Guard animation finished, switching to Chasing.");
+                
                 break;
 
             case State.Parry:
                 animator.SetTrigger("Parry");
                 navMeshAgent.isStopped = true;
-                // 패리 이후 다시 추격 상태로 전환
-                if (Time.time - parryStartTime >= guardDuration)
-                {
-                    currentState = State.Chasing;
-                    parryCollider.gameObject.SetActive(false); // 패리 콜라이더 비활성화
-                    navMeshAgent.isStopped = false;
-                    Debug.Log("Parry executed, switching to Chasing.");
-                }
+                
+                    currentState = State.Chasing;  // 패리 상태 종료하고 추격 상태로 전환
+                    parryCollider.gameObject.SetActive(false);  // 패리 콜라이더 비활성화
+                    navMeshAgent.isStopped = false;  // 이동 재개
+                    Debug.Log("Parry animation finished, switching to Chasing.");
+                
                 break;
         }
 
@@ -195,6 +190,10 @@ public class Enemy : MonoBehaviour
     }
     private void CheckForGuard()
     {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("GuardHit"))
+        {
+            return; // GuardHit 애니메이션이 재생 중이라면 바로 리턴
+        }
         float distance = Vector3.Distance(transform.position, player.position);
 
         // 대치 범위에 처음 들어오면 가드 상태로 전환
@@ -253,7 +252,7 @@ public class Enemy : MonoBehaviour
                 guardSuccessCount++;
                 Debug.Log($"Guard successful! Total: {guardSuccessCount}");
                 animator.SetTrigger("GuardHit");
-
+                Debug.Log("Triggering GuardHit animation.");
                 if (guardSuccessCount >= successfulGuardsToParry)
                 {
                     // 패리 상태로 전환
@@ -348,7 +347,7 @@ public class Enemy : MonoBehaviour
             // 애니메이션 진행 중에 살짝 앞으로 이동
             if (elapsedTime > 0.2f && elapsedTime < 0.8f) // 예: 애니메이션의 중간 부분에 살짝 앞으로 이동
             {
-                Vector3 forwardMovement = transform.forward * 1f * Time.deltaTime; // 살짝 앞으로 이동
+                Vector3 forwardMovement = transform.forward * 2f * Time.deltaTime; // 살짝 앞으로 이동
                 transform.position += forwardMovement; // 이동 적용
             }
 
