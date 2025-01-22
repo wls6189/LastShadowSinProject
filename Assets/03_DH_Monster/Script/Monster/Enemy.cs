@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     private Collider guardCollider; // 가드 콜라이더
     private Collider parryCollider; // 패리 콜라이더
     private bool hasEngaged = false;// 처음 조우했는지 여부
-
+    private bool isAttacking = false;
 
     public AttackPattern[] attackPatterns; // 사용할 공격 패턴 배열
     public AttackPattern currentPattern;
@@ -98,6 +98,7 @@ public class Enemy : MonoBehaviour
                 break;
 
             case State.Chasing:
+                if (isAttacking) return;
                 navMeshAgent.isStopped = false;
                 animator.SetTrigger("Run");
 
@@ -178,7 +179,7 @@ public class Enemy : MonoBehaviour
 
     private void FollowPlayer()
     {
-        if (navMeshAgent == null) return;
+        if (navMeshAgent == null || navMeshAgent.isStopped) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
@@ -251,7 +252,7 @@ public class Enemy : MonoBehaviour
             {
                 guardSuccessCount++;
                 Debug.Log($"Guard successful! Total: {guardSuccessCount}");
-                animator.SetTrigger("GuardSuccess");
+                animator.SetTrigger("GuardHit");
 
                 if (guardSuccessCount >= successfulGuardsToParry)
                 {
@@ -273,7 +274,7 @@ public class Enemy : MonoBehaviour
             if (currentState == State.Parry)
             {
                 Debug.Log("Parry successful! Player attack was countered.");
-                animator.SetTrigger("ParrySuccess");
+                animator.SetTrigger("GuardHit");
                 // 패리 상태 종료
                 currentState = State.Chasing;
                 parryCollider.gameObject.SetActive(false); // 패리 콜라이더 비활성화
@@ -294,6 +295,8 @@ public class Enemy : MonoBehaviour
         // 플레이어가 공격 범위 안에 있을 경우
         if (Vector3.Distance(transform.position, player.position) <= attackRange)
         {
+            isAttacking = true;
+            navMeshAgent.isStopped = true;
             ExecuteAttack(); // 공격 실행
         }
     }
@@ -311,7 +314,7 @@ public class Enemy : MonoBehaviour
         // 공격 애니메이션 트리거 추가
         animator.SetTrigger(currentAttack.attackName);  // 예: "Heavy Strike" 또는 "Quick Parry" 등
         lastAttackTime = Time.time; // 현재 시간 저장
-
+        StartCoroutine(ResetNavMeshAgentAfterAnimation());
 
 
 
@@ -329,6 +332,32 @@ public class Enemy : MonoBehaviour
             currentPatternIndex = (currentPatternIndex + 1) % attackPatterns.Length;
         }
 
+    }
+    private IEnumerator ResetNavMeshAgentAfterAnimation()
+    {
+        // 애니메이션이 진행 중인지 확인
+        AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float animationDuration = currentStateInfo.length;
+
+        // 애니메이션 진행 시간 동안 반복
+        float elapsedTime = 0f;
+        while (elapsedTime < animationDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            // 애니메이션 진행 중에 살짝 앞으로 이동
+            if (elapsedTime > 0.2f && elapsedTime < 0.8f) // 예: 애니메이션의 중간 부분에 살짝 앞으로 이동
+            {
+                Vector3 forwardMovement = transform.forward * 1f * Time.deltaTime; // 살짝 앞으로 이동
+                transform.position += forwardMovement; // 이동 적용
+            }
+
+            yield return null; // 한 프레임 대기
+        }
+
+        // 애니메이션 끝난 후 이동 재개
+        navMeshAgent.isStopped = false; // 이동 재개
+        isAttacking = false;
     }
     private void ShowAttackIndicator(Attack attack)
     {
