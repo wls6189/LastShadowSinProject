@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -16,9 +17,11 @@ public class UIManager : MonoBehaviour
             {
                 GameObject go = new GameObject("UIManager"); //EventBus라는 빈 객체를 만들고
                 instance = go.AddComponent<UIManager>(); //EventBus 빈 객체에 EventBus 스크립트(컴포넌트)을 추가
+                Debug.Log("instance");
             }
             return instance;
         }
+      
     }
 
     private void Awake()
@@ -26,20 +29,25 @@ public class UIManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
         }
-        else
+        else // 1. go.AddComponent<EventBus>(); -> 2. Awake 실행이므로 evetbus가 아직 null이다. 그래서 eventbus = this를 해준다. 
         {
-            Destroy(instance.gameObject);
+            Destroy(gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
+
     }
     public bool IsGameMenuOpen;
 
     public Button[] TabButtons;
+
     private bool isChoose = false;
 
     EventSystem system;
+
     public Selectable firstInput;
+
     private Button lastSelectedButton; // 마지막으로 선택된 버튼
 
 
@@ -48,7 +56,7 @@ public class UIManager : MonoBehaviour
 
         system = EventSystem.current;
 
-        if (TabButtons != null && TabButtons.Length > 0)
+        if (TabButtons != null && TabButtons.Length > 0 )
         {
             TabButtons[0].Select(); // 첫 번째 버튼 선택
             lastSelectedButton = TabButtons[0];

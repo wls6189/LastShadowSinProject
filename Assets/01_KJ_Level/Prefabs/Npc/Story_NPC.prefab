@@ -270,11 +270,16 @@ MonoBehaviour:
   Quests:
   - questName: "\uC601\uD63C\uD30C\uD3B8 \uC0C1\uD638\uC791\uC6A9"
     questGiver: "\uBE5B\uC758 \uB300\uB9AC\uC790"
+    isCompleted: 0
+    isCombackCompleted: 0
     info: {fileID: 11400000, guid: 1e64961a5256d284fbc7e06d9fe43098, type: 2}
   currentActiveQuest:
     questName: 
     questGiver: 
+    isCompleted: 0
+    isCombackCompleted: 0
     info: {fileID: 0}
+  isFirstTimeInteraction: 1
   isFirstOption: 0
   isSecondOption: 0
   isAccepted: 0

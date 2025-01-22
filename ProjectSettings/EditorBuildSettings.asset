@@ -13,40 +13,40 @@ EditorBuildSettings:
     guid: fe9ce8600401e6d489a9de26feafc9bd
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/1-1.unity
-    guid: 5d91b20136d941f4486f04e6e70bd827
+    guid: 48e3897248b4af64e80e44d009bb70ec
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/1-2.unity
-    guid: 19ed93a2a40189143988863aea4cba9e
+    guid: 9c04d9169266a12459d1e31a89ab736c
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/1-3.unity
-    guid: 134a81c9fa65cf84bbde3e02c3e8a1de
+    guid: cee1420fed502374a9181f5b534062e8
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/2-1.unity
-    guid: 51357ef30604ea144944f37d93a9dd23
+    guid: 6894b13416a4b6f4f8706b49727c2fce
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/2-2.unity
-    guid: 43491f502ca47eb4bae713f58fe704b5
+    guid: fb4de3b80cf8c644183f899af8762c07
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/2-3.unity
-    guid: 54e2fbd15e9aeb345aba80eab160f25f
+    guid: c30e25f2eabd32d49aed6c4009a324f5
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/3-1.unity
-    guid: a2f568312d6f07a408ea4a72a1abcb07
+    guid: f88bd066e8cb17b4c9e5d3bb53916477
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/3-2.unity
-    guid: e858edd8793d81e4ebe13d1f244353f6
+    guid: 325f49d61c29c3b4fb73312e81284f47
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/4-1.unity
-    guid: 71597183991c5d34d93eb7f13251930c
+    guid: 81c5952b8a4f0c54b9d34000df4e81ab
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/5-1.unity
-    guid: 316fc7d3a39bfef4aa6bbf4cdc41076d
+    guid: 2c9c33c2e87d7184bb843949cd74a598
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/5-2_Boss.unity
-    guid: 7c7aa4832e9e1fa459657163497cbf89
-  - enabled: 1
+    guid: 9f8c27a16931c124eb895774f53d9a5e
+  - enabled: 0
     path: Assets/Scenes/KJ_Level/CorpseCape/Village.unity
-    guid: ed32f586cca732b43a8e21e102e53e04
+    guid: a48753407e102c04b95554f696fa1829
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

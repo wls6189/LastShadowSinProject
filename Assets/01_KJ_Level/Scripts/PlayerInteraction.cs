@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
-public class PlayerControllerTest : MonoBehaviour
+public class PlayerInteraction : MonoBehaviour
 {
     public Dictionary<string, int> collectedItems = new Dictionary<string, int>(); // 아이템 이름과 개수를 관리
 
@@ -23,7 +23,7 @@ public class PlayerControllerTest : MonoBehaviour
     }
     void Update()
     {
-        if(DialogSystem.Instance.isdialogueCanvas == false)
+        if(DialogSystem.Instance.isdialogueCanvas == false) // -> 승헌님 플레이어 스크립트에서 추가.
         {
             MovePlayer();
         }
@@ -54,7 +54,7 @@ public class PlayerControllerTest : MonoBehaviour
     {
         float h = Input.GetAxisRaw("Horizontal");
 
-        Vector3 movement = new Vector3(h, 0, 0) * moveSpeed * Time.deltaTime;
+        Vector3 movement = new Vector3(0, 0,h) * moveSpeed * Time.deltaTime;
         transform.Translate(movement);
     }
 
@@ -69,7 +69,7 @@ public class PlayerControllerTest : MonoBehaviour
             collectedItems[itemName] = 1;
         }
 
-        Debug.Log("획득한 아이템" + itemName + "총 개수:" + collectedItems[itemName]);
+
     }
 
     void InventoryCheck()
@@ -102,7 +102,7 @@ public class PlayerControllerTest : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("FragMent"))
+        if(other.CompareTag("FragMent")) //헌신자 영혼파편
         {
             SavePlayerData();
         }
