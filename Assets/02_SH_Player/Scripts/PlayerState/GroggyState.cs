@@ -13,6 +13,8 @@ namespace PlayerPart
         public void Enter()
         {
             player.CurrentPlayerState = PlayerState.Groggy;
+            player.IsGuarding = false;
+            player.IsParring = false;
         }
 
         public void Execute()
@@ -24,16 +26,41 @@ namespace PlayerPart
 
             float duration = player.StateInfo.normalizedTime % 1f;
 
-            if (duration > 0.8f)
+            if (player.StateInfo.IsName("Parry"))
             {
-                if (player.guardAction.IsPressed())
+                if (duration > 0.8f)
                 {
-                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardState);
+                    if (player.guardAction.IsPressed())
+                    {
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardState);
+                    }
+                    else
+                    {
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
+                    }
                 }
-                else 
+            }
+            else if (player.StateInfo.IsName("GuardHit"))
+            {
+                if (duration > 0.9f)
                 {
-                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
+                    if (player.guardAction.IsPressed())
+                    {
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardState);
+                    }
+                    else
+                    {
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
+                    }
                 }
+            }
+            else if (player.StateInfo.IsName("HitShortGroggy"))
+            {
+
+            }
+            else if (player.StateInfo.IsName("HitLongGroggy"))
+            {
+
             }
         }
 

@@ -10,7 +10,7 @@ public class TempPJ : MonoBehaviour
         transform.position += new Vector3(0, 0, -3 * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("PlayerGuard") && target != other.gameObject.transform.parent.gameObject)
         {

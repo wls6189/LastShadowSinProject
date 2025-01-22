@@ -13,7 +13,6 @@ public class PlayerStateMachine
     public BasicHorizonSlash2State basicHorizonSlash2State;
     public BasicVerticalSlashState basicVerticalSlashState;
     public ThrustState thrustState;
-    public CounterPostureState counterPostureState;
 
     public PlayerStateMachine(PlayerController player)
     {
@@ -26,7 +25,6 @@ public class PlayerStateMachine
         basicHorizonSlash2State = new(player);
         basicVerticalSlashState = new(player);
         thrustState = new(player);
-        counterPostureState = new(player);
     }
 
     public void Initialize(IState state)
