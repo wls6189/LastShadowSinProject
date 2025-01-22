@@ -15,8 +15,6 @@ public class DialogSystem : MonoBehaviour
             {
                 GameObject go = new GameObject("DialogSystem"); //EventBus라는 빈 객체를 만들고
                 instance = go.AddComponent<DialogSystem>(); //EventBus 빈 객체에 EventBus 스크립트(컴포넌트)을 추가
-                Debug.Log("instance");
-                DontDestroyOnLoad(go);
             }
             return instance;
         }
@@ -48,14 +46,16 @@ public class DialogSystem : MonoBehaviour
     public GameObject QuestDialouge;
     private void Awake()
     {
-        if (instance != null)
+        if (instance == null)
         {
-            Destroy(gameObject);
+            instance = this;
+           
         }
         else // 1. go.AddComponent<EventBus>(); -> 2. Awake 실행이므로 evetbus가 아직 null이다. 그래서 eventbus = this를 해준다. 
         {
-            instance = this;
+            Destroy(gameObject);
         }
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void OpenDialogUI()

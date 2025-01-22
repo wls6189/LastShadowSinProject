@@ -57,27 +57,30 @@ public class NPC : MonoBehaviour
     void Start()
     {
     
+        if(DialogSystem.Instance != null)
+        {
+            npcDialogText = DialogSystem.Instance.StoryDialogText;
 
-        npcDialogText = DialogSystem.Instance.StoryDialogText;
+            OptionFirstBtn = DialogSystem.Instance.optBtn1;
+            OptionFirstBtnText = DialogSystem.Instance.optBtn1.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
 
-        OptionFirstBtn = DialogSystem.Instance.optBtn1;
-        OptionFirstBtnText = DialogSystem.Instance.optBtn1.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
-
-        OptionSecondBtn = DialogSystem.Instance.optBtn2;
-        OptionSecondBtnText = DialogSystem.Instance.optBtn2.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+            OptionSecondBtn = DialogSystem.Instance.optBtn2;
+            OptionSecondBtnText = DialogSystem.Instance.optBtn2.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
 
 
-        FirstBtn = DialogSystem.Instance.FirstBtn;
-        SecondBtn = DialogSystem.Instance.SecondBtn;
-        BackBtn = DialogSystem.Instance.BackBtn;
-        ThirdBtn = DialogSystem.Instance.ReceiveBtn;
+            FirstBtn = DialogSystem.Instance.FirstBtn;
+            SecondBtn = DialogSystem.Instance.SecondBtn;
+            BackBtn = DialogSystem.Instance.BackBtn;
+            ThirdBtn = DialogSystem.Instance.ReceiveBtn;
 
-        TalkDialouge = DialogSystem.Instance.TalkDialouge;
-        QuestionDialouge = DialogSystem.Instance.QuestDialouge;
+            TalkDialouge = DialogSystem.Instance.TalkDialouge;
+            QuestionDialouge = DialogSystem.Instance.QuestDialouge;
 
-        npcGiverText = DialogSystem.Instance.NpcGiverText;
+            npcGiverText = DialogSystem.Instance.NpcGiverText;
 
-        initRot = transform.rotation;
+            initRot = transform.rotation;
+        }
+      
    
     }
 
