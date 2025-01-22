@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 297448979240334201, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
+      propertyPath: m_TagString
+      value: PlayerAttack
+      objectReference: {fileID: 0}
     - target: {fileID: 1423645620402738075, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -135,13 +139,17 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5551548098388636300, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
+      propertyPath: m_TagString
+      value: PlayerAttack
+      objectReference: {fileID: 0}
     - target: {fileID: 6941422205048576417, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
       propertyPath: m_Name
       value: PlayerCharacterPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 6941422205048576417, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
       propertyPath: m_TagString
-      value: Finish
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7718943379045581595, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
       propertyPath: m_LocalPosition.x
@@ -185,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8367002819945445432, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: PlayerGuard
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3626221183976647226, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}

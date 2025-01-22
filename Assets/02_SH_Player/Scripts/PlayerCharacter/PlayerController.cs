@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
     // 조작 관련 변수
     [HideInInspector] public CharacterController CharacterController;
     InputActionAsset inputActionAsset;
+    InputAction gameMenuAction;
     InputAction moveAction;
     InputAction jumpAction;
     InputAction dashAndPenetrateAction;
@@ -91,6 +92,7 @@ public class PlayerController : MonoBehaviour
         PlayerStateMachine = new PlayerStateMachine(this);
         PlayerStateMachine.Initialize(PlayerStateMachine.idleAndMoveState);
 
+        gameMenuAction = inputActionAsset.FindAction("GameMenu");
         moveAction = inputActionAsset.FindAction("Move");
         jumpAction = inputActionAsset.FindAction("Jump");
         dashAndPenetrateAction = inputActionAsset.FindAction("DashAndPenetrate");
@@ -119,15 +121,20 @@ public class PlayerController : MonoBehaviour
         MoveActionValue = moveAction.ReadValue<float>();
 
         Gravity();
-        ManageRotate();
-        LockOnPressed();
 
+
+        if (DialogSystem.Instance.isdialogueCanvas) return; // 다이얼로그 열리면 행동 금지
+        ManageRotate();
+
+        GameMenuPressed();
+        LockOnPressed();
         IdleAndMovePressed();
         DashPressed();
         GuardPressed();
         BasicHorizonSlashPressed();
         BasicVerticalSlashPressed();
         ThrustPressed();
+        CounterPosturePressed();
     }
 
     void Gravity()
@@ -225,6 +232,21 @@ public class PlayerController : MonoBehaviour
             lastBasicHorizonSlash1AttackTime = 0;
         }
     }
+
+    void GameMenuPressed()
+    {
+        if (gameMenuAction.WasPressedThisFrame())
+        {
+            if (UIManager.Instance.IsGameMenuOpen)
+            {
+                UIManager.Instance.GameMenuClose();
+            }
+            else
+            {
+                UIManager.Instance.GameMenuOpen();
+            }
+        }
+    }
     void LockOnPressed() // 락온 상태 관리
     {
         if (lockOnAction.WasPressedThisFrame())
@@ -267,7 +289,6 @@ public class PlayerController : MonoBehaviour
             CameraFocusPosition.position = (transform.position + targetMonster.transform.position) / 2;
         }
     }
-
     void IdleAndMovePressed() // 아이들 및 움직임
     {
         if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
@@ -353,7 +374,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
 
-        if (attack3Action.WasPressedThisFrame())
+        if (!IsParrySucceed && attack3Action.WasPressedThisFrame())
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.thrustState);
         }

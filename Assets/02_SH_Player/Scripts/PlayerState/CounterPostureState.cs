@@ -18,11 +18,11 @@ public class CounterPostureState : IState
 
     public void Execute()
     {
-        
+
     }
 
     public void Exit()
     {
-
+        player.IsCounterPosture = false;
     }
 }

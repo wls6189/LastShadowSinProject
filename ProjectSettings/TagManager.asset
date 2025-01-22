@@ -8,6 +8,9 @@ TagManager:
   - Stone
   - NextPortal
   - PreviousPortal
+  - Enemy
+  - PlayerGuard
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX

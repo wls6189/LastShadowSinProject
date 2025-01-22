@@ -12,17 +12,18 @@ public class TempPJ : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && target != other.gameObject.transform.parent.gameObject)
+        if (other.CompareTag("PlayerGuard") && target != other.gameObject.transform.parent.gameObject)
         {
             target = other.gameObject.transform.parent.gameObject;
             other.gameObject.transform.parent.GetComponent<PlayerStats>().Damaged(10f, 2, 2, EnemyAttackType.Normal);
 
         }
-        //if (other.CompareTag("Player") && target != other.gameObject)
-        //{
-        //    target = other.gameObject;
-        //    other.gameObject.GetComponent<PlayerStats>().Damaged(10f, 2, 2, EnemyAttackType.Normal);
-        //}
+
+        if (other.CompareTag("Player") && target != other.gameObject)
+        {
+            target = other.gameObject;
+            other.gameObject.GetComponent<PlayerStats>().Damaged(10f, 2, 2, EnemyAttackType.Normal);
+        }
 
 
     }
