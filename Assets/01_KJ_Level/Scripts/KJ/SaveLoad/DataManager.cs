@@ -12,7 +12,7 @@ public class PlayerData
     public int coin = 100;
     //  public int item = -1; 
 
-    public Vector3 position = new Vector3(-4.0f, 2.0f, -16.7f);
+    public Vector3 position = new Vector3(0.0f, 1.21f, -21f);
 
     public string currentScene = "StartPlayScene";
     public string currentMap = "½ÃÃ¼ °ù";

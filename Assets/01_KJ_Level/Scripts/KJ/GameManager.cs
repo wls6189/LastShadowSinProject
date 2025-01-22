@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public TextMeshProUGUI sceneName;
     //public TextMeshProUGUI level;
     //public TextMeshProUGUI coin;
 

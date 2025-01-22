@@ -474,7 +474,7 @@ public class NPC : MonoBehaviour
         var firstItemCounter = 0; //현재 내가 들고있는 첫번째 요구한 아이템의 개수 0으로 잡고
 
 
-        foreach (var item in player.GetComponent<PlayerControllerTest>().collectedItems)
+        foreach (var item in player.GetComponent<PlayerInteraction>().collectedItems)
         {
             if (item.Key == firstRequiredItem)
             {
@@ -508,7 +508,7 @@ public class NPC : MonoBehaviour
 
         if (firstRequiredItem != "")
         {
-            player.GetComponent<PlayerControllerTest>().RemoveItem(firstRequiredItem, firstRequiredAmount);
+            player.GetComponent<PlayerInteraction>().RemoveItem(firstRequiredItem, firstRequiredAmount);
         }
 
         string secondRequiredItem = currentActiveQuest.info.secondRequirmentItem;
@@ -516,7 +516,7 @@ public class NPC : MonoBehaviour
 
         if (secondRequiredItem != "")
         {
-            player.GetComponent<PlayerControllerTest>().RemoveItem(secondRequiredItem, secondRequirmentAmount);
+            player.GetComponent<PlayerInteraction>().RemoveItem(secondRequiredItem, secondRequirmentAmount);
         }
 
         //@@@@@@@ NPC가 요구했던 것들이 더 많다면 여기 아래에 더 추가 할 수 있음@@@@@@@@@ 
@@ -530,12 +530,12 @@ public class NPC : MonoBehaviour
 
         if (currentActiveQuest.info.rewardItem1 != "")
         {
-            player.GetComponent<PlayerControllerTest>().CollectItem(currentActiveQuest.info.rewardItem1);
+            player.GetComponent<PlayerInteraction>().CollectItem(currentActiveQuest.info.rewardItem1);
         }
 
         if (currentActiveQuest.info.rewardItem2 != "")
         {
-            player.GetComponent<PlayerControllerTest>().CollectItem(currentActiveQuest.info.rewardItem2);
+            player.GetComponent<PlayerInteraction>().CollectItem(currentActiveQuest.info.rewardItem2);
         }
 
         //@@@@@@@ NPC가 보상해줄 것들이 더 많다면 여기 아래에 더 추가 할 수 있음@@@@@@@@@ 

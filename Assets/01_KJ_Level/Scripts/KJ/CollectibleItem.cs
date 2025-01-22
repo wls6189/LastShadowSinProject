@@ -14,7 +14,7 @@ public class CollectibleItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerControllerTest player = other.GetComponent<PlayerControllerTest>();
+            PlayerInteraction player = other.GetComponent<PlayerInteraction>();
             player.CollectItem(itemName);
             Destroy(this.gameObject); 
         }
