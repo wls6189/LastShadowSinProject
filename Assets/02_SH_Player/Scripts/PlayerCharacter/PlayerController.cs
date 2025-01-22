@@ -13,7 +13,6 @@ public enum PlayerState // 플레이어의 현재 행동(혹은 상태)
     BasicHorizonSlash2,
     BasicVerticalSlash,
     Thrust,
-    CounterPosture,
     RetreatSlash,
     PowerfulThrust,
 }
@@ -47,13 +46,11 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool CanBasicHorizonSlashCombo;
     [HideInInspector] public bool IsAttackColliderEnabled;
     float lastBasicHorizonSlash1AttackTime;
-    [HideInInspector] public bool IsCounterPosture;
+    int specialAttackCount;
 
     // 막기 관련 변수
     [HideInInspector] public bool IsParring;
     [HideInInspector] public bool IsGuarding;
-    [HideInInspector] public bool IsParrySucceed;
-    float lastParrySucceedTime;
 
     // 조작 관련 변수
     [HideInInspector] public CharacterController CharacterController;
@@ -64,10 +61,9 @@ public class PlayerController : MonoBehaviour
     InputAction dashAndPenetrateAction;
     InputAction attack1Action;
     InputAction attack2Action;
-    InputAction attack3Action;
+    [HideInInspector] public InputAction attack3Action;
     [HideInInspector] public InputAction guardAction;
     InputAction lockOnAction;
-    InputAction interactAction;
 
     // 부가적인 변수
     [HideInInspector] public Animator Animator;
@@ -76,8 +72,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public PlayerStateMachine PlayerStateMachine;
     [HideInInspector] public bool IsLookRight; // 오른쪽을 보고 있는지 여부
     Coroutine parryEndedTermRoutine;
-    Coroutine guardHitAndParryMotionTermRoutine;
-    Coroutine parrySucceedTermRoutine;
 
     void Awake()
     {
@@ -101,7 +95,6 @@ public class PlayerController : MonoBehaviour
         attack3Action = inputActionAsset.FindAction("Attack3");
         guardAction = inputActionAsset.FindAction("Guard");
         lockOnAction = inputActionAsset.FindAction("LockOn");
-        interactAction = inputActionAsset.FindAction("Interact");
     }
 
     void Update()
@@ -112,7 +105,6 @@ public class PlayerController : MonoBehaviour
         }
 
         HandleBasicHorizonSlashCombo();
-        HandleCounterPostureEnabled();
 
         StateInfo = Animator.GetCurrentAnimatorStateInfo(0);
 
@@ -134,7 +126,6 @@ public class PlayerController : MonoBehaviour
         BasicHorizonSlashPressed();
         BasicVerticalSlashPressed();
         ThrustPressed();
-        CounterPosturePressed();
     }
 
     void Gravity()
@@ -154,7 +145,7 @@ public class PlayerController : MonoBehaviour
     }
     void ManageRotate()
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash) return; // 공격 중이거나 대쉬 중이라면 회전 금지
+        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Groggy) return; // 공격 중이거나 대쉬 중이라면 회전 금지
 
         if (IsLockOn)
         {
@@ -196,24 +187,7 @@ public class PlayerController : MonoBehaviour
             CharacterController.Move(moveVector * moveSpeed * Time.deltaTime);
         }
     }
-    void HandleCounterPostureEnabled()
-    {
-        if (IsParrySucceed)
-        {
-            lastParrySucceedTime += Time.deltaTime;
-        }
-        else
-        {
-            lastParrySucceedTime = 0;
-            return;
-        }
 
-        if (lastParrySucceedTime > 1f)
-        {
-            IsParrySucceed = false;
-            lastParrySucceedTime = 0;
-        }
-    }
     void HandleBasicHorizonSlashCombo()
     {
         if (CanBasicHorizonSlashCombo)
@@ -311,7 +285,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Groggy) return;
 
-        if (guardAction.WasPressedThisFrame() && CurrentPlayerState == PlayerState.IdleAndMove) // IdleAndMove일 때만 가드 전환
+        if (guardAction.WasPressedThisFrame() && CurrentPlayerState == PlayerState.IdleAndMove) // IdleAndMove나 Guard일 때만 가드 전환
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.guardState);
 
@@ -326,26 +300,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (guardAction.WasReleasedThisFrame())
+        if (guardAction.WasReleasedThisFrame() && CurrentPlayerState == PlayerState.Guard)
         {
-            IsGuarding = false; // 패리나 막기 모션이 나올 때 손을 때면 IsGuarding은 즉시 풀려야한다.
-
-            if (StateInfo.IsName("GuardHit") || StateInfo.IsName("Parry")) // 가드나 패리 시 막기 키를 바로 때도 모션이 끊기지 않도록 방지하는 코드
-            {
-                if (guardHitAndParryMotionTermRoutine == null)
-                {
-                    guardHitAndParryMotionTermRoutine = StartCoroutine(GuardHitAndParryMotionTerm(StateInfo.length * (1 - StateInfo.normalizedTime)));
-                }
-                else
-                {
-                    StopCoroutine(guardHitAndParryMotionTermRoutine);
-                    guardHitAndParryMotionTermRoutine = StartCoroutine(GuardHitAndParryMotionTerm(StateInfo.length * (1 - StateInfo.normalizedTime)));
-                }
-            }
-            else
-            {
-                PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
-            }
+            PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
         }
     }
     void BasicHorizonSlashPressed()
@@ -374,19 +331,14 @@ public class PlayerController : MonoBehaviour
     {
         if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
 
-        if (!IsParrySucceed && attack3Action.WasPressedThisFrame())
+        if (attack3Action.WasPressedThisFrame())
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.thrustState);
         }
     }
-    void CounterPosturePressed()
+    void RetreatSlashPressed()
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
 
-        if (IsParrySucceed && attack3Action.WasPressedThisFrame())
-        {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.counterPostureState);
-        }
     }
 
 
@@ -397,24 +349,12 @@ public class PlayerController : MonoBehaviour
 
 
 
-
-    IEnumerator ParrySucceedTerm() // 반격 태세로 넘어가기 위한 패리가 성공한 이후의 시간
-    {
-        yield return new WaitForSeconds(0.7f);
-        IsParrySucceed = false;
-    }
     IEnumerator ParryEndedTerm() // 패리가 인정되는 시간
     {
         IsParring = true;
         yield return new WaitForSeconds(0.15f);
         IsParring = false;
     }
-    IEnumerator GuardHitAndParryMotionTerm(float remainDuration) // 가드 및 패리 시 모션이 유지되는 시간
-    {
-        yield return new WaitForSeconds(remainDuration);
-        PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
-    }
-
 }
 
 
