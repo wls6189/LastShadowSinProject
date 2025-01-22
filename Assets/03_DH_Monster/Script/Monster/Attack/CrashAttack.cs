@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class CrashAttack : MonoBehaviour
 {
-    public Collider aoeCollider; // 광역 데미지 콜라이더
-    public float aoeDamage = 50f; // 광역 데미지
+    public Collider aoeCollider; // 광역 데미지 콜라이더    
     public float aoeActiveTime = 0.5f; // 광역 데미지 활성화 시간
     public float clashDuration = 3.0f; // 격돌 진행 시간
+    public float damageMultiplier;
 
     private bool isClashActive = false; // 현재 격돌 상태
 
@@ -31,7 +31,7 @@ public class CrashAttack : MonoBehaviour
 
         //if (player.IsReadyForClash()) // 플레이어가 격돌 준비 상태인지 확인
         //{
-        //    Debug.Log("Player is ready for Clash. Starting Clash Event...");
+        
         //    StartClash(player);
         //}
         else
@@ -99,8 +99,20 @@ public class CrashAttack : MonoBehaviour
             Invoke(nameof(DisableAOEDamage), aoeActiveTime);
         }
 
-        // 플레이어에게 데미지 적용
-        //player.TakeDamage(aoeDamage);
+        EnemyStats enemyStats = GetComponent<EnemyStats>();
+        if (enemyStats != null)
+        {
+            // 몬스터 공격력 기반 데미지 계산
+            float finalDamage = enemyStats.attackPower * damageMultiplier;
+
+            //// 플레이어에게 데미지 적용
+            //PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            //if (playerStats != null)
+            //{
+            //    playerStats.Damaged(finalDamage);
+            //    Debug.Log($"Player received {finalDamage} AOE damage!");
+            //}
+        }
     }
 
     private void ToggleAOECollider(bool state)

@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Parry : MonoBehaviour
 {
-    private EnemyHealth enemyHealth;
+    private EnemyStats enemyHealth;
 
     private void Start()
     {
-        enemyHealth = GetComponentInParent<EnemyHealth>(); // 부모 오브젝트에서 EnemyHealth 가져오기
+        enemyHealth = GetComponentInParent<EnemyStats>(); // 부모 오브젝트에서 EnemyHealth 가져오기
 
     }
 

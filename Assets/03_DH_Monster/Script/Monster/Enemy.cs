@@ -25,7 +25,9 @@ public class Enemy : MonoBehaviour
 
 
     public AttackPattern[] attackPatterns; // 사용할 공격 패턴 배열
-   
+    public AttackPattern currentPattern;
+
+
 
     private float lastAttackTime; // 마지막 공격 시간
 
@@ -76,6 +78,10 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (transform.position.x != 0)
+        {
+            transform.position = new Vector3(0, transform.position.y, transform.position.z);
+        }
 
 
         if (player == null) return;
@@ -100,6 +106,15 @@ public class Enemy : MonoBehaviour
                     FollowPlayer();
                     CheckForGuard(); // 가드 상태 진입 조건 확인
                 }
+                Vector3 direction = player.position - transform.position;
+                direction.y = 0; // Y값을 0으로 설정하여 수평 회전만 하도록 합니다.
+
+                if (direction != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = targetRotation; // 즉시 회전
+                }
+
                 break;
 
             case State.Guard:
@@ -289,7 +304,7 @@ public class Enemy : MonoBehaviour
         if (attackPatterns.Length == 0) return;
 
         // 현재 패턴과 공격 가져오기
-        AttackPattern currentPattern = attackPatterns[currentPatternIndex];
+        currentPattern = attackPatterns[currentPatternIndex];
         if (currentPattern.attacks.Length == 0) return;
 
         Attack currentAttack = currentPattern.attacks[currentAttackIndex];
