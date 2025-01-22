@@ -9,8 +9,6 @@ public class PlayerInteraction : MonoBehaviour
     public Dictionary<string, int> collectedItems = new Dictionary<string, int>(); // 아이템 이름과 개수를 관리
 
 
-    [SerializeField]
-    float moveSpeed = 3.0f;
 
     //InputActionAsset inputActionAsset;
     // InputAction gameMenuAction;
@@ -23,40 +21,16 @@ public class PlayerInteraction : MonoBehaviour
     }
     void Update()
     {
-        if(DialogSystem.Instance.isdialogueCanvas == false) // -> 승헌님 플레이어 스크립트에서 추가.
-        {
-            MovePlayer();
-        }
+ 
 
         if (Input.GetKeyDown(KeyCode.I))
         {
             InventoryCheck();
         }
 
-        OnInteraction();
     }
-    void OnInteraction()
-    {
+  
 
-        if (Input.GetKeyDown(KeyCode.Escape )) //  if (gameMenuAction.WasPressedThisFrame()) 나중에 합쳐지면 이걸로 할 예정.
-        {
-            if (UIManager.Instance.IsGameMenuOpen) 
-            {
-                UIManager.Instance.GameMenuClose(); 
-            }
-            else
-            {
-                UIManager.Instance.GameMenuOpen(); 
-            }
-        }
-    }
-    void MovePlayer()
-    {
-        float h = Input.GetAxisRaw("Horizontal");
-
-        Vector3 movement = new Vector3(0, 0,h) * moveSpeed * Time.deltaTime;
-        transform.Translate(movement);
-    }
 
     public void CollectItem(string itemName)
     {
