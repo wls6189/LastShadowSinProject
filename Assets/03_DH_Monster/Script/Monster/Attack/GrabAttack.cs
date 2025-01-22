@@ -5,7 +5,7 @@ public class GrabAttack : MonoBehaviour
     public Transform grabPoint; // 플레이어를 고정할 위치
     public float grabDuration = 2.0f; // 잡기 지속 시간
     private Animator animator; // Animator 컴포넌트 참조
-    public float damage = 20f; // 잡기 공격 데미지
+    public float damageMultiplier;
 
     private void Start()
     {      
@@ -23,8 +23,20 @@ public class GrabAttack : MonoBehaviour
                 animator.SetTrigger("GrabSuccess");
                 // 플레이어 잡기 실행
                 //player.OnGrabbed(grabPoint, grabDuration);
-                //other.GetComponent<Health>().Damage(damage); // 데미지 처리
+                //EnemyStats enemyStats = GetComponent<EnemyStats>();
+                //if (enemyStats != null)
+                //{
+                //    // 최종 데미지 계산
+                //    float finalDamage = enemyStats.attackPower * damageMultiplier;
+
+                //    // 플레이어의 PlayerStats 가져오기
+                //    PlayerStats playerStats = other.GetComponent<PlayerStats>();
+                //    if (playerStats != null)
+                //    {
+                //        // 플레이어에게 최종 데미지 적용
+                //        playerStats.Damaged(finalDamage);
+                    }
+                }
             }
         }
-    }
-}
+    

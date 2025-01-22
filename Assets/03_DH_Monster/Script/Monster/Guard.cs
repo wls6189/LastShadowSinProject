@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Guard : MonoBehaviour
 {
-    private EnemyHealth enemyHealth;
+    private EnemyStats enemyHealth;
 
     private void Start()
     {
-        enemyHealth = GetComponentInParent<EnemyHealth>(); // 부모 오브젝트에서 EnemyHealth 가져오기
+        enemyHealth = GetComponentInParent<EnemyStats>(); // 부모 오브젝트에서 EnemyHealth 가져오기
     }
 
     
@@ -15,6 +15,7 @@ public class Guard : MonoBehaviour
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null && player.IsAttacking)
         {
+            
             //플레이어 공격의 데미지와 영혼 데미지 받기
             //float damage = other.GetComponent<PlayerController>().damage;  // 플레이어 공격에서 데미지 가져오기
             //float soulDamage = other.GetComponent<PlayerController>().soulDamage; // 플레이어 공격에서 영혼 데미지 가져오기

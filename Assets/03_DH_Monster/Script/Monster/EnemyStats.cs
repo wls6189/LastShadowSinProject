@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyStats : MonoBehaviour
 {
     public float maxHealth;        // 최대 체력
     public float currentHealth;           // 현재 체력
@@ -10,10 +10,10 @@ public class EnemyHealth : MonoBehaviour
     public float currentSoulGauge;        // 현재 영혼 게이지
     public float toughness = 10f;          // 몬스터의 강인함 (예: 10) 
     private Animator animator;             // 몬스터 애니메이터
-   
+    public float attackPower = 10f;
 
     // 그로기 상태별 지속 시간 설정
-    
+
     [System.Serializable]
     public class ItemDrop
     {

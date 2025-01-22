@@ -1,6 +1,9 @@
-public enum GroggyState
+namespace MonsterPart
 {
-    None,
-    ShortGroggy,
-    Knockdown
+    public enum GroggyState
+    {
+        None,
+        ShortGroggy,
+        Knockdown
+    }
 }
