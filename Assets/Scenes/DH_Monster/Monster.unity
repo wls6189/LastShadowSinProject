@@ -385,6 +385,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1757856408748245890, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6941422205048576417, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
       propertyPath: m_Name
       value: PlayerCharacterPrefab

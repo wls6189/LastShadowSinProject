@@ -251,8 +251,7 @@ public class Enemy : MonoBehaviour
             {
                 guardSuccessCount++;
                 Debug.Log($"Guard successful! Total: {guardSuccessCount}");
-                animator.SetTrigger("GuardHit");
-                Debug.Log("Triggering GuardHit animation.");
+
                 if (guardSuccessCount >= successfulGuardsToParry)
                 {
                     // 패리 상태로 전환
@@ -272,8 +271,7 @@ public class Enemy : MonoBehaviour
             // 패리 상태에서 플레이어 공격 감지
             if (currentState == State.Parry)
             {
-                Debug.Log("Parry successful! Player attack was countered.");
-                animator.SetTrigger("GuardHit");
+
                 // 패리 상태 종료
                 currentState = State.Chasing;
                 parryCollider.gameObject.SetActive(false); // 패리 콜라이더 비활성화
