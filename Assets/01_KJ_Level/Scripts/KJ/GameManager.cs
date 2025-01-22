@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+
     private static GameManager instance;
     public static GameManager Instance
     {
@@ -11,35 +12,34 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
+
                 GameObject go = new GameObject("GameManager"); //EventBus라는 빈 객체를 만들고
                 instance = go.AddComponent<GameManager>(); //EventBus 빈 객체에 EventBus 스크립트(컴포넌트)을 추가
+
+                DontDestroyOnLoad(go);
             }
             return instance;
         }
-    }
 
+
+
+    }
     //public TextMeshProUGUI level;
     //public TextMeshProUGUI coin;
 
-    [SerializeField]
-    GameObject player;
     //public GameObject[] WeaponItem; 테스트용
-
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-
-        }
-        else // 1. go.AddComponent<EventBus>(); -> 2. Awake 실행이므로 evetbus가 아직 null이다. 그래서 eventbus = this를 해준다. 
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
         }
-        DontDestroyOnLoad(this.gameObject);
 
-        //DataManager.Instance.nowPlayer.position = player.transform.position;
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
+
 
     private void Start()
     {
@@ -51,18 +51,6 @@ public class GameManager : MonoBehaviour
         // 아이템 설정 (주석처리된 부분, 필요시 활성화)
         // ItemSetting(DataManager.Instance.nowPlayer.item);
 
-        Debug.Log("START");
-
-        SetPlayerPos();
-    }
-
-    public void SetPlayerPos()
-    {
-        Debug.Log("플레이어 찾음");
-        Debug.Log("플레이어 위치는 " + DataManager.Instance.nowPlayer.position);
-        player.transform.position = DataManager.Instance.nowPlayer.position;
-
-  
     }
 
     //public void LevelUp()

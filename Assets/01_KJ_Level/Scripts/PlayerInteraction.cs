@@ -11,26 +11,13 @@ public class PlayerInteraction : MonoBehaviour
 
 
     //InputActionAsset inputActionAsset;
-    // InputAction gameMenuAction;
+    //InputAction interactAction;
 
     private void Start()
     {
-    
-        
-        //gameMenuAction = inputActionAsset.FindAction("GameMenu");
+        //interactAction = inputActionAsset.FindAction("Interact");
+        transform.position = DataManager.Instance.nowPlayer.position;
     }
-    void Update()
-    {
- 
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            InventoryCheck();
-        }
-
-    }
-  
-
 
     public void CollectItem(string itemName)
     {
@@ -44,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
 
-    }
+    } //임시 메서드1
 
     void InventoryCheck()
     {
@@ -57,9 +44,9 @@ public class PlayerInteraction : MonoBehaviour
         {
             Debug.Log("인벤토리가 비어 있습니다.");
         }
-    }
+    } //임시 메서드2
 
-   public void RemoveItem(string itemName,int count)
+    public void RemoveItem(string itemName,int count) ////임시 메서드3
     {
         if (collectedItems.ContainsKey(itemName)) //인벤토리에 itemName이라는 아이템이 있을 경우. 아이템 이름으로 판별.
         {
@@ -76,7 +63,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("FragMent")) //헌신자 영혼파편
+        if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) //상호작용 확인.
+        {
+            isInteraction = true;
+        }
+        if (other.CompareTag("FragMent")) //헌신자 영혼파편
         {
             SavePlayerData();
         }
@@ -91,24 +82,35 @@ public class PlayerInteraction : MonoBehaviour
     }
 
 
- 
+    private bool isInteraction;
+
+
+    private bool isInteractionStart;
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) 
+        {
+            isInteraction = false;
+        }
+    }
 
     private void SavePlayerData()
     {
         // 플레이어 위치 및 현재 씬 저장
         DataManager.Instance.nowPlayer.position = transform.position;
+        Debug.Log("Player data saved." + DataManager.Instance.nowPlayer.position);
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name;
 
         //활성화 또는 완료된 약속들 저장
-
-        Debug.Log(QuestManager.Instance.allActiveQuests);
-
         DataManager.Instance.nowPlayer.allActiveQuests = QuestManager.Instance.allActiveQuests;
         DataManager.Instance.nowPlayer.allCompletedQuests = QuestManager.Instance.allCompletedQuests;
 
+        //현재 슬롯 저장. -> Continue 버튼을 위함.
+        DataManager.Instance.nowPlayer.previousSlot = DataManager.Instance.nowSlot;
 
         // 데이터 저장
         DataManager.Instance.SaveData();
         Debug.Log("Player data saved." + DataManager.Instance.nowPlayer.position);
+        Debug.Log("Player가 다음 슬롯을 저장함." + DataManager.Instance.nowPlayer.previousSlot);
     }
 }

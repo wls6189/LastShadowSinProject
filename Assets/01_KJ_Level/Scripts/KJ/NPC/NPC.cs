@@ -57,7 +57,7 @@ public class NPC : MonoBehaviour
     void Start()
     {
     
-        if(DialogSystem.Instance != null)
+        if (DialogSystem.Instance != null)
         {
             npcDialogText = DialogSystem.Instance.StoryDialogText;
 
@@ -95,6 +95,7 @@ public class NPC : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F) && !isTalkingwithPlayer)
             {
                 StartTalk();
+
             }
         }
         else
@@ -137,6 +138,7 @@ public class NPC : MonoBehaviour
                 if(AreQuestRequirmentsCompleted())
                 {
                     DialogSystem.Instance.OpenDialogUI();
+                    
 
                     SubmitRequiredItems();
                     npcDialogText.text = currentActiveQuest.info.FinishAnswer;
@@ -259,6 +261,7 @@ public class NPC : MonoBehaviour
         BackBtn.onClick.AddListener(() =>
         {
             isTalkingwithPlayer = false;
+            isFirstTimeInteraction = true;
             TalkStop();
 
         });

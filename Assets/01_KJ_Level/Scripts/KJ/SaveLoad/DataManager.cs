@@ -38,31 +38,33 @@ public class DataManager : MonoBehaviour
             }
             return instance;
         }
+
+
+
+    }
+    public PlayerData nowPlayer = new PlayerData();
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+
+        }
+        else // 1. go.AddComponent<EventBus>(); -> 2. Awake 실행이므로 evetbus가 아직 null이다. 그래서 eventbus = this를 해준다. 
+        {
+            Destroy(instance.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
+        path = Application.persistentDataPath + "/Save";
     }
 
-    public PlayerData nowPlayer = new PlayerData();
+   
 
     public string path;
 
     public int nowSlot;
 
-    private void Awake()
-    {
-        #region 싱글톤
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(instance.gameObject);
-        }
-        DontDestroyOnLoad(this.gameObject);
-        #endregion
-
-        path = Application.persistentDataPath + "/Save"; 
-    }
-
+   
     public void SaveData()
     {
        
