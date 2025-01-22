@@ -6,25 +6,27 @@ public class PlayerStateMachine
     PlayerController player;
 
     public IdleAndMoveState idleAndMoveState;
-    public AirborneState airborneState;
     public DashState dashState;
+    public GuardState guardState;
+    public PlayerPart.GroggyState groggyState;
     public BasicHorizonSlash1State basicHorizonSlash1State;
     public BasicHorizonSlash2State basicHorizonSlash2State;
     public BasicVerticalSlashState basicVerticalSlashState;
-    public GuardState guardState;
     public ThrustState thrustState;
+    public CounterPostureState counterPostureState;
 
     public PlayerStateMachine(PlayerController player)
     {
         this.player = player;
         idleAndMoveState = new(player);
-        airborneState = new(player);
         dashState = new(player);
+        guardState = new(player);
+        groggyState = new(player);
         basicHorizonSlash1State = new(player);
         basicHorizonSlash2State = new(player);
         basicVerticalSlashState = new(player);
-        guardState = new(player);
         thrustState = new(player);
+        counterPostureState = new(player);
     }
 
     public void Initialize(IState state)

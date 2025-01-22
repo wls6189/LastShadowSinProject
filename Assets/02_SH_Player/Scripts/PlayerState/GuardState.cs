@@ -5,7 +5,7 @@ public class GuardState : IState
 {
     PlayerController player;
     float guardBlendValue = 0;
-    float guardBlendDeltaValue = 3f;
+    float guardBlendDeltaValue = 8f;
 
     public GuardState(PlayerController player)
     {
@@ -15,7 +15,6 @@ public class GuardState : IState
     {
         player.CurrentPlayerState = PlayerState.Guard;
         player.Animator.SetTrigger("DoGuard");
-        player.IsParring = true;
         player.IsGuarding = true;
     }
 
@@ -32,24 +31,24 @@ public class GuardState : IState
             {
                 if (player.MoveActionValue == 1)
                 {
-                    guardBlendValue += Time.deltaTime * guardBlendDeltaValue * 2;
+                    guardBlendValue += Time.deltaTime * guardBlendDeltaValue;
                     guardBlendValue = Mathf.Clamp(guardBlendValue, 0f, 1f);
                 }
                 else if (player.MoveActionValue == -1)
                 {
-                    guardBlendValue -= Time.deltaTime * guardBlendDeltaValue * 2;
+                    guardBlendValue -= Time.deltaTime * guardBlendDeltaValue;
                     guardBlendValue = Mathf.Clamp(guardBlendValue, -1f, 0f);
                 }
                 else
                 {
                     if (guardBlendValue > 0)
                     {
-                        guardBlendValue -= Time.deltaTime * guardBlendDeltaValue * 2;
+                        guardBlendValue -= Time.deltaTime * guardBlendDeltaValue;
                         guardBlendValue = Mathf.Clamp(guardBlendValue, 0f, 1f);
                     }
                     else if (guardBlendValue < 0)
                     {
-                        guardBlendValue += Time.deltaTime * guardBlendDeltaValue * 2;
+                        guardBlendValue += Time.deltaTime * guardBlendDeltaValue;
                         guardBlendValue = Mathf.Clamp(guardBlendValue, -1f, 0f);
                     }
                 }
@@ -58,24 +57,24 @@ public class GuardState : IState
             {
                 if (player.MoveActionValue == 1)
                 {
-                    guardBlendValue -= Time.deltaTime * guardBlendDeltaValue * 2;
+                    guardBlendValue -= Time.deltaTime * guardBlendDeltaValue;
                     guardBlendValue = Mathf.Clamp(guardBlendValue, -1f, 0f);
                 }
                 else if (player.MoveActionValue == -1)
                 {
-                    guardBlendValue += Time.deltaTime * guardBlendDeltaValue * 2;
+                    guardBlendValue += Time.deltaTime * guardBlendDeltaValue;
                     guardBlendValue = Mathf.Clamp(guardBlendValue, 0f, 1f);
                 }
                 else
                 {
                     if (guardBlendValue > 0)
                     {
-                        guardBlendValue -= Time.deltaTime * guardBlendDeltaValue * 2;
+                        guardBlendValue -= Time.deltaTime * guardBlendDeltaValue;
                         guardBlendValue = Mathf.Clamp(guardBlendValue, 0f, 1f);
                     }
                     else if (guardBlendValue < 0)
                     {
-                        guardBlendValue += Time.deltaTime * guardBlendDeltaValue * 2;
+                        guardBlendValue += Time.deltaTime * guardBlendDeltaValue;
                         guardBlendValue = Mathf.Clamp(guardBlendValue, -1f, 0f);
                     }
                 }

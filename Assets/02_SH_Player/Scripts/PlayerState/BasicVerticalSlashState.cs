@@ -24,7 +24,6 @@ public class BasicVerticalSlashState : IState
         }
 
         float duration = player.StateInfo.normalizedTime % 1f;
-        Debug.Log($"normalizedTime : {duration}, IsAttacking :  {player.IsAttacking}");
 
         // 공격 시 전진 여부
         if (duration >= 8f / frame && duration <= 13f / frame) // 첫 발 디딤
@@ -45,7 +44,6 @@ public class BasicVerticalSlashState : IState
         // 공격 중 상태 종료
         if (duration >= 26f / frame)
         {
-            Debug.Log("공격 상태 종료");
             player.IsAttacking = false;
         }
 

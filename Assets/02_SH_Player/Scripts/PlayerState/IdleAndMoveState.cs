@@ -4,7 +4,7 @@ public class IdleAndMoveState : IState
 {
     PlayerController player;
     float moveBlendValue = 0;
-    float moveBlendDeltaValue = 5f;
+    float moveBlendDeltaValue = 11f;
 
     public IdleAndMoveState(PlayerController player)
     {
@@ -30,24 +30,24 @@ public class IdleAndMoveState : IState
             {
                 if (player.MoveActionValue == 1)
                 {
-                    moveBlendValue += Time.deltaTime * moveBlendDeltaValue * 2;
+                    moveBlendValue += Time.deltaTime * moveBlendDeltaValue;
                     moveBlendValue = Mathf.Clamp(moveBlendValue, 0f, 1f);
                 }
                 else if (player.MoveActionValue == -1)
                 {
-                    moveBlendValue -= Time.deltaTime * moveBlendDeltaValue * 2;
+                    moveBlendValue -= Time.deltaTime * moveBlendDeltaValue;
                     moveBlendValue = Mathf.Clamp(moveBlendValue, -1f, 0f);
                 }
                 else
                 {
                     if (moveBlendValue > 0)
                     {
-                        moveBlendValue -= Time.deltaTime * moveBlendDeltaValue * 2;
+                        moveBlendValue -= Time.deltaTime * moveBlendDeltaValue;
                         moveBlendValue = Mathf.Clamp(moveBlendValue, 0f, 1f);
                     }
                     else if (moveBlendValue < 0)
                     {
-                        moveBlendValue += Time.deltaTime * moveBlendDeltaValue * 2;
+                        moveBlendValue += Time.deltaTime * moveBlendDeltaValue;
                         moveBlendValue = Mathf.Clamp(moveBlendValue, -1f, 0f);
                     }
                 }
@@ -56,24 +56,24 @@ public class IdleAndMoveState : IState
             {
                 if (player.MoveActionValue == 1)
                 {
-                    moveBlendValue -= Time.deltaTime * moveBlendDeltaValue * 2;
+                    moveBlendValue -= Time.deltaTime * moveBlendDeltaValue;
                     moveBlendValue = Mathf.Clamp(moveBlendValue, -1f, 0f);
                 }
                 else if (player.MoveActionValue == -1)
                 {
-                    moveBlendValue += Time.deltaTime * moveBlendDeltaValue * 2;
+                    moveBlendValue += Time.deltaTime * moveBlendDeltaValue;
                     moveBlendValue = Mathf.Clamp(moveBlendValue, 0f, 1f);
                 }
                 else
                 {
                     if (moveBlendValue > 0)
                     {
-                        moveBlendValue -= Time.deltaTime * moveBlendDeltaValue * 2;
+                        moveBlendValue -= Time.deltaTime * moveBlendDeltaValue;
                         moveBlendValue = Mathf.Clamp(moveBlendValue, 0f, 1f);
                     }
                     else if (moveBlendValue < 0)
                     {
-                        moveBlendValue += Time.deltaTime * moveBlendDeltaValue * 2;
+                        moveBlendValue += Time.deltaTime * moveBlendDeltaValue;
                         moveBlendValue = Mathf.Clamp(moveBlendValue, -1f, 0f);
                     }
                 }
@@ -83,11 +83,11 @@ public class IdleAndMoveState : IState
         {
             if (player.MoveActionValue == 1 || player.MoveActionValue == -1)
             {
-                moveBlendValue += Time.deltaTime * moveBlendDeltaValue;
+                moveBlendValue += Time.deltaTime * moveBlendDeltaValue / 2;
             }
             else
             {
-                moveBlendValue -= Time.deltaTime * moveBlendDeltaValue;
+                moveBlendValue -= Time.deltaTime * moveBlendDeltaValue / 2;
             }
 
             moveBlendValue = Mathf.Clamp(moveBlendValue, 0f, 1f);

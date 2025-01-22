@@ -1,101 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4360954521004210648
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2524908729098344876}
-  - component: {fileID: 389772315624558231}
-  - component: {fileID: 5861117354900967761}
-  - component: {fileID: 425916007027224454}
-  m_Layer: 0
-  m_Name: GroundCheckCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2524908729098344876
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4360954521004210648}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7718943379045581595}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &389772315624558231
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4360954521004210648}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &5861117354900967761
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4360954521004210648}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.01, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &425916007027224454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4360954521004210648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abaeed86093be6e45b49176dafd6497f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerController: {fileID: 6949551005256516064}
-  IsTouching: 0
 --- !u!1 &5551548098388636300
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,7 +507,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.06
+      value: -5.21
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -659,9 +563,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5544254639474283807}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2524908729098344876}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 950397078958984172}
@@ -760,20 +661,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3270c90887455041884b27f51d4eed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GroundCheck: {fileID: 425916007027224454}
   WeaponCollider: {fileID: 1757856408748245890}
   NearbyMonsterCheck: {fileID: 6549005347744170601}
   CameraFocusPosition: {fileID: 5544254639474283807}
   MoveActionValue: 0
   MoveSpeed: 0
-  VerticalSpeed: 0
   IsGrounded: 1
   DashSpeed: 0
   IsAttacking: 0
   IsAttackMoving: 0
   CanBasicHorizonSlashCombo: 0
+  IsAttackColliderEnabled: 0
   IsParring: 0
   IsGuarding: 0
+  IsParrySucceed: 0
   CharacterController: {fileID: 0}
   Animator: {fileID: 0}
   AnimationSetter: {fileID: 0}

@@ -19,26 +19,21 @@ public class BasicHorizonSlash2State : IState
 
     public void Execute()
     {
-        if (!player.StateInfo.IsName("BasicHorizonSlash2"))
+        if (player.Animator.IsInTransition(0))
         {
-            player.Animator.Play("BasicHorizonSlash2");
             return;
         }
 
-        if (player.StateInfo.normalizedTime >= 0f && player.StateInfo.normalizedTime <= 1f / frame) // 애니메이션 시작
-        {
-            player.IsAttacking = true;
-            player.CanBasicHorizonSlashCombo = false;
-        }
+        float duration = player.StateInfo.normalizedTime % 1f;
 
         // 공격 시 전진 여부
-        if (player.StateInfo.normalizedTime >= 6f / frame && player.StateInfo.normalizedTime <= 11f / frame) // 첫 발 디딤
+        if (duration >= 6f / frame && duration <= 11f / frame)
         {
-            player.AttackMoving(4f); // 발 디딜 때 플레이어가 움직이는 속도를 매개변수로 입력.
+            player.AttackMoving(4f); 
         }
 
         // 무기 콜라이더 활성화 여부
-        if (player.StateInfo.normalizedTime >= 7f / frame && player.StateInfo.normalizedTime <= 12f / frame)
+        if (duration >= 7f / frame && duration <= 12f / frame)
         {
             player.IsAttackColliderEnabled = true;
         }
@@ -47,14 +42,14 @@ public class BasicHorizonSlash2State : IState
             player.IsAttackColliderEnabled = false;
         }
 
-        // 공격 중 상태 종료(다음 State로 이동 가능한 상태) + (콤보 공격 기능 켜짐)
-        if (player.StateInfo.normalizedTime >= 22f / frame)
+        // 공격 중 상태 종료(다음 State로 이동 가능한 상태)
+        if (duration >= 22f / frame)
         {
             player.IsAttacking = false;
         }
 
         // 별 다른 입력이 없다면 아이들 상태로 전환
-        if (player.StateInfo.normalizedTime >= 34f / frame)
+        if (duration >= 34f / frame)
         {
             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
         }

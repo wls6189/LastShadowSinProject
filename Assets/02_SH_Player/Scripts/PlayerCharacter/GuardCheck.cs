@@ -28,19 +28,19 @@ public class GuardCheck : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other) // 공격하는 몬스터 내에 같은 대상은 2번 공격하지 않는 로직 필요
-    {
-        if (player.IsGuarding && other.CompareTag("Enemy"))
-        {
-            if (player.IsParring)
-            {
-                player.Animator.SetTrigger("DoParry");
-                player.IsParring = false; // 패리에 성공하면 패리 판정 즉시 종료
-            }
-            else
-            {
-                player.Animator.SetTrigger("DoGuardHit");
-            }
-        }
-    }
+    //private void OnTriggerEnter(Collider other) // 공격하는 몬스터 내에 같은 대상은 2번 공격하지 않는 로직 필요
+    //{
+    //    if (player.IsGuarding && other.CompareTag("Normal"))
+    //    {
+    //        if (player.IsParring)
+    //        {
+    //            player.Animator.SetTrigger("DoParry");
+    //            player.IsParring = false; // 패리에 성공하면 패리 판정 즉시 종료
+    //        }
+    //        else
+    //        {
+    //            player.Animator.SetTrigger("DoGuardHit");
+    //        }
+    //    }
+    //}
 }

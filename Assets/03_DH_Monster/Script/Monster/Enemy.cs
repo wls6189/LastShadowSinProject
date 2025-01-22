@@ -199,7 +199,6 @@ public class Enemy : MonoBehaviour
             currentState = State.Guard;
             guardStartTime = Time.time; // 가드 시작 시간 기록
             guardCollider.gameObject.SetActive(true); // 가드 콜라이더 활성화
-            
         }
     }
 

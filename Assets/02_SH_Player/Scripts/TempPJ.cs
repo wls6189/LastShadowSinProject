@@ -2,15 +2,29 @@ using UnityEngine;
 
 public class TempPJ : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    GameObject target;
 
     // Update is called once per frame
     void Update()
     {
         transform.position += new Vector3(0, 0, -3 * Time.deltaTime);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && target != other.gameObject.transform.parent.gameObject)
+        {
+            target = other.gameObject.transform.parent.gameObject;
+            other.gameObject.transform.parent.GetComponent<PlayerStats>().Damaged(10f, 2, 2, EnemyAttackType.Normal);
+
+        }
+        //if (other.CompareTag("Player") && target != other.gameObject)
+        //{
+        //    target = other.gameObject;
+        //    other.gameObject.GetComponent<PlayerStats>().Damaged(10f, 2, 2, EnemyAttackType.Normal);
+        //}
+
+
+    }
+
 }
