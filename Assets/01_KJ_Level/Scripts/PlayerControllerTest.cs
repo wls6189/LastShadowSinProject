@@ -8,16 +8,13 @@ public class PlayerControllerTest : MonoBehaviour
 {
     public Dictionary<string, int> collectedItems = new Dictionary<string, int>(); // 아이템 이름과 개수를 관리
 
+
     [SerializeField]
     float moveSpeed = 3.0f;
 
     //InputActionAsset inputActionAsset;
     // InputAction gameMenuAction;
 
-    private void Awake()
-    {
-     
-    }
     private void Start()
     {
     
@@ -109,17 +106,32 @@ public class PlayerControllerTest : MonoBehaviour
         {
             SavePlayerData();
         }
-        if (other.CompareTag("Portal"))
+        if (other.CompareTag("NextPortal"))
         {
-            SceneManager.LoadScene(2);
+            other.GetComponent<Portal>().LoadScene(true);
+        }
+        if (other.CompareTag("PreviousPortal"))
+        {
+            other.GetComponent<Portal>().LoadScene(false);
         }
     }
+
+
+ 
 
     private void SavePlayerData()
     {
         // 플레이어 위치 및 현재 씬 저장
         DataManager.Instance.nowPlayer.position = transform.position;
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name;
+
+        //활성화 또는 완료된 약속들 저장
+
+        Debug.Log(QuestManager.Instance.allActiveQuests);
+
+        DataManager.Instance.nowPlayer.allActiveQuests = QuestManager.Instance.allActiveQuests;
+        DataManager.Instance.nowPlayer.allCompletedQuests = QuestManager.Instance.allCompletedQuests;
+
 
         // 데이터 저장
         DataManager.Instance.SaveData();

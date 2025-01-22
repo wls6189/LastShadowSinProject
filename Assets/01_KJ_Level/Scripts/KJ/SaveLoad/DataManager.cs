@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerData
 {
@@ -11,8 +12,15 @@ public class PlayerData
     public int coin = 100;
     //  public int item = -1; 
 
-    public Vector3 position;
-    public string currentScene;
+    public Vector3 position = new Vector3(-4.0f, 2.0f, -16.7f);
+
+    public string currentScene = "StartPlayScene";
+    public string currentMap = "½ÃÃ¼ °ù";
+
+    public int previousSlot = -1;
+
+    public List<Quest> allActiveQuests = new List<Quest>();
+    public List<Quest> allCompletedQuests = new List<Quest>();
 
 }
 public class DataManager : MonoBehaviour

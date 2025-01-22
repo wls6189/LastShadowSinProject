@@ -1,6 +1,8 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -39,8 +41,11 @@ public class UIManager : MonoBehaviour
     EventSystem system;
     public Selectable firstInput;
     private Button lastSelectedButton; // 마지막으로 선택된 버튼
+
+
     void Start()
     {
+
         system = EventSystem.current;
 
         if (TabButtons != null && TabButtons.Length > 0)
