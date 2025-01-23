@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!135 &195100718 stripped
+SphereCollider:
+  m_CorrespondingSourceObject: {fileID: 4421647856502198729, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
+  m_PrefabInstance: {fileID: 998727862}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,8 +210,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.059617896, y: -0.70374274, z: 0.0594723, w: 0.7054466}
-  m_LocalPosition: {x: 10.1097145, y: 3.7868588, z: 3.9523664}
+  m_LocalRotation: {x: 0.037315458, y: -0.7063264, z: 0.037335645, w: 0.7059154}
+  m_LocalPosition: {x: 14.955704, y: 3.7869127, z: -18.893312}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -564,8 +569,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3397009368617138634, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
+      propertyPath: attackCollider
+      value: 
+      objectReference: {fileID: 195100718}
+    - target: {fileID: 3397009368617138634, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
       propertyPath: attackCooldown
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082874118968168590, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4365693526630096428, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
       propertyPath: m_AutoBraking

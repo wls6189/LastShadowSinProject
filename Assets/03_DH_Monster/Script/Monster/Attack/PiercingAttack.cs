@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class AttackBase : MonoBehaviour
+public class PiercingAttack : MonoBehaviour
 {
     public float damageMultiplier;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>();
@@ -10,15 +10,9 @@ public class AttackBase : MonoBehaviour
     //기본,영혼 공격에 쓸거
     private void OnTriggerEnter(Collider other)
     {
-        GameObject target;
-        
-        // 가드 콜라이더인지 확인
-        if (other.CompareTag("PlayerGuard"))
-        {
-            target = other.transform.parent.gameObject; // 부모(GameObject)를 가져옴
-        }
+        GameObject target;     
         // 본체 콜라이더인지 확인
-        else if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             target = other.gameObject; // 바로 대상
             isDirectAttack = true;
