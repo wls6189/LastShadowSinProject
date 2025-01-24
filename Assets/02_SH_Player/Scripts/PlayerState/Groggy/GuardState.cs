@@ -14,7 +14,7 @@ public class GuardState : IState
     public void Enter()
     {
         player.CurrentPlayerState = PlayerState.Guard;
-        player.Animator.SetTrigger("DoGuard");
+        player.PlayerAnimator.SetTrigger("DoGuard");
         player.IsGuarding = true;
     }
 
@@ -94,7 +94,7 @@ public class GuardState : IState
             guardBlendValue = Mathf.Clamp(guardBlendValue, 0f, 1f);
         }
 
-        player.Animator.SetFloat("GuardBlendValue", guardBlendValue); // 애니메이터의 moveBlendValue를 설정
+        player.PlayerAnimator.SetFloat("GuardBlendValue", guardBlendValue); // 애니메이터의 moveBlendValue를 설정
     }
 
     public void Exit()
@@ -102,6 +102,6 @@ public class GuardState : IState
         player.IsParring = false;
         player.IsGuarding = false;
         guardBlendValue = 0;
-        player.Animator.SetFloat("GuardBlendValue", guardBlendValue);
+        player.PlayerAnimator.SetFloat("GuardBlendValue", guardBlendValue);
     }
 }

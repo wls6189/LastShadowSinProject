@@ -4,8 +4,8 @@ using UnityEngine;
 public class GuardCheck : MonoBehaviour
 {
     [SerializeField] PlayerController player;
-    BoxCollider guardCollider;
-    List<GameObject> monstersAttackingPlayer = new(); // 중복 체크를 위한 리스트
+    Collider guardCollider;
+
     void Awake()
     {
         TryGetComponent(out guardCollider);
@@ -18,7 +18,7 @@ public class GuardCheck : MonoBehaviour
 
     void OnGuardCollider()
     {
-        if (player.IsGuarding)
+        if (player.IsGuarding || player.IsSpiritParring)
         {
             guardCollider.enabled = true;
         }
@@ -27,20 +27,4 @@ public class GuardCheck : MonoBehaviour
             guardCollider.enabled = false;
         }
     }
-
-    //private void OnTriggerEnter(Collider other) // 공격하는 몬스터 내에 같은 대상은 2번 공격하지 않는 로직 필요
-    //{
-    //    if (player.IsGuarding && other.CompareTag("Normal"))
-    //    {
-    //        if (player.IsParring)
-    //        {
-    //            player.Animator.SetTrigger("DoParry");
-    //            player.IsParring = false; // 패리에 성공하면 패리 판정 즉시 종료
-    //        }
-    //        else
-    //        {
-    //            player.Animator.SetTrigger("DoGuardHit");
-    //        }
-    //    }
-    //}
 }

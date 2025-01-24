@@ -19,17 +19,17 @@ public class DashState : IState
             {
                 if (player.MoveActionValue > 0) // 오른쪽 방향키 입력 시
                 {
-                    player.Animator.SetTrigger("DoDashForward");
+                    player.PlayerAnimator.SetTrigger("DoDashForward");
                     moveRight = true;
                 }
                 else if (player.MoveActionValue < 0) // 왼쪽 방향키 입력 시
                 {
-                    player.Animator.SetTrigger("DoDashBackward");
+                    player.PlayerAnimator.SetTrigger("DoDashBackward");
                     moveRight = false;
                 }
                 else // 방향키 입력 없이 대쉬 시
                 {
-                    player.Animator.SetTrigger("DoDashBackward");
+                    player.PlayerAnimator.SetTrigger("DoDashBackward");
                     moveRight = false;
                 }
             }
@@ -37,17 +37,17 @@ public class DashState : IState
             {
                 if (player.MoveActionValue > 0) // 오른쪽 방향키 입력 시
                 {
-                    player.Animator.SetTrigger("DoDashBackward");
+                    player.PlayerAnimator.SetTrigger("DoDashBackward");
                     moveRight = true;
                 }
                 else if (player.MoveActionValue < 0) // 왼쪽 방향키 입력 시
                 {
-                    player.Animator.SetTrigger("DoDashForward");
+                    player.PlayerAnimator.SetTrigger("DoDashForward");
                     moveRight = false;
                 }
                 else // 방향키 입력 없이 대쉬 시
                 {
-                    player.Animator.SetTrigger("DoDashBackward");
+                    player.PlayerAnimator.SetTrigger("DoDashBackward");
                     moveRight = false;
                 }
             }
@@ -56,24 +56,24 @@ public class DashState : IState
         {
             if (player.MoveActionValue > 0) // 오른쪽 방향키 입력 시
             {
-                player.Animator.SetTrigger("DoDashForward");
+                player.PlayerAnimator.SetTrigger("DoDashForward");
                 moveRight = true;
             }
             else if (player.MoveActionValue < 0) // 왼쪽 방향키 입력 시
             {
-                player.Animator.SetTrigger("DoDashForward");
+                player.PlayerAnimator.SetTrigger("DoDashForward");
                 moveRight = false;
             }
             else // 방향키 입력 없이 대쉬 시
             {
                 if (player.IsLookRight)
                 {
-                    player.Animator.SetTrigger("DoDashForward");
+                    player.PlayerAnimator.SetTrigger("DoDashForward");
                     moveRight = true;
                 }
                 else
                 {
-                    player.Animator.SetTrigger("DoDashForward");
+                    player.PlayerAnimator.SetTrigger("DoDashForward");
                     moveRight = false;
 
                 }
@@ -83,7 +83,7 @@ public class DashState : IState
 
     public void Execute()
     {
-        if (player.Animator.IsInTransition(0))
+        if (player.PlayerAnimator.IsInTransition(0))
         {
             return;
         }

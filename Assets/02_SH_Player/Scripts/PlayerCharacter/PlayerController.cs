@@ -4,17 +4,25 @@ using UnityEngine.InputSystem;
 
 public enum PlayerState // 플레이어의 현재 행동(혹은 상태)
 {
+    Dead,
     IdleAndMove,
+    UseChaliceOfAtonement,
     Dash,
-    Groggy,
-    Guard,
+    SpiritParry,
     Penetrate,
+    Parry,
+    GuardHit,
+    HitShortGroggy,
+    HitLongGroggy,
+    Guard,
     BasicHorizonSlash1,
     BasicHorizonSlash2,
     BasicVerticalSlash,
     Thrust,
     RetreatSlash,
-    PowerfulThrust,
+    SpiritCleave1,
+    SpiritCleave2,
+    SpiritCleave3,
 }
 
 public class PlayerController : MonoBehaviour
@@ -28,8 +36,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float MoveSpeed; // 움직이는 속도
 
     // 점프 관련 변수
+    float gravity = 17; // 중력값
     float verticalSpeed; // 플레이어의 수직 속도(중력에서 관리)
-    float gravity = 17; // 중력
     float terminalSpeed = 20; // 수직 속도의 한계
 
     // 대쉬 관련 변수
@@ -43,70 +51,99 @@ public class PlayerController : MonoBehaviour
     // 공격 관련 변수
     [HideInInspector] public bool IsAttacking;
     [HideInInspector] public bool IsAttackMoving;
-    [HideInInspector] public bool CanBasicHorizonSlashCombo;
     [HideInInspector] public bool IsAttackColliderEnabled;
+    [HideInInspector] public bool CanBasicHorizonSlash2Combo;
+    [HideInInspector] public bool CanSpiritCleave2Combo;
+    [HideInInspector] public bool CanSpiritCleave3Combo;
     float lastBasicHorizonSlash1AttackTime;
-    int specialAttackCount;
+    float lastSpiritCleave1AttackTime;
+    float lastSpiritCleave2AttackTime;
+    int ThrustSpiritWaveConsume = 1;
+    int RetreatSpiritWaveConsume = 1;
+    int SpiritCleave1SpiritWaveConsume = 1;
+    int SpiritCleave2And3SpiritWaveConsume = 2;
+    int SpiritPiercingSpiritWaveConsume = 2;
+    int SpiritAnnihilationSpiritWaveConsume = 3;
+    int SpiritSwordDanceSpiritWaveConsume = 3;
+    int SpiritUnboundSpiritWaveConsume = 2;
+    int SpiritParrySpiritWaveConsume = 2;
 
     // 막기 관련 변수
     [HideInInspector] public bool IsParring;
+    [HideInInspector] public bool IsSpiritParring;
     [HideInInspector] public bool IsGuarding;
+    [HideInInspector] public bool IsAttackingParring;
+    [HideInInspector] public bool CanPenetrate;
+    Coroutine parryEndedTermRoutine; // 패리 인정 시간 코루틴 관리하는 변수
 
     // 조작 관련 변수
     [HideInInspector] public CharacterController CharacterController;
     InputActionAsset inputActionAsset;
     InputAction gameMenuAction;
     InputAction moveAction;
-    InputAction jumpAction;
     InputAction dashAndPenetrateAction;
     InputAction attack1Action;
     InputAction attack2Action;
-    [HideInInspector] public InputAction attack3Action;
+    InputAction attack3Action;
     [HideInInspector] public InputAction guardAction;
     InputAction lockOnAction;
+    InputAction useChaliceOfAtonementAction;
+    InputAction specialAttackAction;
+    InputAction spiritualAction;
 
-    // 부가적인 변수
-    [HideInInspector] public Animator Animator;
+    // 상태 머신 관련 변수
     [HideInInspector] public AnimatorStateInfo StateInfo;
     [HideInInspector] public PlayerState CurrentPlayerState;
     [HideInInspector] public PlayerStateMachine PlayerStateMachine;
+
+    // 부가적인 변수
+    [HideInInspector] public Animator PlayerAnimator;
+    [HideInInspector] public PlayerStats PlayerStats;
+    [HideInInspector] public ChaliceOfAtonement PlayerChaliceOfAtonement;
+    [HideInInspector] public bool IsGrogging; // 행동 불능 상태 여부, 전투 및 비전투 여부도 이걸로 확인 // 현재 사용 : 짧은 행동 불능, 긴 행동 불능, 막기, 패리, 영혼 패리, 간파
     [HideInInspector] public bool IsLookRight; // 오른쪽을 보고 있는지 여부
-    Coroutine parryEndedTermRoutine;
+    [HideInInspector] public bool IsDoSomething; // 다른 행위를 할 수 없는 특수 행동 중일 때 사용. 현재 사용 : 물약 사용 시
+    [HideInInspector] public bool IsInCombat; // 전투 중(의지력 회복 불가)인지 비전투 중(의지력 회복)인지 여부
+    [HideInInspector] public bool IsAttackSucceed; // 전투 중(의지력 회복 불가)인지 비전투 중(의지력 회복)인지 여부
+    float lastInCombatTime;
 
     void Awake()
     {
         MoveSpeed = 5f;
         DashSpeed = 10f;
         IsLockOn = false;
+        IsLookRight = true; // 대부분 시작 시 오른쪽을 보면서 스폰되서 true로 설정.
 
-        Animator = GetComponent<Animator>();
+        PlayerAnimator = GetComponent<Animator>();
+        PlayerStats = GetComponent<PlayerStats>();
+        PlayerChaliceOfAtonement = GetComponent<ChaliceOfAtonement>();
         CharacterController = GetComponent<CharacterController>();
         inputActionAsset = GetComponent<PlayerInput>().actions;
 
         PlayerStateMachine = new PlayerStateMachine(this);
         PlayerStateMachine.Initialize(PlayerStateMachine.idleAndMoveState);
-
         gameMenuAction = inputActionAsset.FindAction("GameMenu");
         moveAction = inputActionAsset.FindAction("Move");
-        jumpAction = inputActionAsset.FindAction("Jump");
         dashAndPenetrateAction = inputActionAsset.FindAction("DashAndPenetrate");
         attack1Action = inputActionAsset.FindAction("Attack1");
         attack2Action = inputActionAsset.FindAction("Attack2");
         attack3Action = inputActionAsset.FindAction("Attack3");
         guardAction = inputActionAsset.FindAction("Guard");
         lockOnAction = inputActionAsset.FindAction("LockOn");
+        useChaliceOfAtonementAction = inputActionAsset.FindAction("UseChaliceOfAtonement");
+        specialAttackAction = inputActionAsset.FindAction("SpecialAttack");
+        spiritualAction = inputActionAsset.FindAction("Spiritual");
     }
 
     void Update()
     {
+        if (CurrentPlayerState == PlayerState.Dead) return;
         if (transform.position.x != 0)
         {
             transform.position = new Vector3(0, transform.position.y, transform.position.z);
         }
 
-        HandleBasicHorizonSlashCombo();
-
-        StateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+        StateInfo = PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         PlayerStateMachine.Execute();
 
@@ -114,21 +151,24 @@ public class PlayerController : MonoBehaviour
 
         Gravity();
 
-
-        if (DialogSystem.Instance.isdialogueCanvas) return; // 다이얼로그 열리면 행동 금지
+        if (DialogSystem.Instance.isdialogueCanvas) return; // 다이얼로그 열리면 키 입력 및 행동 금지(추후 TimeScale로 다루는 것에 대한 여부)
         ManageRotate();
+        HandleBasicHorizonSlash2Combo();
+        HandleSpiritCleave2Combo();
+        HandleSpiritCleave3Combo();
+        ManageIsInCombat();
 
         GameMenuPressed();
         LockOnPressed();
+        UseChaliceOfAtonementPressed();
         IdleAndMovePressed();
-        DashPressed();
+        DashAndPenetratePressed();
         GuardPressed();
-        BasicHorizonSlashPressed();
-        BasicVerticalSlashPressed();
-        ThrustPressed();
+        Attack1Pressed();
+        Attack2Pressed();
     }
 
-    void Gravity()
+    void Gravity() // 중력 관리
     {
         verticalSpeed -= gravity * Time.deltaTime;
 
@@ -143,9 +183,9 @@ public class PlayerController : MonoBehaviour
             verticalSpeed = 0;
         }
     }
-    void ManageRotate()
+    void ManageRotate() // 캐릭터의 회전 관리
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Groggy) return; // 공격 중이거나 대쉬 중이라면 회전 금지
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash) return; // 공격 중이거나 대쉬 중이라면 회전 금지
 
         if (IsLockOn)
         {
@@ -174,23 +214,9 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void AttackMoving(float moveSpeed) // 공격 시 앞으로 조금씩 움직이는 기능. 공격 시 IsAttackingMoving이 true가 되면 플레이어가 공격 방향으로 움직인다.
+    void HandleBasicHorizonSlash2Combo() // 기본 횡베기 2번째 콤보 관리
     {
-        if (IsLookRight)
-        {
-            Vector3 moveVector = new Vector3(0, 0, 1);
-            CharacterController.Move(moveVector * moveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            Vector3 moveVector = new Vector3(0, 0, -1);
-            CharacterController.Move(moveVector * moveSpeed * Time.deltaTime);
-        }
-    }
-
-    void HandleBasicHorizonSlashCombo()
-    {
-        if (CanBasicHorizonSlashCombo)
+        if (CanBasicHorizonSlash2Combo)
         {
             lastBasicHorizonSlash1AttackTime += Time.deltaTime;
         }
@@ -202,12 +228,68 @@ public class PlayerController : MonoBehaviour
 
         if (lastBasicHorizonSlash1AttackTime > 1f)
         {
-            CanBasicHorizonSlashCombo = false;
+            CanBasicHorizonSlash2Combo = false;
             lastBasicHorizonSlash1AttackTime = 0;
         }
     }
+    void HandleSpiritCleave2Combo() // 영혼 가르기 2번째 콤보 관리
+    {
+        if (CanSpiritCleave2Combo)
+        {
+            lastSpiritCleave1AttackTime += Time.deltaTime;
+        }
+        else
+        {
+            lastSpiritCleave1AttackTime = 0;
+            return;
+        }
 
-    void GameMenuPressed()
+        if (lastSpiritCleave1AttackTime > 1f)
+        {
+            CanSpiritCleave2Combo = false;
+            lastSpiritCleave1AttackTime = 0;
+        }
+    }
+    void HandleSpiritCleave3Combo() // 영혼 가르기 3번째 콤보 관리
+    {
+        if (CanSpiritCleave3Combo)
+        {
+            lastSpiritCleave2AttackTime += Time.deltaTime;
+        }
+        else
+        {
+            lastSpiritCleave2AttackTime = 0;
+            return;
+        }
+
+        if (lastSpiritCleave2AttackTime > 1f)
+        {
+            CanSpiritCleave3Combo = false;
+            lastSpiritCleave2AttackTime = 0;
+        }
+    }
+    void ManageIsInCombat()
+    {
+        if (IsAttackSucceed || IsGrogging)
+        {
+            lastInCombatTime = 0;
+        }
+        else
+        {
+            lastInCombatTime += Time.deltaTime;
+        }
+
+        if (lastInCombatTime > 4f)
+        {
+            IsInCombat = false;
+        }
+        else
+        {
+            IsInCombat = true;
+        }
+    }
+
+    void GameMenuPressed() // 게임 메뉴 켜기
     {
         if (gameMenuAction.WasPressedThisFrame())
         {
@@ -263,92 +345,143 @@ public class PlayerController : MonoBehaviour
             CameraFocusPosition.position = (transform.position + targetMonster.transform.position) / 2;
         }
     }
-    void IdleAndMovePressed() // 아이들 및 움직임
+    void UseChaliceOfAtonementPressed() // 물약(속죄의 성배) 사용
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
+
+        if (useChaliceOfAtonementAction.WasPressedThisFrame() && PlayerChaliceOfAtonement.CurrentChaliceOfAtonementCount > 0)
+        {
+            PlayerStateMachine.TransitionTo(PlayerStateMachine.useChaliceOfAtonementState);
+        }
+    }
+    void IdleAndMovePressed() // 아이들 및 움직임 관리
+    {
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
         if (moveAction.IsPressed() && CurrentPlayerState != PlayerState.IdleAndMove)
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
         }
     }
-    void DashPressed() // 대쉬
+    void DashAndPenetratePressed() // 대쉬 및 간파 관리
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
         if (dashAndPenetrateAction.WasPressedThisFrame())
         {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.dashState);
-        }
-    }
-    void GuardPressed() // 가드
-    {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Groggy) return;
-
-        if (guardAction.WasPressedThisFrame() && CurrentPlayerState == PlayerState.IdleAndMove) // IdleAndMove나 Guard일 때만 가드 전환
-        {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.guardState);
-
-            if (parryEndedTermRoutine == null)
+            if (CanPenetrate)
             {
-                parryEndedTermRoutine = StartCoroutine(ParryEndedTerm());
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.penetrateState);
             }
             else
             {
-                StopCoroutine(parryEndedTermRoutine);
-                parryEndedTermRoutine = StartCoroutine(ParryEndedTerm());
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.dashState);
+            }
+        }
+    }
+    void GuardPressed() // 가드 관리
+    {
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash) return;
+
+        if (guardAction.IsPressed() && CurrentPlayerState != PlayerState.Guard) // IdleAndMove나 Guard일 때만 가드 전환
+        {
+            if (SpiritualPressed() && PlayerStats.CurrentSpiritWave >= SpiritParrySpiritWaveConsume) // 영혼 패리 발동 조건
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritParryState);
+            }
+            else
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.guardState);
+
+                if (parryEndedTermRoutine == null)
+                {
+                    parryEndedTermRoutine = StartCoroutine(ParryEndedTerm());
+                }
+                else
+                {
+                    StopCoroutine(parryEndedTermRoutine);
+                    parryEndedTermRoutine = StartCoroutine(ParryEndedTerm());
+                }
             }
         }
 
-        if (guardAction.WasReleasedThisFrame() && CurrentPlayerState == PlayerState.Guard)
+        if (guardAction.WasReleasedThisFrame() && CurrentPlayerState == PlayerState.Guard) // 가드 상태일 때 키를 때면 디폴트 상태로 이동
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
         }
     }
-    void BasicHorizonSlashPressed()
+    void Attack1Pressed() // 공격 Z키 관리
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
-        if (attack1Action.WasPressedThisFrame() && CanBasicHorizonSlashCombo)
+        if (attack1Action.WasPressedThisFrame())
         {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.basicHorizonSlash2State);
+            if (SpiritualPressed() && CanSpiritCleave3Combo && PlayerStats.CurrentSpiritWave >= SpiritCleave2And3SpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritCleave3State);
+            }
+            else if (SpiritualPressed() && CanSpiritCleave2Combo && PlayerStats.CurrentSpiritWave >= SpiritCleave2And3SpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritCleave2State);
+            }
+            else if (SpiritualPressed() && PlayerStats.CurrentSpiritWave >= SpiritCleave1SpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritCleave1State);
+            }
+            else if (SpecialAttackPressed() && PlayerStats.CurrentSpiritWave >= ThrustSpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.thrustState);
+            }
+            else if (CanBasicHorizonSlash2Combo)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.basicHorizonSlash2State);
+            }
+            else
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.basicHorizonSlash1State);
+            }
         }
-        else if (attack1Action.WasPressedThisFrame())
-        {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.basicHorizonSlash1State);
-        }
+
     }
-    void BasicVerticalSlashPressed()
+    void Attack2Pressed() // 공격 X키 관리
     {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
         if (attack2Action.WasPressedThisFrame())
         {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.basicVerticalSlashState);
+            if (SpecialAttackPressed() && PlayerStats.CurrentSpiritWave >= RetreatSpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.retreatSlashState);
+            }
+            else
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.basicVerticalSlashState);
+            }
         }
     }
-    void ThrustPressed()
-    {
-        if (IsAttacking || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard || CurrentPlayerState == PlayerState.Groggy) return;
 
-        if (attack3Action.WasPressedThisFrame())
+
+    public void AttackMoving(float moveSpeed) // 공격 시 앞으로 조금씩 움직이는 기능. 공격 시 IsAttackingMoving이 true가 되면 플레이어가 공격 방향으로 움직인다.
+    {
+        if (IsLookRight)
         {
-            PlayerStateMachine.TransitionTo(PlayerStateMachine.thrustState);
+            Vector3 moveVector = new Vector3(0, 0, 1);
+            CharacterController.Move(moveVector * moveSpeed * Time.deltaTime);
+        }
+        else
+        {
+            Vector3 moveVector = new Vector3(0, 0, -1);
+            CharacterController.Move(moveVector * moveSpeed * Time.deltaTime);
         }
     }
-    void RetreatSlashPressed()
+    bool SpecialAttackPressed() // 아랫방향키 눌린 상태 반환
     {
-
+        return specialAttackAction.IsPressed();
     }
-
-
-
-
-
-
-
-
-
+    bool SpiritualPressed() // Shift 눌린 상태 반환
+    {
+        return spiritualAction.IsPressed();
+    }
     IEnumerator ParryEndedTerm() // 패리가 인정되는 시간
     {
         IsParring = true;

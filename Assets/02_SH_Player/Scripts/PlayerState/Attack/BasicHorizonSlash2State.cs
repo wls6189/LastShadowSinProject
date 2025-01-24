@@ -1,24 +1,25 @@
 using UnityEngine;
 
-public class BasicVerticalSlashState : IState
+public class BasicHorizonSlash2State : IState
 {
     PlayerController player;
-    float frame = 40;
+    float frame = 37;
 
-    public BasicVerticalSlashState(PlayerController player)
+    public BasicHorizonSlash2State(PlayerController player)
     {
         this.player = player;
     }
     public void Enter()
     {
-        player.CurrentPlayerState = PlayerState.BasicVerticalSlash;
-        player.Animator.SetTrigger("DoBasicVerticalSlash");
+        player.CurrentPlayerState = PlayerState.BasicHorizonSlash2;
+        player.PlayerAnimator.SetTrigger("DoBasicHorizonSlash2");
         player.IsAttacking = true;
+        player.CanBasicHorizonSlash2Combo = false;
     }
 
     public void Execute()
     {
-        if (player.Animator.IsInTransition(0))
+        if (player.PlayerAnimator.IsInTransition(0))
         {
             return;
         }
@@ -26,13 +27,13 @@ public class BasicVerticalSlashState : IState
         float duration = player.StateInfo.normalizedTime % 1f;
 
         // 공격 시 전진 여부
-        if (duration >= 8f / frame && duration <= 13f / frame) // 첫 발 디딤
+        if (duration >= 6f / frame && duration <= 11f / frame)
         {
-            player.AttackMoving(3f); // 발 디딜 때 플레이어가 움직이는 속도를 매개변수로 입력.
+            player.AttackMoving(5f); 
         }
 
         // 무기 콜라이더 활성화 여부
-        if (duration >= 9f / frame && duration <= 13f / frame)
+        if (duration >= 7f / frame && duration <= 12f / frame)
         {
             player.IsAttackColliderEnabled = true;
         }
@@ -41,14 +42,14 @@ public class BasicVerticalSlashState : IState
             player.IsAttackColliderEnabled = false;
         }
 
-        // 공격 중 상태 종료
-        if (duration >= 26f / frame)
+        // 공격 중 상태 종료(다음 State로 이동 가능한 상태)
+        if (duration >= 22f / frame)
         {
             player.IsAttacking = false;
         }
 
         // 별 다른 입력이 없다면 아이들 상태로 전환
-        if (duration >= 37f / frame)
+        if (duration >= 34f / frame)
         {
             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
         }

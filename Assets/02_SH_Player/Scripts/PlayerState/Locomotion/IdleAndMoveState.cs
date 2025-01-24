@@ -13,7 +13,7 @@ public class IdleAndMoveState : IState
     public void Enter()
     {
         player.CurrentPlayerState = PlayerState.IdleAndMove;
-        player.Animator.SetTrigger("DoIdleAndMove");
+        player.PlayerAnimator.SetTrigger("DoIdleAndMove");
         player.IsAttacking = false;
     }
 
@@ -93,12 +93,12 @@ public class IdleAndMoveState : IState
             moveBlendValue = Mathf.Clamp(moveBlendValue, 0f, 1f);
         }
 
-        player.Animator.SetFloat("MoveBlendValue", moveBlendValue); // 애니메이터의 moveBlendValue를 설정
+        player.PlayerAnimator.SetFloat("MoveBlendValue", moveBlendValue); // 애니메이터의 moveBlendValue를 설정
     }
 
     public void Exit()
     {
         moveBlendValue = 0;
-        player.Animator.SetFloat("MoveBlendValue", moveBlendValue);
+        player.PlayerAnimator.SetFloat("MoveBlendValue", moveBlendValue);
     }
 }
