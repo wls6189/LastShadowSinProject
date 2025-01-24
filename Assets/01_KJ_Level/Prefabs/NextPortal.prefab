@@ -121,4 +121,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87e41278126dffd42b01a2d900260fac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSceneData: {fileID: 0}
+  currentSceneData: {fileID: 11400000, guid: bbeb81c037fd14448922e281d34b3c97, type: 2}

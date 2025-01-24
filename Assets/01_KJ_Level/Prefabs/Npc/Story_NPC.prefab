@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 4998982936458334832}
   m_Layer: 0
   m_Name: Story_NPC
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -248,7 +248,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.3534317, y: 2, z: 4.534487}
+  m_Size: {x: 4, y: 2, z: 4}
   m_Center: {x: -0.10052776, y: 0, z: 0.012480736}
 --- !u!114 &4998982936458334832
 MonoBehaviour:
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInRange: 0
-  player: {fileID: 0}
+  player: {fileID: 6941422205048576417, guid: 72c2a6fba56141a4ba219c18374118af, type: 3}
   rotationSpeed: 15
   isTalkingwithPlayer: 0
   NpcTalkImage: {fileID: 2722608009818701970}
@@ -300,7 +300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1429872994510760899
 RectTransform:
   m_ObjectHideFlags: 0

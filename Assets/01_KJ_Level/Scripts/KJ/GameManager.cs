@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -40,7 +41,18 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    //헌신자 영혼파편 상호작용 시 현재 구역 세이브하는 부분. -> UI 띄우고 현재 구역 표시하기 위함.
+    [Header("SaveObjectInfo")]
+    public List<SaveObjectData> saveObjects; // NPC가 가지고 있는 퀘스트 목록 관리
+    public SaveObjectData saveObject;
 
+    private int ActiveSaveIndex = 0;
+
+    public void SaveObjectFunc()
+    {
+        saveObject = saveObjects[ActiveSaveIndex];
+        DataManager.Instance.SoulFragMentFunc(saveObject,ActiveSaveIndex);
+    }
     private void Start()
     {
         // 게임 씬에 넘어오면 플레이어의 정보(이름, 레벨, 코인)가 알맞게 나타나야 함.
