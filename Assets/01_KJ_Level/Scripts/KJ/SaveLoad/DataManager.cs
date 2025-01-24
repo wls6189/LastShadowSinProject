@@ -3,16 +3,16 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 
 public class PlayerData
 {
-    //이름, 레벨 , 코인, 착용중인 무기 들을 저장
     public string name;
     public int level = 1;
     public int coin = 100;
     //  public int item = -1; 
 
-    public Vector3 position = new Vector3(0.0f, 1.21f, -21f);
+    public Vector3 position = new Vector3(0.0f, 0.0f, -5.21f);
 
     public string currentScene = "StartPlayScene";
     public string currentMap = "시체 곶";
@@ -56,6 +56,8 @@ public class DataManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
         path = Application.persistentDataPath + "/Save";
+
+        LoadPreviousSlot();
     }
 
    
@@ -63,11 +65,35 @@ public class DataManager : MonoBehaviour
     public string path;
 
     public int nowSlot;
+    private void LoadPreviousSlot()
+    {
+        if (PlayerPrefs.HasKey("PreviousSlot"))
+        {
+            nowPlayer.previousSlot = PlayerPrefs.GetInt("PreviousSlot");
+            nowSlot = nowPlayer.previousSlot;
+            Debug.Log("Previous Slot Loaded: " + nowSlot);
+        }
+        else
+        {
+            nowSlot = 0; // 기본 슬롯 번호 설정
+            Debug.Log("No previous slot, using default slot: " + nowSlot);
+        }
+    }
+    public void SlotSave(int number)
+    {
 
-   
+        nowPlayer.previousSlot = number;
+        nowSlot = number;
+
+        // PlayerPrefs에 이전 슬롯 번호 저장
+        PlayerPrefs.SetInt("PreviousSlot", nowSlot);
+        PlayerPrefs.Save(); // 변경 사항을 즉시 저장
+
+        Debug.Log("Slot Saved: " + nowSlot);
+    }
+
     public void SaveData()
     {
-       
         string data = JsonUtility.ToJson(nowPlayer);
 
         //저장하기 - WriteAllText() 사용
@@ -86,8 +112,25 @@ public class DataManager : MonoBehaviour
     public void DataClear()
     {
         nowSlot = -1; //슬롯 번호가 
+      
         nowPlayer = new PlayerData(); //초기값으로 다시 초기화
+       
+    }
+    public void DataCelarSlot()
+    {
+        PlayerPrefs.DeleteKey("PreviousSlot");
+        PlayerPrefs.Save();
+
     }
 
+    public List<SaveObjectData> saveActiveObjects = new List<SaveObjectData>();
+
+    public void SoulFragMentFunc(SaveObjectData saveObject,int ActiveSaveIndex)
+    {
+        
+
+        saveActiveObjects.Add(saveObject);
+        UIManager.Instance.RefreshSaveScenes(saveActiveObjects);
+    }
 
 }

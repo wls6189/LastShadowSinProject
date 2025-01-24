@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -8,15 +9,54 @@ public class PlayerInteraction : MonoBehaviour
 {
     public Dictionary<string, int> collectedItems = new Dictionary<string, int>(); // 아이템 이름과 개수를 관리
 
+    private NPC currentNPC;
 
+    InputActionAsset inputActionAsset;
+    InputAction interactAction;
 
-    //InputActionAsset inputActionAsset;
-    //InputAction interactAction;
-
+    private void Awake()
+    {
+        inputActionAsset = GetComponent<PlayerInput>().actions;
+    }
     private void Start()
     {
-        //interactAction = inputActionAsset.FindAction("Interact");
+        interactAction = inputActionAsset.FindAction("Interact");
         transform.position = DataManager.Instance.nowPlayer.position;
+    }
+
+    private void Update()
+    {
+        if(interactAction.WasPressedThisFrame() && isInteraction)
+        {
+            isInteractionStart = true;
+
+        }
+
+        if(interactAction.WasPressedThisFrame() && isFragMentInfo)
+        {
+            isFragMentInfo = false;
+            GameManager.Instance.SaveObjectFunc();
+           
+        }    
+
+
+        if (currentNPC != null && currentNPC.playerInRange)
+        {
+            currentNPC.NpcTalkImage.gameObject.SetActive(true);
+
+            if (interactAction.WasPressedThisFrame() && isNpcInteraction)
+            {
+                isNpcInteraction = false;
+                currentNPC.PlayerWithTalk();
+                currentNPC.PlayerLookNpc(transform.position);
+            }
+               
+           
+        }
+     
+
+
+
     }
 
     public void CollectItem(string itemName)
@@ -61,28 +101,52 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    [SerializeField]
+    private bool isFragMentInfo;
+
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) //상호작용 확인.
         {
             isInteraction = true;
+
+           
         }
-        if (other.CompareTag("FragMent")) //헌신자 영혼파편
+        if (other.CompareTag("FragMent") && isInteractionStart) //헌신자 영혼파편
         {
+            other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]";
+            isInteractionStart = false;
+
+            isFragMentInfo = true;
+
             SavePlayerData();
+
+           
+
+
+
         }
-        if (other.CompareTag("NextPortal"))
+        if (other.CompareTag("NextPortal") && isInteractionStart)
         {
+            isInteractionStart = false;
             other.GetComponent<Portal>().LoadScene(true);
         }
-        if (other.CompareTag("PreviousPortal"))
+        if (other.CompareTag("PreviousPortal") && isInteractionStart)
         {
+            isInteractionStart = false;
             other.GetComponent<Portal>().LoadScene(false);
+        }
+        if (other.CompareTag("NPC"))
+        {
+            isNpcInteraction = true;
+            currentNPC = other.GetComponent<NPC>();
         }
     }
 
-
     private bool isInteraction;
+
+    private bool isNpcInteraction;
 
 
     private bool isInteractionStart;
@@ -92,13 +156,22 @@ public class PlayerInteraction : MonoBehaviour
         {
             isInteraction = false;
         }
+
+
+        if (other.CompareTag("NPC"))
+        {
+            isNpcInteraction = false;
+            currentNPC.NpcTalkImage.gameObject.SetActive(false);
+            currentNPC = null;
+        }
     }
 
     private void SavePlayerData()
     {
+        Debug.Log("SAVE");
         // 플레이어 위치 및 현재 씬 저장
         DataManager.Instance.nowPlayer.position = transform.position;
-        Debug.Log("Player data saved." + DataManager.Instance.nowPlayer.position);
+
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name;
 
         //활성화 또는 완료된 약속들 저장
@@ -106,11 +179,11 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.allCompletedQuests = QuestManager.Instance.allCompletedQuests;
 
         //현재 슬롯 저장. -> Continue 버튼을 위함.
-        DataManager.Instance.nowPlayer.previousSlot = DataManager.Instance.nowSlot;
+
 
         // 데이터 저장
         DataManager.Instance.SaveData();
-        Debug.Log("Player data saved." + DataManager.Instance.nowPlayer.position);
-        Debug.Log("Player가 다음 슬롯을 저장함." + DataManager.Instance.nowPlayer.previousSlot);
+
+
     }
 }

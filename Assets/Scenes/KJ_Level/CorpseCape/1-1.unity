@@ -900,7 +900,7 @@ PrefabInstance:
     - target: {fileID: -213478816292155101, guid: f09f3962c89214442aa98eb9f65d63e6, type: 3}
       propertyPath: currentSceneData
       value: 
-      objectReference: {fileID: 11400000, guid: 87683062a2f712641898d5236d220d44, type: 2}
+      objectReference: {fileID: 11400000, guid: 47648ad5936048f468395cc91b124a26, type: 2}
     - target: {fileID: 3977936430393889907, guid: f09f3962c89214442aa98eb9f65d63e6, type: 3}
       propertyPath: m_Name
       value: PreviousPortal
@@ -1185,7 +1185,7 @@ PrefabInstance:
     - target: {fileID: 6246809377372696865, guid: 909f416d368083345bf694ae19866629, type: 3}
       propertyPath: currentSceneData
       value: 
-      objectReference: {fileID: 11400000, guid: 87683062a2f712641898d5236d220d44, type: 2}
+      objectReference: {fileID: 11400000, guid: 47648ad5936048f468395cc91b124a26, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

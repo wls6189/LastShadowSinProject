@@ -7,16 +7,15 @@ using UnityEngine.UI;
 
 public class NPC : MonoBehaviour
 {
-    [SerializeField]
-    private bool playerInRange; // 대화 시작 범위 안에 플레이어가 있는 경우에 대한 여부
+    public bool playerInRange; // 대화 시작 범위 안에 플레이어가 있는 경우에 대한 여부
     [SerializeField]
     GameObject player;
     [SerializeField]
     float rotationSpeed; //회전속도
+
+    public bool isTalkingwithPlayer;
     [SerializeField]
-    private bool isTalkingwithPlayer;
-    [SerializeField]
-    GameObject NpcTalkImage; //Talk[F] 라는  텍스트를 보여주기 위함.
+    public GameObject NpcTalkImage; //Talk[F] 라는  텍스트를 보여주기 위함.
 
     Quaternion initRot;
 
@@ -84,36 +83,54 @@ public class NPC : MonoBehaviour
    
     }
 
+    public void PlayerWithTalk()
+    {
+       
+        NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
+
+        if (!isTalkingwithPlayer)
+        {
+            StartTalk();
+
+        }
+    }
+    public void PlayerLookNpc(Vector3 playerPos)
+    {
+        Vector3 target = playerPos;
+
+        Vector3 dir = transform.position - target;
+        dir.y = 0;
+
+        Quaternion targetRotation = Quaternion.LookRotation(dir);
+
+        StartCoroutine(LookAtPlayerRoutine(targetRotation));
+    }
+
     void Update()
     {
-        if (playerInRange)
-        {
-            NpcTalkImage.gameObject.SetActive(true);
+        //if (playerInRange)
+        //{
+        //    NpcTalkImage.gameObject.SetActive(true);
 
-            NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
+        //    NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
 
-            if (Input.GetKeyDown(KeyCode.F) && !isTalkingwithPlayer)
-            {
-                StartTalk();
+        //    if (Input.GetKeyDown(KeyCode.F) && !isTalkingwithPlayer)
+        //    {
+        //        StartTalk();
 
-            }
-        }
-        else
-        {
-            NpcTalkImage.gameObject.SetActive(false);
-        }
+        //    }
+        //}
+        //else
+        //{
+        //    NpcTalkImage.gameObject.SetActive(false);
+        //}
     }
 
     private void StartTalk()
     {
         isTalkingwithPlayer = true;
 
-        Vector3 dir = transform.position - player.transform.position;
-        dir.y = 0;
-
-        Quaternion targetRotation = Quaternion.LookRotation(dir);
-
-        StartCoroutine(LookAtPlayerRoutine(targetRotation));
+       
 
         if (isFirstTimeInteraction)
         {

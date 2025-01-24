@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -126,6 +127,39 @@ public class UIManager : MonoBehaviour
         IsGameMenuOpen = false;
         DialogSystem.Instance.MouseMoveStart(); // 메뉴를 열 때 마우스 이동 정지
     }
+
+    [SerializeField]
+    GameObject SoulFragMentInfo;
+
+    [SerializeField]
+    GameObject SoulFragMentMoveInfo;
+
+    [SerializeField]
+    Canvas SoulCanvas;
+
+    [SerializeField]
+    TextMeshProUGUI CurrentAreaText;
+
+    public GameObject SoulFragMentContent;
+    public void RefreshSaveScenes(List<SaveObjectData> saveObjects)
+    {
+        SoulCanvas.gameObject.SetActive(true);
+
+        foreach (Transform child in SoulFragMentContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (SaveObjectData scene in saveObjects)
+        {
+            GameObject soulFragMent = Instantiate(SoulFragMentInfo, Vector3.zero, Quaternion.identity);
+            soulFragMent.transform.SetParent(SoulFragMentContent.transform, false);
+
+            TextMeshProUGUI text = soulFragMent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            text.text = scene.sceneflow.currentSceneName;
+        }
+    }
+
     public void ColorChange(Button clickedButton)
     {
  
