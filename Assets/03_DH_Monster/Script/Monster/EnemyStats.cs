@@ -8,9 +8,9 @@ public class EnemyStats : MonoBehaviour
     private Enemy enemy;
     public float maxSoulGauge;     // 최대 영혼 게이지
     public float currentSoulGauge;        // 현재 영혼 게이지
-    public float toughness = 10f;          // 몬스터의 강인함 (예: 10) 
+    public float toughness ;          // 몬스터의 강인함 (1하,2중,3상,4최상)
     private Animator animator;             // 몬스터 애니메이터
-    public float attackPower = 10f;
+    public float attackPower ;
 
     // 그로기 상태별 지속 시간 설정
 
@@ -29,9 +29,9 @@ public class EnemyStats : MonoBehaviour
         currentSoulGauge = maxSoulGauge; // 현재 영혼 게이지를 최대 영혼 게이지로 초기화
     }
     // 데미지를 받았을 때 호출되는 메서드
-    public void TakeDamage(float damage, float soulDamage, float attackPower)
+    public void TakeDamage(float damage, float soulDamage, float playerForce)
     {
-        DetermineGroggyState(attackPower); // 그로기 상태 결정
+        DetermineGroggyState(playerForce); // 그로기 상태 결정
 
         currentHealth -= damage;          // 체력 감소
         currentSoulGauge -= soulDamage;   // 영혼 게이지 감소
@@ -50,21 +50,21 @@ public class EnemyStats : MonoBehaviour
         currentSoulGauge = Mathf.Max(currentSoulGauge, 0);
     }
 
-  
 
-    private void DetermineGroggyState(float attackPower)
+
+    private void DetermineGroggyState(float playerForce)
     {
-        if (attackPower <= toughness * 0.25f)
+        if (playerForce < toughness) // Force가 강인함보다 낮음
         {
-            
+            // 그로기 상태 없음
         }
-        else if (attackPower <= toughness * 0.5f)
+        else if (playerForce == toughness) // Force가 강인함과 같음
         {
-            animator.SetTrigger("ShortGroggy");
+            animator.SetTrigger("ShortGroggy"); // 짧은 그로기
         }
-        else
+        else if (playerForce > toughness) // Force가 강인함보다 큼
         {
-            animator.SetTrigger("Knockdown");
+            animator.SetTrigger("Knockdown"); // 넉다운
         }
     }
 
