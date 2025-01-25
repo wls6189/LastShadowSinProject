@@ -14,6 +14,7 @@ public enum PlayerState // 플레이어의 현재 행동(혹은 상태)
     GuardHit,
     HitShortGroggy,
     HitLongGroggy,
+    Grabbed,
     Guard,
     BasicHorizonSlash1,
     BasicHorizonSlash2,
@@ -71,6 +72,7 @@ public class PlayerController : MonoBehaviour
     // 막기 관련 변수
     [HideInInspector] public bool IsParring;
     [HideInInspector] public bool IsSpiritParring;
+    [HideInInspector] public bool IsClashGuard;
     [HideInInspector] public bool IsGuarding;
     [HideInInspector] public bool IsAttackingParring;
     [HideInInspector] public bool CanPenetrate;
@@ -78,6 +80,7 @@ public class PlayerController : MonoBehaviour
 
     // 조작 관련 변수
     [HideInInspector] public CharacterController CharacterController;
+    PlayerInput playerInput;
     InputActionAsset inputActionAsset;
     InputAction gameMenuAction;
     InputAction moveAction;
@@ -93,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     // 상태 머신 관련 변수
     [HideInInspector] public AnimatorStateInfo StateInfo;
-    [HideInInspector] public PlayerState CurrentPlayerState;
+    public PlayerState CurrentPlayerState;
     [HideInInspector] public PlayerStateMachine PlayerStateMachine;
 
     // 부가적인 변수
@@ -106,11 +109,16 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool IsInCombat; // 전투 중(의지력 회복 불가)인지 비전투 중(의지력 회복)인지 여부
     [HideInInspector] public bool IsAttackSucceed; // 전투 중(의지력 회복 불가)인지 비전투 중(의지력 회복)인지 여부
     float lastInCombatTime;
+    float lastPressArrowTime;
+    float lastPressCtrlZXTime;
+    float lastPressCTime;
+    bool canPressC;
+
 
     void Awake()
     {
         MoveSpeed = 5f;
-        DashSpeed = 10f;
+        DashSpeed = 15f;
         IsLockOn = false;
         IsLookRight = true; // 대부분 시작 시 오른쪽을 보면서 스폰되서 true로 설정.
 
@@ -118,6 +126,7 @@ public class PlayerController : MonoBehaviour
         PlayerStats = GetComponent<PlayerStats>();
         PlayerChaliceOfAtonement = GetComponent<ChaliceOfAtonement>();
         CharacterController = GetComponent<CharacterController>();
+        playerInput = GetComponent<PlayerInput>();
         inputActionAsset = GetComponent<PlayerInput>().actions;
 
         PlayerStateMachine = new PlayerStateMachine(this);
@@ -138,16 +147,21 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (CurrentPlayerState == PlayerState.Dead) return;
+
         if (transform.position.x != 0)
         {
             transform.position = new Vector3(0, transform.position.y, transform.position.z);
         }
 
+        ManagePressArrow();
+        ManagePressCtrlZX();
+        ManagePressC();
+
         StateInfo = PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
-        PlayerStateMachine.Execute();
-
         MoveActionValue = moveAction.ReadValue<float>();
+
+        PlayerStateMachine.Execute();
 
         Gravity();
 
@@ -161,11 +175,11 @@ public class PlayerController : MonoBehaviour
         GameMenuPressed();
         LockOnPressed();
         UseChaliceOfAtonementPressed();
-        IdleAndMovePressed();
         DashAndPenetratePressed();
         GuardPressed();
         Attack1Pressed();
         Attack2Pressed();
+        IdleAndMovePressed();
     }
 
     void Gravity() // 중력 관리
@@ -219,6 +233,7 @@ public class PlayerController : MonoBehaviour
         if (CanBasicHorizonSlash2Combo)
         {
             lastBasicHorizonSlash1AttackTime += Time.deltaTime;
+            lastBasicHorizonSlash1AttackTime = Mathf.Clamp(lastBasicHorizonSlash1AttackTime, 0f, 2f);
         }
         else
         {
@@ -237,6 +252,7 @@ public class PlayerController : MonoBehaviour
         if (CanSpiritCleave2Combo)
         {
             lastSpiritCleave1AttackTime += Time.deltaTime;
+            lastSpiritCleave1AttackTime = Mathf.Clamp(lastSpiritCleave2AttackTime, 0f, 2f);
         }
         else
         {
@@ -255,6 +271,7 @@ public class PlayerController : MonoBehaviour
         if (CanSpiritCleave3Combo)
         {
             lastSpiritCleave2AttackTime += Time.deltaTime;
+            lastSpiritCleave2AttackTime = Mathf.Clamp(lastSpiritCleave2AttackTime, 0f, 2f);
         }
         else
         {
@@ -288,7 +305,71 @@ public class PlayerController : MonoBehaviour
             IsInCombat = true;
         }
     }
+    void ManagePressArrow()
+    {
+        if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash)
+        {
+            lastPressArrowTime = 0;
+        }
+        else
+        {
+            lastPressArrowTime += Time.deltaTime;
+            lastPressArrowTime = Mathf.Clamp01(lastPressArrowTime);
+        }
 
+        if (lastPressArrowTime > 0.03f)
+        {
+            moveAction.Enable();
+        }
+        else
+        {
+            moveAction.Disable();
+        }
+    }
+    void ManagePressCtrlZX()
+    {
+        if ((dashAndPenetrateAction.enabled || attack1Action.enabled || attack2Action.enabled) && (dashAndPenetrateAction.WasPressedThisFrame() || attack1Action.WasPressedThisFrame() || attack2Action.WasPressedThisFrame()))
+        {
+            lastPressCtrlZXTime = 0;
+        }
+        else
+        {
+            lastPressCtrlZXTime += Time.deltaTime;
+        }
+
+        if (lastPressCtrlZXTime > 0.07f)
+        {
+            dashAndPenetrateAction.Enable();
+            attack1Action.Enable();
+            attack2Action.Enable();
+        }
+        else
+        {
+            dashAndPenetrateAction.Disable();
+            attack1Action.Disable();
+            attack2Action.Disable();
+        }
+    }
+    void ManagePressC()
+    {
+        if (guardAction.enabled && guardAction.WasCompletedThisFrame())
+        {
+            lastPressCTime = 0;
+        }
+        else
+        {
+            lastPressCTime += Time.deltaTime;
+        }
+
+        if (lastPressCTime > 0.08f)
+        {
+            canPressC = true;
+        }
+        else
+        {
+            canPressC = false;
+        }
+    }
     void GameMenuPressed() // 게임 메뉴 켜기
     {
         if (gameMenuAction.WasPressedThisFrame())
@@ -362,6 +443,11 @@ public class PlayerController : MonoBehaviour
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
         }
+
+        if (CurrentPlayerState == PlayerState.IdleAndMove && !StateInfo.IsName("IdleAndMove") && !PlayerAnimator.IsInTransition(0))
+        {
+            PlayerAnimator.SetTrigger("DoIdleAndMove");
+        }
     }
     void DashAndPenetratePressed() // 대쉬 및 간파 관리
     {
@@ -405,7 +491,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (guardAction.WasReleasedThisFrame() && CurrentPlayerState == PlayerState.Guard) // 가드 상태일 때 키를 때면 디폴트 상태로 이동
+        if (!guardAction.IsPressed() && CurrentPlayerState == PlayerState.Guard) // 가드 상태일 때 키를 때면 디폴트 상태로 이동
         {
             PlayerStateMachine.TransitionTo(PlayerStateMachine.idleAndMoveState);
         }
@@ -485,8 +571,10 @@ public class PlayerController : MonoBehaviour
     IEnumerator ParryEndedTerm() // 패리가 인정되는 시간
     {
         IsParring = true;
+        IsClashGuard = true;
         yield return new WaitForSeconds(0.15f);
         IsParring = false;
+        IsClashGuard = false;
     }
 }
 

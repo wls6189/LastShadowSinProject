@@ -41,14 +41,7 @@ namespace PlayerPart
 
             if (duration >= 49f / frame)
             {
-                if (player.guardAction.IsPressed())
-                {
-                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardState);
-                }
-                else
-                {
-                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
-                }
+                player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
             }
         }
 

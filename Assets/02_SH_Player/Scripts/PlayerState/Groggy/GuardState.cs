@@ -16,6 +16,11 @@ public class GuardState : IState
         player.CurrentPlayerState = PlayerState.Guard;
         player.PlayerAnimator.SetTrigger("DoGuard");
         player.IsGuarding = true;
+
+        if (player.StateInfo.IsName("IdleAndMove"))
+        {
+            player.PlayerAnimator.Play("Guard");
+        }
     }
 
     public void Execute()
@@ -101,6 +106,7 @@ public class GuardState : IState
     {
         player.IsParring = false;
         player.IsGuarding = false;
+        player.IsClashGuard = false;
         guardBlendValue = 0;
         player.PlayerAnimator.SetFloat("GuardBlendValue", guardBlendValue);
     }

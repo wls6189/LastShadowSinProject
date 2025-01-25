@@ -80,7 +80,6 @@ public class DashState : IState
             }
         }
     }
-
     public void Execute()
     {
         if (player.PlayerAnimator.IsInTransition(0))
@@ -90,7 +89,7 @@ public class DashState : IState
 
         float duration = player.StateInfo.normalizedTime % 1f;
 
-        if (duration >= 0 && duration <= 0.8f)
+        if (duration >= 0f && duration <= 0.8f)
         {
             if (moveRight)
             {
@@ -103,7 +102,7 @@ public class DashState : IState
                 player.CharacterController.Move(moveVector * player.DashSpeed * Time.deltaTime);
             }
         }
-        else if (duration > 0.8f)
+        else if (duration >= 0.9f)
         {
             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
         }

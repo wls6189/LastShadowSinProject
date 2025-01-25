@@ -32,30 +32,18 @@ namespace PlayerPart
             if (duration >= 0f && duration < 15f / frame)
             {
                 player.AttackMoving(-6f);
-                Debug.Log("1");
             }
 
-            if (duration >= 28f / frame)
+            if (duration >= 20f / frame)
             {
-                Debug.Log("2");
-
                 player.IsGrogging = false;
 
-                if (player.guardAction.IsPressed())
-                {
-                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardState);
-                }
-                else
-                {
-                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
-                }
+                player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
             }
         }
 
         public void Exit()
         {
-            Debug.Log("3");
-
             player.IsGrogging = false;
         }
     }

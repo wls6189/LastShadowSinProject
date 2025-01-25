@@ -16,6 +16,7 @@ public class PlayerStateMachine
     public GuardHitState guardHitState;
     public HitShortGroggyState hitShortGroggyState;
     public HitLongGroggyState hitLongGroggyState;
+    public GrabbedState grabbedState;
     public GuardState guardState;
 
     public BasicHorizonSlash1State basicHorizonSlash1State;
@@ -41,6 +42,7 @@ public class PlayerStateMachine
         guardHitState = new(player);
         hitShortGroggyState = new(player);
         hitLongGroggyState = new(player);
+        grabbedState = new(player);
         guardState = new(player);
 
         basicHorizonSlash1State = new(player);

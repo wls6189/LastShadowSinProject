@@ -79,11 +79,11 @@ public class PlayerStats : MonoBehaviour
     {
         if (isDirectAttack) // 가드를 피해서 직접 플레이어를 때렸을 때(몬스터의 콜라이더에 Player 태그가 바로 닿을 경우)
         {
-            if (groggyForce > Tenacity) // 위력이 상 이상인 경우 긴 행동 불능
+            if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
             {
                 player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
             }
-            else if (groggyForce == Tenacity) // 위력이 중인 경우 짧은 행동 불능
+            else if (groggyForce == Tenacity && !player.IsGrogging) // 위력이 중인 경우 짧은 행동 불능
             {
                 player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
             }
@@ -140,11 +140,11 @@ public class PlayerStats : MonoBehaviour
                     }
                     else // 그냥 피격(웬만하면 isDirectAttack에서 피격이 처리되지만 혹시나 생길 상황에 대비)
                     {
-                        if (groggyForce > Tenacity) // 위력이 상 이상인 경우 긴 행동 불능
+                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
                         }
-                        else if (groggyForce == Tenacity) // 위력이 중인 경우 짧은 행동 불능
+                        else if (groggyForce == Tenacity && !player.IsGrogging) // 위력이 중인 경우 짧은 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
@@ -162,11 +162,11 @@ public class PlayerStats : MonoBehaviour
                     }
                     else // 간파 중이 아닌데 피격되면 무조건 피격
                     {
-                        if (groggyForce > Tenacity) // 위력이 상 이상인 경우 긴 행동 불능
+                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
                         }
-                        else if (groggyForce == Tenacity) // 위력이 중인 경우 짧은 행동 불능
+                        else if (groggyForce == Tenacity && !player.IsGrogging) // 위력이 중인 경우 짧은 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
@@ -183,11 +183,11 @@ public class PlayerStats : MonoBehaviour
                     }
                     else // 영혼 패리 중이 아니면 무조건 피격
                     {
-                        if (groggyForce > Tenacity) // 위력이 상 이상인 경우 긴 행동 불능
+                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
                         }
-                        else if (groggyForce == Tenacity) // 위력이 중인 경우 짧은 행동 불능
+                        else if (groggyForce == Tenacity && !player.IsGrogging) // 위력이 중인 경우 짧은 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
@@ -196,7 +196,29 @@ public class PlayerStats : MonoBehaviour
                         CurrentWillpower -= impactForce; // 타격력만큼 의지력 감소
                     }
                     break;
+                case AttackType.Grab:
+                    player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.grabbedState); // 몬스터에서 끝날 때 긴 행동 불능 상태이상 전환을 호출해주면 됨.
+                    break;
+                case AttackType.Clash:
+                    if (player.IsClashGuard)
+                    {
 
+                    }
+                    else
+                    {
+                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
+                        {
+                            player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
+                        }
+                        else if (groggyForce == Tenacity && !player.IsGrogging) // 위력이 중인 경우 짧은 행동 불능
+                        {
+                            player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
+                        }
+
+                        CurrentHealth -= damage; // 데미지만큼 체력 감소
+                        CurrentWillpower -= impactForce; // 타격력만큼 의지력 감소
+                    }
+                    break;
             }
         }
 
