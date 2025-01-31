@@ -22,7 +22,7 @@ public class Parry : MonoBehaviour
             //float attackPower = other.GetComponent<PlayerController>().attackPower;
 
             // 패리 상태에서 데미지 완전히 차단
-            enemyHealth.TakeDamage(0f, 0f, 0f);
+            //enemyHealth.Damaged(0f, 0f, 0f);
             //플레이어에게 너 그로기야 하기
         }
     }

@@ -1,8 +1,7 @@
 public enum AttackType
 {
     Normal,
-    Piercing,
-    Bottom,
+    Piercing,   
     Grab,
     Clash,
     Spirit,

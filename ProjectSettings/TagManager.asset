@@ -12,6 +12,8 @@ TagManager:
   - PlayerGuard
   - PlayerAttack
   - NPC
+  - EnemyPiercing
+  - EnemyGuard
   layers:
   - Default
   - TransparentFX

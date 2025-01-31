@@ -48,7 +48,7 @@ public class AttackBase : MonoBehaviour
             PlayerStats playerStats = target.GetComponent<PlayerStats>();
             //if (playerStats != null)
             //{
-            //    playerStats.Damaged(finalDamage, currentAttackType, isDirectAttack);
+            //    playerStats.Damaged(damage, impactForce, groggyForce, type, enemyStats, isDirectAttack);
             //}
         }
     }
