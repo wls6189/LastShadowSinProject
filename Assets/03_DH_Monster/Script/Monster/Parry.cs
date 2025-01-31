@@ -1,29 +1,58 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Parry : MonoBehaviour
 {
-    private EnemyStats enemyHealth;
-
-    private void Start()
-    {
-        enemyHealth = GetComponentInParent<EnemyStats>(); // 부모 오브젝트에서 EnemyHealth 가져오기
-
-    }
-
-    // 패리 콜라이더와 충돌 시
+    public float damageMultiplier;
+    public float impactForce;
+    public float groggyForce;
+    private HashSet<GameObject> hitTargets = new HashSet<GameObject>();
+    public AttackType currentAttackType;
+    private bool isDirectAttack = false;
+    //기본,영혼 공격에 쓸거
     private void OnTriggerEnter(Collider other)
     {
-        PlayerController player = other.GetComponent<PlayerController>();
-        if (player != null && player.IsAttacking)
+        GameObject target;
+        // 본체 콜라이더인지 확인
+        if (other.CompareTag("Player"))
         {
-            // 플레이어 공격의 데미지와 영혼 데미지 받기
-            //float damage = other.GetComponent<PlayerController>().damage;
-            //float soulDamage = other.GetComponent<PlayerController>().soulDamage;
-            //float attackPower = other.GetComponent<PlayerController>().attackPower;
-
-            // 패리 상태에서 데미지 완전히 차단
-            //enemyHealth.Damaged(0f, 0f, 0f);
-            //플레이어에게 너 그로기야 하기
+            target = other.gameObject; // 바로 대상
+            isDirectAttack = true;
         }
+        else
+        {
+            return; // 해당 태그가 아닌 경우 처리하지 않음
+        }
+
+        // 이미 맞춘 대상인지 확인
+        if (hitTargets.Contains(target))
+        {
+            return; // 이미 처리된 대상은 무시
+        }
+
+        // 대상 기록
+        hitTargets.Add(target);
+
+        // EnemyStats 컴포넌트 가져오기
+        EnemyStats enemyStats = GetComponent<EnemyStats>();
+
+        if (enemyStats != null)
+        {
+            float finalDamage = enemyStats.attackPower * damageMultiplier;
+
+
+            PlayerStats playerStats = target.GetComponent<PlayerStats>();
+            //if (playerStats != null)
+            //{
+            //    playerStats.Damaged(damage, impactForce, groggyForce, AttackType type, enemyStats, isDirectAttack);
+            //}
+        }
+    }
+
+    private void OnDisable()
+    {
+        // 공격 콜라이더가 꺼질 때 기록 초기화
+        hitTargets.Clear();
+        isDirectAttack = false;
     }
 }

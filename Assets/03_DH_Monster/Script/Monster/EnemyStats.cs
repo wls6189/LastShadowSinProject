@@ -11,6 +11,7 @@ public class EnemyStats : MonoBehaviour
     public float tenacity ;          // 몬스터의 강인함 (1하,2중,3상,4최상)
     private Animator animator;             // 몬스터 애니메이터
     public float attackPower ;
+    private bool isGroggy = false;
 
     // 그로기 상태별 지속 시간 설정
 
@@ -27,6 +28,7 @@ public class EnemyStats : MonoBehaviour
         animator = GetComponent<Animator>(); // 애니메이터 초기화
         currentHealth = maxHealth; // 현재 체력을 최대 체력으로 초기화
         currentWillpower = maxWillpower; // 현재 영혼 게이지를 최대 영혼 게이지로 초기화
+        isGroggy = false;
     }
   
     public void Damaged(float damage, float impactForce, float groggyForce, bool isdirectattack)
@@ -44,9 +46,10 @@ public class EnemyStats : MonoBehaviour
             damage *= 0.1f; // 데미지 10%
             impactForce *= 0.3f; // 소울 데미지 30%
         }
-
-        DetermineGroggyState(groggyForce); // 그로기 상태 결정
-
+        if (!isGroggy)
+        {
+            DetermineGroggyState(groggyForce);
+        }
         currentHealth -= damage; // 체력 감소
         currentWillpower -= impactForce; // 영혼 게이지 감소
 
@@ -79,6 +82,7 @@ public class EnemyStats : MonoBehaviour
         else if (groggyForce > tenacity) // Force가 강인함보다 큼
         {
             animator.SetTrigger("Knockdown"); // 넉다운
+            isGroggy = true;
         }
     }
 
@@ -94,8 +98,10 @@ public class EnemyStats : MonoBehaviour
 
     public void EnterKnockdown()//외부호출용
     {
-        animator.SetTrigger("Knockdown");
+        if (isGroggy) return;
 
+        animator.SetTrigger("Knockdown");
+        isGroggy = true;
 
 
         // 소울 게이지가 0일 때만 회복 (게이지 0으로 인한 Knockdown일 경우)
@@ -107,6 +113,7 @@ public class EnemyStats : MonoBehaviour
     }
     public void EnterShortGroggy()//외부호출용
     {
+        if (isGroggy) return;
         animator.SetTrigger("ShortGroggy");
     }
 
@@ -122,12 +129,21 @@ public class EnemyStats : MonoBehaviour
             }
         }
     }
-   
-    
+    public void RecoverHealth()
+    {
+        
+        currentHealth = maxHealth;
+        currentWillpower = maxWillpower;
+    }
+
     public void OnDeathAnimationEnd()//애니메이션 이벤트 추가
     {
         Destroy(gameObject);
     }
-  
+    public void ExitGroggy()
+    {
+        isGroggy = false;
+    }
+
 }
 

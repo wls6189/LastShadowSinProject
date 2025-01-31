@@ -4,6 +4,8 @@ using UnityEngine;
 public class PiercingAttack : MonoBehaviour
 {
     public float damageMultiplier;
+    public float impactForce;
+    public float groggyForce;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>();
     public AttackType currentAttackType;
     private bool isDirectAttack = false;
@@ -42,7 +44,7 @@ public class PiercingAttack : MonoBehaviour
             PlayerStats playerStats = target.GetComponent<PlayerStats>();
             //if (playerStats != null)
             //{
-            //    playerStats.Damaged(finalDamage, currentAttackType, isDirectAttack);
+            //playerStats.Damaged(damage, impactForce, groggyForce,AttackType type, enemyStats, isDirectAttack);
             //}
         }
     }

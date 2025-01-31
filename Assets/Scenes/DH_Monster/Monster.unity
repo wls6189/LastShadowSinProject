@@ -631,6 +631,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageMultiplier: 1
+  impactForce: 2
+  groggyForce: 2
   currentAttackType: 0
 --- !u!1001 &1849330543
 PrefabInstance:

@@ -36,14 +36,18 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent navMeshAgent; // NavMeshAgent 컴포넌트
     private bool isPlayerOnNavMesh = true; // 플레이어가 NavMesh에 있는지 여부
 
+
     private Animator animator; // Animator 컴포넌트
+
+    public float maxChaseDistance = 15f; // 적이 플레이어를 쫓아갈 최대 거리
+    private Vector3 spawnPosition; // 초기 위치 저장
 
 
     private int currentPatternIndex = 0; // 현재 사용 중인 패턴 인덱스
     private int currentAttackIndex = 0;  // 현재 패턴 내 공격 인덱스
-    public enum State { Idle, Chasing, Guard, Parry }
+    public enum State { Idle, Chasing, Returning, Guard, Parry }
     public State currentState;
-
+    public EnemyStats enemyStats;
 
 
     public TextMeshProUGUI indicatorText;
@@ -75,7 +79,7 @@ public class Enemy : MonoBehaviour
             Debug.LogWarning("Player with tag 'Player' not found.");
         }
 
-
+        spawnPosition = transform.position;
     }
 
     private void Update()
@@ -94,7 +98,15 @@ public class Enemy : MonoBehaviour
             transform.rotation = targetRotation; 
         }
         if (player == null) return;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceFromSpawn = Vector3.Distance(transform.position, spawnPosition);
 
+        
+        if (distanceFromSpawn > maxChaseDistance)
+        {
+            ReturnToSpawn();
+            return;
+        }
 
         UpdatePlayerNavMeshStatus();
 
@@ -118,6 +130,21 @@ public class Enemy : MonoBehaviour
                 }
    
 
+                break;
+
+            case State.Returning:
+                navMeshAgent.SetDestination(spawnPosition);
+                if (distanceFromSpawn < 0.5f) // 거의 도착했을 때
+                {
+                    ResetEnemy(); // 상태 초기화
+                }
+                Vector3 directionToSpawn = spawnPosition - transform.position;
+                directionToSpawn.y = 0; 
+                if (directionToSpawn != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(directionToSpawn);
+                    transform.rotation = targetRotation;
+                }
                 break;
 
             case State.Guard:
@@ -174,7 +201,7 @@ public class Enemy : MonoBehaviour
             // 목적지 초기화
             navMeshAgent.SetDestination(player.position);
 
-            Debug.Log("Player detected, starting chase.");
+            
         }
     }
 
@@ -207,7 +234,7 @@ public class Enemy : MonoBehaviour
                 currentState = State.Guard;
                 guardStartTime = Time.time;
                
-                Debug.Log("Guarding! Attack cooldown is still active.");
+               
             }
             else
             {
@@ -216,7 +243,7 @@ public class Enemy : MonoBehaviour
                 parryStartTime = Time.time;
                 
                 parryCollider.gameObject.SetActive(true); // 패리 콜라이더 활성화
-                Debug.Log("Switching to Parry State after attack cooldown.");
+              
             }
         }
     }
@@ -389,6 +416,26 @@ public class Enemy : MonoBehaviour
         attackCollider.gameObject.SetActive(false); // 콜라이더 비활성화
     }
 
-
+    private void ReturnToSpawn()
+    {
+        
+        currentState = State.Returning;
+        navMeshAgent.isStopped = false;
+        navMeshAgent.SetDestination(spawnPosition);
+        Vector3 directionToSpawn = spawnPosition - transform.position;
+        directionToSpawn.y = 0; // y축 회전 방지 (수평만 회전)
+        if (directionToSpawn != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToSpawn);
+            transform.rotation = targetRotation;
+        }
+    }
+    private void ResetEnemy()
+    {
+        
+        currentState = State.Idle;
+        animator.SetTrigger("Idle");
+        enemyStats.RecoverHealth(); // 체력 회복
+    }
 
 }
