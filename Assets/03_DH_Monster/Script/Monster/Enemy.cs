@@ -20,20 +20,11 @@ public class Enemy : MonoBehaviour
     public float parryStartTime;
     public int successfulGuardsToParry = 3; // 패리 상태로 전환할 가드 성공 횟수
     private int guardSuccessCount = 0; // 가드 성공 횟수
-    private Collider guardCollider; // 가드 콜라이더
+    
     private Collider parryCollider; // 패리 콜라이더
     public Collider attackCollider;
 
-
-    public float standoffMoveSpeed = 2f; // 왔다리갔다리 이동 속도
-    public float standoffWanderRange = 5f; // 대치 상태에서 이동 범위
-    private Vector3 standoffTargetPosition; // 대치 상태에서 이동할 목표 위치
-    public float standoffDecisionInterval = 2f; // 대치 상태에서 행동을 결정하는 시간 간격
-    private float lastStandoffDecisionTime; // 마지막으로 행동을 결정한 시간
-    private bool isMaintainingStandoff; // 대치를 유지할지 여부
-    private float lastDistanceToPlayer;
-
-    private bool isAttacking = false;
+    public bool isAttacking = false;
 
     public AttackPattern[] attackPatterns; // 사용할 공격 패턴 배열
     public AttackPattern currentPattern;
@@ -45,14 +36,18 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent navMeshAgent; // NavMeshAgent 컴포넌트
     private bool isPlayerOnNavMesh = true; // 플레이어가 NavMesh에 있는지 여부
 
+
     private Animator animator; // Animator 컴포넌트
+
+    public float maxChaseDistance = 15f; // 적이 플레이어를 쫓아갈 최대 거리
+    private Vector3 spawnPosition; // 초기 위치 저장
 
 
     private int currentPatternIndex = 0; // 현재 사용 중인 패턴 인덱스
     private int currentAttackIndex = 0;  // 현재 패턴 내 공격 인덱스
-    public enum State { Idle, Chasing, Guard, Parry, Standoff }
+    public enum State { Idle, Chasing, Returning, Guard, Parry }
     public State currentState;
-
+    public EnemyStats enemyStats;
 
 
     public TextMeshProUGUI indicatorText;
@@ -66,11 +61,11 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
 
-        guardCollider = transform.Find("Guard").GetComponent<Collider>();
+       
         parryCollider = transform.Find("Parry").GetComponent<Collider>();
-        
         attackCollider.gameObject.SetActive(false);
-        guardCollider.gameObject.SetActive(false);
+        attackCooldown = 0f;
+       
         parryCollider.gameObject.SetActive(false);
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -84,7 +79,7 @@ public class Enemy : MonoBehaviour
             Debug.LogWarning("Player with tag 'Player' not found.");
         }
 
-
+        spawnPosition = transform.position;
     }
 
     private void Update()
@@ -94,9 +89,24 @@ public class Enemy : MonoBehaviour
             transform.position = new Vector3(0, transform.position.y, transform.position.z);
         }
 
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0; 
 
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = targetRotation; 
+        }
         if (player == null) return;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceFromSpawn = Vector3.Distance(transform.position, spawnPosition);
 
+        
+        if (distanceFromSpawn > maxChaseDistance)
+        {
+            ReturnToSpawn();
+            return;
+        }
 
         UpdatePlayerNavMeshStatus();
 
@@ -118,28 +128,37 @@ public class Enemy : MonoBehaviour
                     FollowPlayer();
                     CheckForGuard(); // 가드 상태 진입 조건 확인
                 }
-                FacePlayer();
+   
 
                 break;
 
-            case State.Standoff: // 대치 상태 로직 추가
-                HandleStandoff();
-                FacePlayer();
-                CheckForGuard();
+            case State.Returning:
+                navMeshAgent.SetDestination(spawnPosition);
+                if (distanceFromSpawn < 0.5f) // 거의 도착했을 때
+                {
+                    ResetEnemy(); // 상태 초기화
+                }
+                Vector3 directionToSpawn = spawnPosition - transform.position;
+                directionToSpawn.y = 0; 
+                if (directionToSpawn != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(directionToSpawn);
+                    transform.rotation = targetRotation;
+                }
                 break;
 
             case State.Guard:
                 animator.SetTrigger("Guard");
                 navMeshAgent.isStopped = true;
 
-                StartCoroutine(SwitchToChasingAfterDelay(0.3f));
+                StartCoroutine(SwitchToChasingAfterDelay(0.1f));
                 break;
 
             case State.Parry:
                 animator.SetTrigger("Parry");
                 navMeshAgent.isStopped = true;
-                
-                StartCoroutine(SwitchToChasingAfterDelay(0.3f));
+                guardSuccessCount = 0; // 카운트 초기화
+                StartCoroutine(SwitchToChasingAfterDelay(0.1f));
 
                 break;
         }
@@ -161,21 +180,10 @@ public class Enemy : MonoBehaviour
         if (currentState == State.Guard || currentState == State.Parry)
         {
             currentState = State.Chasing;
-            guardCollider.gameObject.SetActive(false); // 가드 콜라이더 비활성화
+           
             parryCollider.gameObject.SetActive(false);
             navMeshAgent.isStopped = false; // 이동 재개
-            
-        }
-    }
-    private void FacePlayer()
-    {
-        Vector3 direction = player.position - transform.position;
-        direction.y = 0;
 
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
         }
     }
 
@@ -183,102 +191,18 @@ public class Enemy : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, player.position);
 
+        // 탐지 범위 안에 들어오면 추격 시작
         if (distance <= detectionRange)
         {
-            // 대치 상태로 진입
-            if (distance > standoffRange)
-            {
-                currentState = State.Standoff;
-                lastStandoffDecisionTime = Time.time; // 행동 결정 시간 초기화
-                SetStandoffTarget();
-            }
-            else
-            {
-                // 추격 상태로 전환
-                currentState = State.Chasing;
-                navMeshAgent.isStopped = false;
-                navMeshAgent.SetDestination(player.position);
-            }
-        }
-    }
-    private void HandleStandoff()
-    {
-        float currentDistanceToPlayer = Vector3.Distance(transform.position, player.position);
+            currentState = State.Chasing;
 
-        // 이전 거리와 현재 거리를 비교하여 방향 판단
-        if (currentDistanceToPlayer > lastDistanceToPlayer)
-        {
-            // 플레이어로부터 멀어질 때 (백무빙)
-            animator.SetTrigger("BackMove");
-            Vector3 backwardDirection = (transform.position - player.position).normalized;
-            navMeshAgent.Move(backwardDirection * standoffMoveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            // 플레이어에게 가까워질 때 (런 애니메이션)
-            animator.SetTrigger("Run");
-            navMeshAgent.SetDestination(player.position);
-        }
-
-        lastDistanceToPlayer = currentDistanceToPlayer; // 현재 거리를 저장
-    
-
-        // 행동 결정 간격을 확인
-        if (Time.time - lastStandoffDecisionTime > standoffDecisionInterval)
-        {
-            DecideStandoffAction(); // 랜덤 행동 결정
-            lastStandoffDecisionTime = Time.time; // 마지막 결정 시간 갱신
-        }
-
-        if (isMaintainingStandoff)
-        {
-            // 대치를 유지하면서 왔다 갔다
-            navMeshAgent.speed = standoffMoveSpeed;
-
-            if (Vector3.Distance(transform.position, standoffTargetPosition) < 0.1f)
-            {
-                SetStandoffTarget(); // 새 목표 위치 설정
-            }
-
-            navMeshAgent.SetDestination(standoffTargetPosition);
-        }
-        else
-        {
-            // 공격하기 위해 플레이어에게 접근
+            // 이동 활성화
             navMeshAgent.isStopped = false;
+            // 목적지 초기화
             navMeshAgent.SetDestination(player.position);
 
-            // 플레이어와 거리가 가까워지면 공격
-            if (Vector3.Distance(transform.position, player.position) <= attackRange)
-            {
-                TryAttack();
-            }
+            
         }
-    }
-    private void DecideStandoffAction()
-    {
-        // 50% 확률로 대치 유지 또는 공격 결정
-        if (Random.Range(0, 2) == 0)
-        {
-            isMaintainingStandoff = true; // 대치 유지
-            Debug.Log("Enemy decided to maintain standoff.");
-        }
-        else
-        {
-            isMaintainingStandoff = false; // 공격 선택
-            Debug.Log("Enemy decided to attack.");
-        }
-    }
-    private void SetStandoffTarget()
-    {
-        // 플레이어 주변에서 랜덤 위치 선택
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-standoffWanderRange, standoffWanderRange),
-            0,
-            Random.Range(-standoffWanderRange, standoffWanderRange)
-        );
-        standoffTargetPosition = player.position + randomOffset;
-        standoffTargetPosition.y = transform.position.y; // 높이 고정
     }
 
     private void FollowPlayer()
@@ -299,31 +223,27 @@ public class Enemy : MonoBehaviour
     }
     private void CheckForGuard()
     {
-       
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // 플레이어가 공격하려고 할 때 가드 상태로 전환
+        // 공격 쿨타임이 끝나지 않았다면 가드를 하고, 쿨타임이 끝나면 패리로 전환
         if (distance <= hitbox && IsPlayerAttacking())
         {
-            // 가드 시도 시, 성공 횟수 체크
-            guardSuccessCount++;
-
-            if (guardSuccessCount < successfulGuardsToParry)
+            if (Time.time - lastAttackTime < attackCooldown)
             {
-                
+                // 공격 쿨타임이 끝나지 않았다면 가드
                 currentState = State.Guard;
-                guardStartTime = Time.time; // 가드 시작 시간 기록
-                guardCollider.gameObject.SetActive(true); // 가드 콜라이더 활성화
-                Debug.Log($"Guard successful! Total: {guardSuccessCount}");
+                guardStartTime = Time.time;
+               
+               
             }
             else
             {
-                
+                // 공격 쿨타임이 끝났으면 패리로 전환
                 currentState = State.Parry;
                 parryStartTime = Time.time;
-                guardSuccessCount = 0;
+                
                 parryCollider.gameObject.SetActive(true); // 패리 콜라이더 활성화
-                Debug.Log("Switching to Parry State after 4th Guard attempt.");
+              
             }
         }
     }
@@ -356,7 +276,7 @@ public class Enemy : MonoBehaviour
 
         // 쿨다운 확인
         if (Time.time - lastAttackTime < attackCooldown) return;
-
+        attackCooldown = Random.Range(3.5f, 4.5f);
         // 플레이어가 공격 범위 안에 있을 경우
         if (Vector3.Distance(transform.position, player.position) <= attackRange)
         {
@@ -379,7 +299,7 @@ public class Enemy : MonoBehaviour
         // 공격 애니메이션 트리거 추가
         animator.SetTrigger(currentAttack.attackName);  // 예: "Heavy Strike" 또는 "Quick Parry" 등
         lastAttackTime = Time.time; // 현재 시간 저장
-        StartCoroutine(ResetNavMeshAgentAfterAnimation());
+        StartCoroutine(MoveAfterAttack());
 
 
 
@@ -398,7 +318,7 @@ public class Enemy : MonoBehaviour
         }
 
     }
-    private IEnumerator ResetNavMeshAgentAfterAnimation()
+    private IEnumerator MoveAfterAttack()
     {
         // 애니메이션이 진행 중인지 확인
         AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -454,7 +374,11 @@ public class Enemy : MonoBehaviour
     }
     private void ShowAttackIndicator(Attack attack)
     {
+        if (indicatorText == null)
+        {
 
+            return;
+        }
         if (isIndicatorActive) return;
 
         // 인디케이터가 새로 활성화되었으므로, 상태 변경
@@ -492,15 +416,26 @@ public class Enemy : MonoBehaviour
         attackCollider.gameObject.SetActive(false); // 콜라이더 비활성화
     }
 
-
+    private void ReturnToSpawn()
+    {
+        
+        currentState = State.Returning;
+        navMeshAgent.isStopped = false;
+        navMeshAgent.SetDestination(spawnPosition);
+        Vector3 directionToSpawn = spawnPosition - transform.position;
+        directionToSpawn.y = 0; // y축 회전 방지 (수평만 회전)
+        if (directionToSpawn != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToSpawn);
+            transform.rotation = targetRotation;
+        }
+    }
+    private void ResetEnemy()
+    {
+        
+        currentState = State.Idle;
+        animator.SetTrigger("Idle");
+        enemyStats.RecoverHealth(); // 체력 회복
+    }
 
 }
-
-
-
-
-
-
-
-
-
