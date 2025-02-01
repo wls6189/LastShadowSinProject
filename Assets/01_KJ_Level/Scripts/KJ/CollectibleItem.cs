@@ -6,17 +6,13 @@ public class CollectibleItem : MonoBehaviour
     [SerializeField]
     string itemName; 
 
-    private void Start()
-    {
-        itemName = GetCleanName(this.gameObject.name);
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             PlayerInteraction player = other.GetComponent<PlayerInteraction>();
-            player.CollectItem(itemName);
-            Destroy(this.gameObject); 
+            player.CollectItem(GetCleanName(this.gameObject.name));
+            Destroy(this.gameObject);
         }
     }
 

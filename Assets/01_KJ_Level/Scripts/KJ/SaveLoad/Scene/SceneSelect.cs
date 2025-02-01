@@ -4,10 +4,11 @@ using System.IO;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneSelect : MonoBehaviour
+public class SceneSelect : MonoBehaviour 
 {
 
     public GameObject PlayerNickNameImage; //비어있는 슬롯을 눌렀을 때 뜨는 창 
@@ -140,27 +141,11 @@ public class SceneSelect : MonoBehaviour
 
     }
 
-    [SerializeField]
-    public bool isSlotsEmpty;
-    private bool SlotsCheak()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            string filePath = DataManager.Instance.path + $"{i}";
-            if (File.Exists(filePath) == false)
-            {
-                isSlotsEmpty = true;
 
-                Debug.Log("모두 비어있는 슬롯입니다.");
-                
-                return isSlotsEmpty = true;
-            }
-        }
-        return isSlotsEmpty = false;
-    }
     public void ContinueButton()
     {
-        //SlotsCheak();
+
+        SlotsEmptyCheak();
 
         continueCheackImage.gameObject.SetActive(true);
 
@@ -331,5 +316,24 @@ public class SceneSelect : MonoBehaviour
         isSlotsFull = true;
     }
 
+    [SerializeField]
+    public bool isSlotsEmpty;
+    private void SlotsEmptyCheak()
+    {
+        isSlotsEmpty = true;
+
+        for (int i = 0; i < savefile.Length; i++)
+        {
+            if (savefile[i] == true) // 하나라도 채워져 있는 경우
+            {
+                isSlotsEmpty = false;  // 세이브파일에 하나라도 채워져 있으면 비어있지 않음
+                return;  // 더 이상 체크할 필요 없으므로 종료
+            }
+
+        }
+
+    }
+
+  
 
 }

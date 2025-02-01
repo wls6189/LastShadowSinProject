@@ -16,11 +16,11 @@ public class Portal : MonoBehaviour
 
         if (isSceneMove)
         {
-            SceneManager.LoadScene(currentSceneData.nextScene); // ScriptableObject에 저장된 씬으로 이동
+            SceneManager.LoadScene(currentSceneData.nextScene, LoadSceneMode.Single); // ScriptableObject에 저장된 씬으로 이동
         }
         else
         {
-            SceneManager.LoadScene(currentSceneData.previousScene); // ScriptableObject에 저장된 씬으로 이동
+            SceneManager.LoadScene(currentSceneData.previousScene, LoadSceneMode.Single); // ScriptableObject에 저장된 씬으로 이동
         }
 
     }

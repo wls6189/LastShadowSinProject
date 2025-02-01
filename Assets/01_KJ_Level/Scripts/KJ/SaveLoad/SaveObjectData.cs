@@ -4,6 +4,6 @@ using UnityEngine;
 [System.Serializable] 
 public class SaveObjectData
 {
-    [Header("Scene Info")]
-    public SceneFlow sceneflow; 
+    //[Header("Scene Info")]
+    //public SceneFlow sceneflow; 
 }

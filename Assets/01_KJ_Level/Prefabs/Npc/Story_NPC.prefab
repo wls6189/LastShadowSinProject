@@ -280,6 +280,7 @@ MonoBehaviour:
     isCombackCompleted: 0
     info: {fileID: 0}
   isFirstTimeInteraction: 1
+  QuestGiver: "\uBE5B\uC758 \uB300\uB9AC\uC790"
   isFirstOption: 0
   isSecondOption: 0
   isAccepted: 0

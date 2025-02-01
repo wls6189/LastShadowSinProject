@@ -53,9 +53,25 @@ public class NPC : MonoBehaviour
     private int CurrentFirstDialog = 0;
     private int CurrentSecondDialog = 0;
 
+
+
+    public string QuestGiver;
+
+    private PlayerInteraction playerInteraction;
+
     void Start()
     {
-    
+        if (DataManager.Instance.nowPlayer.questGivers.Contains(QuestGiver))
+        {
+            if (DataManager.Instance.nowPlayer.allCompletedQuests.Count > 0)
+            {
+                currentActiveQuest = Quests[ActiveQuestIndex];
+                currentActiveQuest.isCompleted = true;
+            }
+        }
+           
+        playerInteraction = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInteraction>();
+
         if (DialogSystem.Instance != null)
         {
             npcDialogText = DialogSystem.Instance.StoryDialogText;
@@ -79,14 +95,15 @@ public class NPC : MonoBehaviour
 
             initRot = transform.rotation;
         }
-      
-   
+
+        
     }
 
     public void PlayerWithTalk()
     {
        
         NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
+
 
         if (!isTalkingwithPlayer)
         {
@@ -105,30 +122,85 @@ public class NPC : MonoBehaviour
 
         StartCoroutine(LookAtPlayerRoutine(targetRotation));
     }
-
-    void Update()
-    {
-        //if (playerInRange)
-        //{
-        //    NpcTalkImage.gameObject.SetActive(true);
-
-        //    NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
-
-        //    if (Input.GetKeyDown(KeyCode.F) && !isTalkingwithPlayer)
-        //    {
-        //        StartTalk();
-
-        //    }
-        //}
-        //else
-        //{
-        //    NpcTalkImage.gameObject.SetActive(false);
-        //}
-    }
-
+  
     private void StartTalk()
     {
-        isTalkingwithPlayer = true;
+        if (DataManager.Instance.nowPlayer.questGivers.Contains(QuestGiver))
+        {
+            Debug.Log("0");
+
+            if (currentActiveQuest.isCompleted == true) //퀘스트를 완료했을 경우. 즉, 이미 이전에 동일한 퀘스트를 완료했는데, 또 보상 받을려고? ㅋ
+            {
+                DialogSystem.Instance.OpenDialogUI();
+
+                TalkDialouge.gameObject.SetActive(true);
+
+                FirstBtn.gameObject.SetActive(false);
+                SecondBtn.gameObject.SetActive(false);
+                ThirdBtn.gameObject.SetActive(false);
+
+                npcDialogText.text = currentActiveQuest.info.CombackFinishAnswer;
+
+                StartCoroutine(delayTalkText());
+
+                return;
+            }
+
+            if (AreQuestRequirmentsCompleted())
+            {
+                Debug.Log("2");
+                DialogSystem.Instance.OpenDialogUI();
+
+
+                SubmitRequiredItems();
+             
+                npcDialogText.text = currentActiveQuest.info.FinishAnswer;
+
+                QuestionDialouge.gameObject.SetActive(false);
+                TalkDialouge.gameObject.SetActive(true);
+
+                FirstBtn.gameObject.SetActive(false);
+                SecondBtn.gameObject.SetActive(false);
+                ThirdBtn.gameObject.SetActive(true);
+
+                ThirdBtn.GetComponentInChildren<TextMeshProUGUI>().text = "[보상 받기]";
+                ThirdBtn.onClick.RemoveAllListeners();
+                ThirdBtn.onClick.AddListener(() =>
+                {
+                    isTalkingwithPlayer = false;
+                    TalkStop();
+
+                    ReceiveReward();
+                    DialogSystem.Instance.CloseDialogUI();
+                });
+
+               
+            }
+            else
+            {
+                DialogSystem.Instance.OpenDialogUI();
+
+                QuestionDialouge.gameObject.SetActive(false); //옵션 이미지 가리기.
+
+                TalkDialouge.gameObject.SetActive(true); //대화 이미지 보이기
+
+                FirstBtn.gameObject.SetActive(false); //버튼 가리기1
+                SecondBtn.gameObject.SetActive(false);//버튼 가리기2
+
+                currentActiveQuest = Quests[ActiveQuestIndex];
+                npcDialogText.text = currentActiveQuest.info.AcceptCombackAnswer;
+
+                StartCoroutine(delayTalkText());
+
+               
+            }
+
+       
+
+            return;
+        }
+
+         isTalkingwithPlayer = true;
 
        
 
@@ -150,10 +222,12 @@ public class NPC : MonoBehaviour
                 UpdateDialogUI();
             }
             
-            if(isAccepted && currentActiveQuest.isCompleted == false)
+            if(isAccepted && currentActiveQuest.isCompleted == false 
+                )
             {
                 if(AreQuestRequirmentsCompleted())
                 {
+
                     DialogSystem.Instance.OpenDialogUI();
                     
 
@@ -215,7 +289,7 @@ public class NPC : MonoBehaviour
         }
 
        
-
+   
     }
 
  
@@ -432,17 +506,23 @@ public class NPC : MonoBehaviour
         FirstBtn.onClick.RemoveAllListeners();
         FirstBtn.onClick.AddListener(() =>
         {
-            isAccepted = true;
-            isDecline = false;
-            FirstBtn.gameObject.SetActive(false);
-            SecondBtn.gameObject.SetActive(false);
+            if (!DataManager.Instance.nowPlayer.questGivers.Contains(currentActiveQuest.questGiver))
+            {
+                
+                isAccepted = true;
+                isDecline = false;
+                FirstBtn.gameObject.SetActive(false);
+                SecondBtn.gameObject.SetActive(false);
 
-            npcDialogText.text = currentActiveQuest.info.AcceptThankyouAnswer;
+                npcDialogText.text = currentActiveQuest.info.AcceptThankyouAnswer;
 
+                QuestManager.Instance.AddActiveQuest(currentActiveQuest);
 
-            QuestManager.Instance.AddActiveQuest(currentActiveQuest);
+                StartCoroutine(delayTalkText());
+            }
+               
 
-            StartCoroutine(delayTalkText());
+       
         });
         SecondBtn.GetComponentInChildren<TextMeshProUGUI>().text = currentActiveQuest.info.finalSecondAnswer;
         SecondBtn.onClick.RemoveAllListeners();
@@ -487,18 +567,26 @@ public class NPC : MonoBehaviour
 
     private bool AreQuestRequirmentsCompleted() //Npc가 요청한 요구사항들을 플레이어가 갖고 있는지 체크
     {
+   
+
+        currentActiveQuest = Quests[ActiveQuestIndex];
 
         string firstRequiredItem = currentActiveQuest.info.firstRequirmentItem;
+
         int firstRequiredAmount = currentActiveQuest.info.firstRequirmentAmount;
 
         var firstItemCounter = 0; //현재 내가 들고있는 첫번째 요구한 아이템의 개수 0으로 잡고
 
 
-        foreach (var item in player.GetComponent<PlayerInteraction>().collectedItems)
+        foreach (var item in playerInteraction.collectedItems)
         {
+            Debug.Log($"인벤토리 아이템: {item.Key}, 요구 아이템: {firstRequiredItem}");
+
             if (item.Key == firstRequiredItem)
             {
                 firstItemCounter += item.Value; //현재 내가 들고있는 첫번째 요구한 아이템의 개수를 1씩 증가
+
+                Debug.Log(firstItemCounter);
             }
         }
 
@@ -513,6 +601,7 @@ public class NPC : MonoBehaviour
         //현재 내가 들고있는 첫번째 또는 두번째 요구한 아이템의 개수가 >= 목표치보다 많을 경우
         if (firstItemCounter >= firstRequiredAmount && secondItemCounter >= secondRequirmentAmount)
         {
+            Debug.Log("요구 충족");
             return true;
         }
         else

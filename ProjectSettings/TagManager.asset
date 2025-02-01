@@ -12,6 +12,8 @@ TagManager:
   - PlayerGuard
   - PlayerAttack
   - NPC
+  - EnemyPiercing
+  - 'SoulWell '
   layers:
   - Default
   - TransparentFX

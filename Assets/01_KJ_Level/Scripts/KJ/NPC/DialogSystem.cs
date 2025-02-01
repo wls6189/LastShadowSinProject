@@ -63,7 +63,7 @@ public class DialogSystem : MonoBehaviour
         DialougeCanvas.gameObject.SetActive(true);
         isdialogueCanvas = true;
 
-        MouseMoveStop();
+        MouseOn();
     }
 
     public void CloseDialogUI()
@@ -71,15 +71,15 @@ public class DialogSystem : MonoBehaviour
         DialougeCanvas.gameObject.SetActive(false);
         isdialogueCanvas = false;
 
-        MouseMoveStart();
+        MouseOff();
     }
 
-    public void MouseMoveStop()
+    public void MouseOn()
     {
         Cursor.lockState = CursorLockMode.None; //마우스 보여주기
         Cursor.visible = true;
     }
-    public void MouseMoveStart()
+    public void MouseOff()
     {
         Cursor.lockState = CursorLockMode.Locked; //마우스 보여주지 않기
         Cursor.visible = false;
