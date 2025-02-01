@@ -214,6 +214,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14eed2ac65b74f94aabe4766771d1247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveObjects: []
+  saveObject:
+    sceneflow: {fileID: 0}
 --- !u!4 &84478850
 Transform:
   m_ObjectHideFlags: 0
@@ -691,6 +694,11 @@ MonoBehaviour:
   - {fileID: 1971718124336413519}
   firstInput: {fileID: 1971718124336413524}
   GameMenu: {fileID: 1971718124336413518}
+  SoulFragMentInfo: {fileID: 0}
+  SoulFragMentMoveInfo: {fileID: 0}
+  SoulCanvas: {fileID: 0}
+  CurrentAreaText: {fileID: 0}
+  SoulFragMentContent: {fileID: 0}
 --- !u!4 &915325092
 Transform:
   m_ObjectHideFlags: 0

@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class ChaliceOfAtonement : MonoBehaviour
 {
+    [HideInInspector] public int MaxChaliceOfAtonementCount;
+    [HideInInspector] public int CurrentChaliceOfAtonementCount;
+
     PlayerController player;
-    public int MaxChaliceOfAtonementCount;
-    public int CurrentChaliceOfAtonementCount;
     float recoveryAmount;
-    bool lastRecoveryTime;
 
     void Awake()
     {

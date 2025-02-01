@@ -32,7 +32,7 @@ public class RetreatSlashState : IState
             player.AttackMoving(-16f);
         }
 
-        // 패리 판정 및 공격 콜라이더 활성화 여부
+        // 공격 콜라이더 활성화 여부
         if (duration >= 6f / frame && duration <= 11f / frame)
         {
             player.IsAttackColliderEnabled = true;

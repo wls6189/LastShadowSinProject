@@ -4,8 +4,6 @@ using UnityEngine;
 public class GrabbedState : IState
 {
     PlayerController player;
-    float guardBlendValue = 0;
-    float guardBlendDeltaValue = 8f;
 
     public GrabbedState(PlayerController player)
     {

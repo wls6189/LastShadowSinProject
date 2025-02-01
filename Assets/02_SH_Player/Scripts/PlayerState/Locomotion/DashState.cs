@@ -3,6 +3,7 @@ using UnityEngine;
 public class DashState : IState
 {
     PlayerController player;
+    float frame = 20f;
     bool moveRight;
 
     public DashState(PlayerController player)
@@ -12,7 +13,7 @@ public class DashState : IState
     public void Enter()
     {
         player.CurrentPlayerState = PlayerState.Dash;
-
+        player.IsDoSomething = true;
         if (player.IsLockOn)
         {
             if (player.IsLookRight) // 오른쪽을 보고 있을 때, 즉 몬스터가 오른쪽에 있을 때
@@ -48,7 +49,7 @@ public class DashState : IState
                 else // 방향키 입력 없이 대쉬 시
                 {
                     player.PlayerAnimator.SetTrigger("DoDashBackward");
-                    moveRight = false;
+                    moveRight = true;
                 }
             }
         }
@@ -89,27 +90,32 @@ public class DashState : IState
 
         float duration = player.StateInfo.normalizedTime % 1f;
 
-        if (duration >= 0f && duration <= 0.8f)
+        if (duration >= 6f / frame && duration <= 14f / frame)
         {
+            player.OnDashEffect = true;
+
             if (moveRight)
             {
                 Vector3 moveVector = new Vector3(0, 0, 1);
-                player.CharacterController.Move(moveVector * player.DashSpeed * Time.deltaTime);
+                player.PlayerCharacterController.Move(moveVector * player.DashSpeed * Time.deltaTime);
             }
             else
             {
                 Vector3 moveVector = new Vector3(0, 0, -1);
-                player.CharacterController.Move(moveVector * player.DashSpeed * Time.deltaTime);
+                player.PlayerCharacterController.Move(moveVector * player.DashSpeed * Time.deltaTime);
             }
         }
-        else if (duration >= 0.9f)
+        else if (duration >= 17f / frame)
         {
+            player.IsDoSomething = false;
+            player.OnDashEffect = false;
             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.idleAndMoveState);
         }
     }
 
     public void Exit()
     {
-
+        player.IsDoSomething = false;
+        player.OnDashEffect = false;
     }
 }

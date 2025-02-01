@@ -33,9 +33,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack3",
+                    "name": "Spiritual",
                     "type": "Button",
-                    "id": "62e2a029-a8e6-4daa-91bb-fa589b3ede65",
+                    "id": "641cd816-40e6-41b4-8c3d-04687c349290",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SpecialAttack",
+                    "type": "Button",
+                    "id": "14562da7-8acc-4ed8-b020-bd271d7dbc78",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -51,33 +60,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
-                    "type": "Button",
-                    "id": "852140f2-7766-474d-8707-702459ba45f3",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Spiritual",
-                    "type": "Button",
-                    "id": "641cd816-40e6-41b4-8c3d-04687c349290",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "DashAndPenetrate",
                     "type": "Button",
                     "id": "44b1fce5-c474-4f63-a150-7a177e8cafba",
@@ -87,7 +69,25 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SpiritAbility",
+                    "name": "UseChaliceOfAtonement",
+                    "type": "Button",
+                    "id": "d66ae46e-7104-48ef-8885-869e7bce2d1a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "852140f2-7766-474d-8707-702459ba45f3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SpiritMarkAbility",
                     "type": "Button",
                     "id": "c254100b-4c71-4ac9-a2c2-81705d1c62da",
                     "expectedControlType": "",
@@ -112,24 +112,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "SpecialAttack",
-                    "type": "Button",
-                    "id": "14562da7-8acc-4ed8-b020-bd271d7dbc78",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "UseChaliceOfAtonement",
-                    "type": "Button",
-                    "id": "d66ae46e-7104-48ef-8885-869e7bce2d1a",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -141,17 +123,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Spiritual",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "eb40bb66-4559-4dfa-9a2f-820438abb426",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -250,7 +221,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "SpiritAbility",
+                    "action": "SpiritMarkAbility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -262,17 +233,6 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "LockOn",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "be480609-0971-4a1f-b847-d2d698144659",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Attack3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

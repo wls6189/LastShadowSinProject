@@ -33,15 +33,13 @@ public class ThrustState : IState
         }
 
         // 패리 판정 및 공격 콜라이더 활성화 여부
-        if (duration >= 1f / frame && duration <= 4f / frame)
+        if (duration >= 1f / frame && duration <= 5f / frame)
         {
-            player.IsAttackingParring = true;
-            player.IsAttackColliderEnabled = true;
+            player.IsAttackingParryColliderEnabled = true;
         }
         else
         {
-            player.IsAttackingParring = false;
-            player.IsAttackColliderEnabled = false;
+            player.IsAttackingParryColliderEnabled = false;
         }
 
         // 공격 중 상태 종료(다음 State로 이동 가능한 상태)
@@ -60,7 +58,6 @@ public class ThrustState : IState
     public void Exit()
     {
         player.IsAttacking = false;
-        player.IsAttackingParring = false;
-        player.IsAttackColliderEnabled = false;
+        player.IsAttackingParryColliderEnabled = false;
     }
 }

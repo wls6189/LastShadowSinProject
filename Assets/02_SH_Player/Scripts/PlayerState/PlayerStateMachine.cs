@@ -17,6 +17,7 @@ public class PlayerStateMachine
     public HitShortGroggyState hitShortGroggyState;
     public HitLongGroggyState hitLongGroggyState;
     public GrabbedState grabbedState;
+    public ClashGuardState clashGuardState;
     public GuardState guardState;
 
     public BasicHorizonSlash1State basicHorizonSlash1State;
@@ -27,6 +28,8 @@ public class PlayerStateMachine
     public SpiritCleave1State spiritCleave1State;
     public SpiritCleave2State spiritCleave2State;
     public SpiritCleave3State spiritCleave3State;
+    public SpiritPiercingState spiritPiercingState;
+    public SpiritSwordDanceState spiritSwordDanceState;
 
     public PlayerStateMachine(PlayerController player)
     {
@@ -43,6 +46,7 @@ public class PlayerStateMachine
         hitShortGroggyState = new(player);
         hitLongGroggyState = new(player);
         grabbedState = new(player);
+        clashGuardState = new(player);
         guardState = new(player);
 
         basicHorizonSlash1State = new(player);
@@ -53,6 +57,8 @@ public class PlayerStateMachine
         spiritCleave1State = new(player);
         spiritCleave2State = new(player);
         spiritCleave3State = new(player);
+        spiritPiercingState = new(player);
+        spiritSwordDanceState = new(player);
     }
 
     public void Initialize(IState state)

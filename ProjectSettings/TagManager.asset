@@ -12,6 +12,8 @@ TagManager:
   - PlayerGuard
   - PlayerAttack
   - NPC
+  - EnemyPiercing
+  - DroppedItem
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Enemy
   - 
   - 
   - 

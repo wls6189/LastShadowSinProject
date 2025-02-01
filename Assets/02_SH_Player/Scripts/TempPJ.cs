@@ -15,14 +15,14 @@ public class TempPJ : MonoBehaviour
         if (other.CompareTag("PlayerGuard") && target != other.gameObject.transform.parent.gameObject)
         {
             target = other.gameObject.transform.parent.gameObject;
-            other.gameObject.transform.parent.GetComponent<PlayerStats>().Damaged(10f, 40, 2, AttackType.Normal);
+            other.gameObject.transform.parent.gameObject.GetComponent<PlayerStats>().Damaged(10f, TenacityAndGroggyForce.Medium, AttackType.Normal, null, false);
 
         }
 
         if (other.CompareTag("Player") && target != other.gameObject)
         {
             target = other.gameObject;
-            other.gameObject.GetComponent<PlayerStats>().Damaged(10f, 40, 2, AttackType.Normal, null, true);
+            other.gameObject.GetComponent<PlayerStats>().Damaged(10f, TenacityAndGroggyForce.Medium, AttackType.Normal, null, true);
         }
 
     }

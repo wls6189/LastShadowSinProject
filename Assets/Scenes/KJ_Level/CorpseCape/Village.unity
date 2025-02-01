@@ -1772,6 +1772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14eed2ac65b74f94aabe4766771d1247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveObjects: []
+  saveObject:
+    sceneflow: {fileID: 0}
 --- !u!1001 &4986495798765619415
 PrefabInstance:
   m_ObjectHideFlags: 0

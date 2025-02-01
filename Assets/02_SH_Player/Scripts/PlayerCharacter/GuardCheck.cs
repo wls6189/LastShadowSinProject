@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class GuardCheck : MonoBehaviour
 {
-    [SerializeField] PlayerController player;
+    PlayerController player;
     Collider guardCollider;
 
     void Awake()
     {
+        player = GetComponentInParent<PlayerController>();
         TryGetComponent(out guardCollider);
     }
 

@@ -27,7 +27,7 @@ public class GuardState : IState
     {
         // 플레이어의 실제 이동
         Vector3 moveVector = new Vector3(0, 0, player.MoveActionValue);
-        player.CharacterController.Move(moveVector * player.MoveSpeed * Time.deltaTime / 2);
+        player.PlayerCharacterController.Move(moveVector * player.MoveSpeed * Time.deltaTime / 2);
 
         // 이동 애니메이션 
         if (player.IsLockOn) // 대상 고정 중일 때

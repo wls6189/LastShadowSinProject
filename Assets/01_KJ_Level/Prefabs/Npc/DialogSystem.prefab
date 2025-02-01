@@ -1735,6 +1735,7 @@ MonoBehaviour:
   DialougeCanvas: {fileID: 5186812026064899027}
   FirstBtn: {fileID: 8167789420437939018}
   SecondBtn: {fileID: 3518178972609717595}
+  ReceiveBtn: {fileID: 0}
   TalkDialouge: {fileID: 6087860433641033624}
   QuestDialouge: {fileID: 6512475640770571138}
 --- !u!1 &8716467489173017786
