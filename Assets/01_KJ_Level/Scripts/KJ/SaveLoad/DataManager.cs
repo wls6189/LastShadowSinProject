@@ -1,31 +1,43 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Overlays;
+using System.Linq;
 
 public class PlayerData
 {
     public string name;
-    public int level = 1;
-    public int coin = 100;
+    //public int level = 1;
+    //public int coin = 100;
     //  public int item = -1; 
 
     public Vector3 position = new Vector3(0.0f, 0.0f, -5.21f);
 
     public string currentScene = "StartPlayScene";
-    public string currentMap = "½ÃÃ¼ °ù";
+    public string currentMap = "ì‹œì²´ ê³¶";
 
     public int previousSlot = -1;
 
+    //í€˜ìŠ¤íŠ¸
     public List<Quest> allActiveQuests = new List<Quest>();
     public List<Quest> allCompletedQuests = new List<Quest>();
+    public List<string> questGivers = new List<string>();
+    
+
+    //ì˜í˜¼íŒŒí¸
+    public List<SoulFragMent> saveActiveObjects = new List<SoulFragMent>();
+    public List<int> saveObjectId = new List<int>();
+    public List<string> saveObjectSceneName = new List<string>();
+
+
+
 
 }
 public class DataManager : MonoBehaviour
 {
-    //°ÔÀÓ ³»¿¡ Ç×»ó Á¸ÀçÇÏ¸é ÁÁÀ¸¹Ç·Î ½Ì±ÛÅæ
+    //ê²Œì„ ë‚´ì— í•­ìƒ ì¡´ì¬í•˜ë©´ ì¢‹ìœ¼ë¯€ë¡œ ì‹±ê¸€í†¤
     private static DataManager instance;
     public static DataManager Instance
     {
@@ -33,8 +45,8 @@ public class DataManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject go = new GameObject("DataManager"); //EventBus¶ó´Â ºó °´Ã¼¸¦ ¸¸µé°í
-                instance = go.AddComponent<DataManager>(); //EventBus ºó °´Ã¼¿¡ EventBus ½ºÅ©¸³Æ®(ÄÄÆ÷³ÍÆ®)À» Ãß°¡
+                GameObject go = new GameObject("DataManager"); //EventBusë¼ëŠ” ë¹ˆ ê°ì²´ë¥¼ ë§Œë“¤ê³ 
+                instance = go.AddComponent<DataManager>(); //EventBus ë¹ˆ ê°ì²´ì— EventBus ìŠ¤í¬ë¦½íŠ¸(ì»´í¬ë„ŒíŠ¸)ì„ ì¶”ê°€
             }
             return instance;
         }
@@ -50,9 +62,9 @@ public class DataManager : MonoBehaviour
             instance = this;
 
         }
-        else // 1. go.AddComponent<EventBus>(); -> 2. Awake ½ÇÇàÀÌ¹Ç·Î evetbus°¡ ¾ÆÁ÷ nullÀÌ´Ù. ±×·¡¼­ eventbus = this¸¦ ÇØÁØ´Ù. 
+        else // 1. go.AddComponent<EventBus>(); -> 2. Awake ì‹¤í–‰ì´ë¯€ë¡œ evetbusê°€ ì•„ì§ nullì´ë‹¤. ê·¸ë˜ì„œ eventbus = thisë¥¼ í•´ì¤€ë‹¤. 
         {
-            Destroy(instance.gameObject);
+            Destroy(this.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
         path = Application.persistentDataPath + "/Save";
@@ -60,7 +72,7 @@ public class DataManager : MonoBehaviour
         LoadPreviousSlot();
     }
 
-   
+
 
     public string path;
 
@@ -75,7 +87,7 @@ public class DataManager : MonoBehaviour
         }
         else
         {
-            nowSlot = 0; // ±âº» ½½·Ô ¹øÈ£ ¼³Á¤
+            nowSlot = 0; // ê¸°ë³¸ ìŠ¬ë¡¯ ë²ˆí˜¸ ì„¤ì •
             Debug.Log("No previous slot, using default slot: " + nowSlot);
         }
     }
@@ -85,9 +97,9 @@ public class DataManager : MonoBehaviour
         nowPlayer.previousSlot = number;
         nowSlot = number;
 
-        // PlayerPrefs¿¡ ÀÌÀü ½½·Ô ¹øÈ£ ÀúÀå
+        // PlayerPrefsì— ì´ì „ ìŠ¬ë¡¯ ë²ˆí˜¸ ì €ì¥
         PlayerPrefs.SetInt("PreviousSlot", nowSlot);
-        PlayerPrefs.Save(); // º¯°æ »çÇ×À» Áï½Ã ÀúÀå
+        PlayerPrefs.Save(); // ë³€ê²½ ì‚¬í•­ì„ ì¦‰ì‹œ ì €ì¥
 
         Debug.Log("Slot Saved: " + nowSlot);
     }
@@ -96,25 +108,34 @@ public class DataManager : MonoBehaviour
     {
         string data = JsonUtility.ToJson(nowPlayer);
 
-        //ÀúÀåÇÏ±â - WriteAllText() »ç¿ë
-        File.WriteAllText(path  + nowSlot.ToString(), data); // °æ·ÎÀÇ ÆÄÀÏÀÌ¸§À» ÁöÁ¤ÇÑ ÈÄ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ°í ÆÄÀÏ ÀÌ¸§ µÚ¿¡ ½½·ÔÀÇ ¹øÈ£±îÁö Ãß°¡. Save0,Save1...
+        //ì €ì¥í•˜ê¸° - WriteAllText() ì‚¬ìš©
+        File.WriteAllText(path + nowSlot.ToString(), data); // ê²½ë¡œì˜ íŒŒì¼ì´ë¦„ì„ ì§€ì •í•œ í›„ ë°ì´í„°ë¥¼ ì €ì¥í•˜ê³  íŒŒì¼ ì´ë¦„ ë’¤ì— ìŠ¬ë¡¯ì˜ ë²ˆí˜¸ê¹Œì§€ ì¶”ê°€. Save0,Save1...
     }
 
     public void LoadData()
     {
-        //ºÒ·¯¿À±â - ReadAllText() »ç¿ë
-        string data = File.ReadAllText(path  + nowSlot.ToString()); 
 
-        nowPlayer = JsonUtility.FromJson<PlayerData>(data); //±âÁ¸¿¡ ¼±¾ğÇß´ø nowPlayerÀ» ºÒ·¯¿À°í ³ª¼­ µ¤¾î ¾º¿ì°Ô µÊ
+        if (!File.Exists(path + nowSlot.ToString()))
+        {
+            Debug.LogWarning("ì €ì¥ëœ ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤. ê¸°ë³¸ ë°ì´í„° ì‚¬ìš©.");
+            return;
+        }
 
+        string data = File.ReadAllText(path + nowSlot.ToString());
+        nowPlayer = JsonUtility.FromJson<PlayerData>(data);  
+
+        Debug.Log("ë°ì´í„° ë¡œë“œ ì™„ë£Œ! ì €ì¥ëœ ì˜í˜¼íŒŒí¸ ê°œìˆ˜: " + nowPlayer.saveActiveObjects.Count);
+       // Debug.Log("ë°ì´í„° ë¡œë“œ ì™„ë£Œ! ì €ì¥ëœ í™œì„±í™”ëœ í€˜ìŠ¤íŠ¸ ê°œìˆ˜: " + nowPlayer.allActiveQuests.Count);
+        Debug.Log("ë°ì´í„° ë¡œë“œ ì™„ë£Œ! ì €ì¥ëœ ì™„ë£Œëœ í€˜ìŠ¤íŠ¸ ê°œìˆ˜: " + nowPlayer.allCompletedQuests.Count);
+        Debug.Log("ë°ì´í„° ë¡œë“œ ì™„ë£Œ! ì €ì¥ëœ í™œì„±í™”ëœ  í€˜ìŠ¤íŠ¸ ê°œìˆ˜: " + nowPlayer.questGivers.Count);
     }
 
     public void DataClear()
     {
-        nowSlot = -1; //½½·Ô ¹øÈ£°¡ 
-      
-        nowPlayer = new PlayerData(); //ÃÊ±â°ªÀ¸·Î ´Ù½Ã ÃÊ±âÈ­
-       
+        nowSlot = -1; //ìŠ¬ë¡¯ ë²ˆí˜¸ê°€ 
+
+        nowPlayer = new PlayerData(); //ì´ˆê¸°ê°’ìœ¼ë¡œ ë‹¤ì‹œ ì´ˆê¸°í™”
+
     }
     public void DataCelarSlot()
     {
@@ -123,14 +144,43 @@ public class DataManager : MonoBehaviour
 
     }
 
-    public List<SaveObjectData> saveActiveObjects = new List<SaveObjectData>();
+    //í—Œì‹ ì ì˜í˜¼íŒŒí¸ ìƒí˜¸ì‘ìš© ì‹œ í˜„ì¬ êµ¬ì—­ ì„¸ì´ë¸Œí•˜ëŠ” ë¶€ë¶„. -> UI ë„ìš°ê³  í˜„ì¬ êµ¬ì—­ í‘œì‹œí•˜ê¸° ìœ„í•¨.
 
-    public void SoulFragMentFunc(SaveObjectData saveObject,int ActiveSaveIndex)
+    public void SaveSoulFragment(SoulFragMent soulObj,int id, string sceneName)
     {
-        
+        if(nowPlayer.saveActiveObjects.Contains(soulObj))
+        {
+            Debug.Log("ë°ì´í„°ì— ì˜í˜¼íŒŒí¸ì´ ì´ë¯¸ ì €ì¥ë¨");
+            return;
+        }
 
-        saveActiveObjects.Add(saveObject);
-        UIManager.Instance.RefreshSaveScenes(saveActiveObjects);
+        if (!nowPlayer.saveActiveObjects.Contains(soulObj))
+        {
+            nowPlayer.saveObjectId.Add(id);
+
+            nowPlayer.saveObjectSceneName.Add(sceneName);
+
+            nowPlayer.saveActiveObjects.Add(soulObj);     
+
+            SaveData();
+
+        }
     }
 
+    public void SaveActiveQuest(string giver,Quest quest)
+    {
+        Debug.Log("í€˜ìŠ¤íŠ¸ ì œê³µìëŠ” " + giver);
+        nowPlayer.questGivers.Add(giver);
+        nowPlayer.allActiveQuests.Add(quest);
+
+        SaveData();
+    }
+    public void SaveCompletedQuest(string giver,Quest quest)
+    {
+        nowPlayer.allActiveQuests.Remove(quest);
+        nowPlayer.questGivers.Add(giver);
+        nowPlayer.allCompletedQuests.Add(quest);
+
+        SaveData();
+    }
 }

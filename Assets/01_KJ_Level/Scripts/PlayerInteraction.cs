@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,9 +8,11 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    public Dictionary<string, int> collectedItems = new Dictionary<string, int>(); // 아이템 이름과 개수를 관리
+    public readonly Dictionary<string, int> collectedItems = new Dictionary<string, int>(); // 아이템 이름과 개수를 관리
 
     private NPC currentNPC;
+
+    private SoulFragMent soulfragMent;
 
     InputActionAsset inputActionAsset;
     InputAction interactAction;
@@ -17,27 +20,28 @@ public class PlayerInteraction : MonoBehaviour
     private void Awake()
     {
         inputActionAsset = GetComponent<PlayerInput>().actions;
+        
     }
     private void Start()
     {
         interactAction = inputActionAsset.FindAction("Interact");
         transform.position = DataManager.Instance.nowPlayer.position;
+
+ 
     }
 
     private void Update()
     {
-        if(interactAction.WasPressedThisFrame() && isInteraction)
+        if(interactAction.WasPressedThisFrame() && isInteractionReady)
         {
             isInteractionStart = true;
 
         }
 
-        if(interactAction.WasPressedThisFrame() && isFragMentInfo)
+        if(Input.GetKeyDown(KeyCode.I))
         {
-            isFragMentInfo = false;
-            GameManager.Instance.SaveObjectFunc();
-           
-        }    
+            InventoryCheck();
+        }
 
 
         if (currentNPC != null && currentNPC.playerInRange)
@@ -61,24 +65,27 @@ public class PlayerInteraction : MonoBehaviour
 
     public void CollectItem(string itemName)
     {
-       if(collectedItems.ContainsKey(itemName))
-        {
-            collectedItems[itemName]++;
-        }
-       else
-        {
-            collectedItems[itemName] = 1;
-        }
 
+        if (collectedItems.ContainsKey(itemName))
+        {
+            collectedItems[itemName] += 1; // 기존 아이템 개수 증가
+        }
+        else
+        {
+            collectedItems.Add(itemName, 1); // 새 아이템 추가
+
+        }
 
     } //임시 메서드1
 
     void InventoryCheck()
     {
+
         foreach (var item in collectedItems)
         {
             Debug.Log($"아이템: {item.Key}, 개수: {item.Value}");
         }
+
 
         if (collectedItems.Count == 0)
         {
@@ -101,32 +108,38 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-
-    [SerializeField]
-    private bool isFragMentInfo;
-
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) //상호작용 확인.
         {
-            isInteraction = true;
+            isInteractionReady = true;
 
            
         }
         if (other.CompareTag("FragMent") && isInteractionStart) //헌신자 영혼파편
         {
-            other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]";
+            soulfragMent = other.GetComponent<SoulFragMent>();
+
+            if (!soulfragMent.isSave) // 처음 상호작용 시 저장
+            {
+                SavePlayerData();
+                soulfragMent.isSave = true; // 이미 저장된 상태로 플래그 설정
+                DataManager.Instance.SaveSoulFragment(soulfragMent, soulfragMent.fragmentID,soulfragMent.sceneflow.currentSceneName);
+                
+                //DataManager.Instance.SaveObjectFunc(soulfragMent);
+                
+                other.GetComponentInChildren<TextMeshProUGUI>().text = "Saved! [F]"; // UI 텍스트 업데이트
+                Debug.Log("영혼 파편이 저장.");
+            }
+            else // 이미 저장된 상태에서 다시 상호작용
+            {
+                UIManager.Instance.SoulImageOpen(soulfragMent);
+                other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI 텍스트 업데이트
+                Debug.Log("영혼 파편이 이미 저장.");
+            }
             isInteractionStart = false;
-
-            isFragMentInfo = true;
-
-            SavePlayerData();
-
-           
-
-
-
         }
+
         if (other.CompareTag("NextPortal") && isInteractionStart)
         {
             isInteractionStart = false;
@@ -144,7 +157,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private bool isInteraction;
+    private bool isInteractionReady;
 
     private bool isNpcInteraction;
 
@@ -154,9 +167,13 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) 
         {
-            isInteraction = false;
+            isInteractionReady = false;
         }
 
+        if (other.CompareTag("FragMent"))
+        {
+            soulfragMent = null;
+        }
 
         if (other.CompareTag("NPC"))
         {
@@ -175,8 +192,7 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name;
 
         //활성화 또는 완료된 약속들 저장
-        DataManager.Instance.nowPlayer.allActiveQuests = QuestManager.Instance.allActiveQuests;
-        DataManager.Instance.nowPlayer.allCompletedQuests = QuestManager.Instance.allCompletedQuests;
+
 
         //현재 슬롯 저장. -> Continue 버튼을 위함.
 

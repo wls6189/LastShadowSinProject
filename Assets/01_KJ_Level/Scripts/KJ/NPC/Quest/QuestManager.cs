@@ -62,15 +62,21 @@ public class QuestManager : MonoBehaviour
 
     public void AddActiveQuest(Quest quest)
     {
-        allActiveQuests.Add(quest);
+       // allActiveQuests.Add(quest);
+
+        DataManager.Instance.SaveActiveQuest(quest.questGiver,quest);
+
         RefreshQuestList();
     }
 
     public void MarkQuestCompleted(Quest quest)
     {    
 
-        allActiveQuests.Remove(quest);
-        allCompletedQuests.Add(quest);
+       // allActiveQuests.Remove(quest);
+
+        //allCompletedQuests.Add(quest);
+
+        DataManager.Instance.SaveCompletedQuest(quest.questGiver, quest);
 
         RefreshQuestList();
     }
@@ -80,12 +86,13 @@ public class QuestManager : MonoBehaviour
         FinishQuestExplain.gameObject.SetActive(false);
         NotFinishQuestExplain.gameObject.SetActive(false);
 
+
         foreach (Transform child in questMenuContent.transform)
         {
             Destroy(child.gameObject);
         }
 
-        foreach(Quest actvieQuest in allActiveQuests)
+        foreach(Quest actvieQuest in DataManager.Instance.nowPlayer.allActiveQuests)
         {
             GameObject questPrefab = Instantiate(activeQuestPrefab, Vector3.zero, Quaternion.identity); //활성화된 퀘스트 프리펩 생성
             questPrefab.transform.SetParent(questMenuContent.transform, false); //활성화된 퀘스트 프리펩의 부모를 Content로 설정
@@ -106,7 +113,7 @@ public class QuestManager : MonoBehaviour
             }
         }
 
-        foreach (Quest completeQuest in allCompletedQuests)
+        foreach (Quest completeQuest in DataManager.Instance.nowPlayer.allCompletedQuests)
         {
             GameObject questPrefab = Instantiate(completeQuestPrefab, Vector3.zero, Quaternion.identity); //활성화된 퀘스트 프리펩 생성
             questPrefab.transform.SetParent(questMenuContent.transform, false); //활성화된 퀘스트 프리펩의 부모를 Content로 설정
