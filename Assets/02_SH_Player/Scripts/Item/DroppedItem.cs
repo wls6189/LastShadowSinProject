@@ -40,5 +40,7 @@ public class DroppedItem : MonoBehaviour
                 }
             }
         }
+
+        Destroy(gameObject);
     }
 }
