@@ -69,7 +69,10 @@ public class QuestInfo : ScriptableObject
 
     [Header("Rewards")] //보상, 여기에 더 많은 것을 추가할 수 있다.
     public GameObject rewardItem1;
-    public string rewardItem2;
+
+    [SerializeField]
+    public Sprite rewardImage;
+
 
     [Header("Requirments")] //요구사항, 더 많은 것을 추가할 수 있다.
     public string firstRequirment; //첫번째 요구사항, ex ) 돌이 필요함

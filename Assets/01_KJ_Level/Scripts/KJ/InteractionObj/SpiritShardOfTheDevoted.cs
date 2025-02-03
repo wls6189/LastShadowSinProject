@@ -12,6 +12,7 @@ public class SpiritShardOfTheDevoted : MonoBehaviour
 
     public SceneFlow sceneflow;
 
+    
     private void Start()
     {
         // 씬 로드 시 저장된 상태 복원
@@ -24,7 +25,12 @@ public class SpiritShardOfTheDevoted : MonoBehaviour
         else
         {
             isSave = false;
+          
             GetComponentInChildren<TextMeshProUGUI>().text = "Save [F]";
         }
     }
+
+
+   
+
 }

@@ -47,6 +47,7 @@ public class UIManager : MonoBehaviour
     }
 
     public bool IsGameMenuOpen;
+    public bool IsSpiritShardOfTheDevotedMenuOpen;
 
     public Button[] TabButtons;
 
@@ -160,6 +161,8 @@ public class UIManager : MonoBehaviour
 
     public void SoulImageOpen(SpiritShardOfTheDevoted soulFragMent)
     {
+        IsSpiritShardOfTheDevotedMenuOpen = true;
+
         SoulImages.gameObject.SetActive(true);
 
         RefreshSaveScenes(soulFragMent);
@@ -222,6 +225,7 @@ public class UIManager : MonoBehaviour
   
         SoulFragMentMoveInfo.gameObject.SetActive(false);
         SoulImages.gameObject.SetActive(false);
+        IsSpiritShardOfTheDevotedMenuOpen = false;
         SceneManager.LoadScene(movedScene);
     }
 
@@ -229,6 +233,7 @@ public class UIManager : MonoBehaviour
     {
         DialogSystem.Instance.MouseOff();
         SoulImages.gameObject.SetActive(false);
+        IsSpiritShardOfTheDevotedMenuOpen = false;
     }
     public void ColorChange(Button clickedButton)
     {

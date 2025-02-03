@@ -18,6 +18,8 @@ public class PlayerInteraction : MonoBehaviour
     private DecayedStamp crackedSeal;
     private ChaosRift chaosRift;
 
+    private DroppedItem droppedItem;
+
     InputActionAsset inputActionAsset;
     InputAction interactAction;
 
@@ -29,14 +31,23 @@ public class PlayerInteraction : MonoBehaviour
     private void Start()
     {
         interactAction = inputActionAsset.FindAction("Interact");
+
+
         transform.position = DataManager.Instance.nowPlayer.position;
 
- 
+        LoadStatDataWhenQuit();
     }
 
     private void Update()
     {
-        if(interactAction.WasPressedThisFrame() && isInteractionReady)
+        if (CurrentHealth <= 0)
+        {
+            PlayerDie();
+            return;
+        }
+
+
+        if (interactAction.WasPressedThisFrame() && isInteractionReady)
         {
             isInteractionStart = true;
 
@@ -112,15 +123,28 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+  
+    void PlayerDie()
+    {
+        SceneManager.LoadScene(DataManager.Instance.nowPlayer.currentScene);
+        transform.position = DataManager.Instance.nowPlayer.position;
+    }
+
+
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") 
-            || other.CompareTag("PreviousPortal") || other.CompareTag("SoulWell")
-            || other.CompareTag("CrackedSeal") || other.CompareTag("ChaosRift")) //상호작용 확인.
+        if(other.CompareTag("FragMent"))
         {
             isInteractionReady = true;
+        }
 
-           
+        if ( other.CompareTag("NextPortal") 
+            || other.CompareTag("PreviousPortal") || other.CompareTag("SoulWell")
+            || other.CompareTag("CrackedSeal") || other.CompareTag("ChaosRift")
+            || other.CompareTag("DroppedItem")) //상호작용 확인.
+        {
+            isInteractionReady = true;
+            other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI 텍스트 업데이트                
         }
         if (other.CompareTag("FragMent") && isInteractionStart) //헌신자 영혼파편
         {
@@ -128,7 +152,11 @@ public class PlayerInteraction : MonoBehaviour
 
             if (!soulfragMent.isSave) // 처음 상호작용 시 저장
             {
-                SavePlayerData();
+                CurrentHealth = DataManager.Instance.nowPlayer.InitMaxHealth;
+
+                SpriritShardOfTheDevotedSave();
+
+
                 soulfragMent.isSave = true; // 이미 저장된 상태로 플래그 설정
                 DataManager.Instance.SaveSoulFragment(soulfragMent, soulfragMent.fragmentID,soulfragMent.sceneflow.currentSceneName);
                 
@@ -159,6 +187,7 @@ public class PlayerInteraction : MonoBehaviour
         if(other.CompareTag("SoulWell") && isInteractionStart)
         {
             isInteractionStart = false;
+           
 
             soulWell = other.GetComponent<SpiritSpring>();
             soulWell.InteractionPlayer();
@@ -167,6 +196,7 @@ public class PlayerInteraction : MonoBehaviour
         if(other.CompareTag("CrackedSeal") && isInteractionStart)
         {
             isInteractionStart = false;
+
             crackedSeal = other.GetComponent<DecayedStamp>();
             crackedSeal.InteractionPlayer();
         }
@@ -175,8 +205,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             isInteractionStart = false;
 
-           
-
+            Debug.Log("ChaosRift 상호작용");
             CollectItem(GetCleanName(other.gameObject.name));
 
             chaosRift = other.GetComponent<ChaosRift>();
@@ -188,6 +217,13 @@ public class PlayerInteraction : MonoBehaviour
             isNpcInteraction = true;
             currentNPC = other.GetComponent<NPC>();
         }
+
+        if (other.CompareTag("DroppedItem") & isInteractionStart)
+        {
+            isInteractionStart = false;
+            droppedItem = other.GetComponent<DroppedItem>();
+            droppedItem.PickUpItem(this.GetComponent<PlayerController>());
+        }
     }
     [SerializeField]
     private bool isInteractionReady;
@@ -198,14 +234,24 @@ public class PlayerInteraction : MonoBehaviour
     private bool isInteractionStart;
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) 
-        {
-            isInteractionReady = false;
-        }
-
         if (other.CompareTag("FragMent"))
         {
+            isInteractionReady = false;
             soulfragMent = null;
+        }
+        if (other.CompareTag("DroppedItem"))
+        {
+            isInteractionStart = false;
+            droppedItem = null;
+        }
+
+        if (other.CompareTag("NextPortal")|| other.CompareTag("PreviousPortal") 
+            || other.CompareTag("SoulWell") || other.CompareTag("CrackedSeal") 
+            || other.CompareTag("ChaosRift") || other.CompareTag("DroppedItem")) //상호작용 확인.
+        {
+            isInteractionReady = false;
+            other.GetComponentInChildren<TextMeshProUGUI>().text = ""; // UI 텍스트 업데이트
+
         }
 
         if (other.CompareTag("NPC"))
@@ -214,18 +260,35 @@ public class PlayerInteraction : MonoBehaviour
             currentNPC.NpcTalkImage.gameObject.SetActive(false);
             currentNPC = null;
         }
+
+       
     }
 
-    private void SavePlayerData()
+    public float MaxSpiritWave;
+    public float CurrentSpiritWave;
+    public float CurrentSpiritMarkForce;
+    public float CurrentHealth;
+
+    public void LoadStatDataWhenQuit()
     {
-        Debug.Log("SAVE");
+        //헌신자의 영혼파편과 상호작용하여 세이브하고 나서 다시 로드 했을 때 세이브 했을 때의  CurrentHealth, MaxSpiritWave 저장
+        CurrentHealth = DataManager.Instance.nowPlayer.MaxHealth;
+
+        CurrentSpiritWave = DataManager.Instance.nowPlayer.MaxSpiritWave;
+
+        CurrentSpiritMarkForce = DataManager.Instance.nowPlayer.MaxSpiritMarkForce;
+    }
+    private void SpriritShardOfTheDevotedSave()
+    {
         // 플레이어 위치 및 현재 씬 저장
         DataManager.Instance.nowPlayer.position = transform.position; //위치. 
-
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name; //현재씬 
-
+        //플레이어 체력 , 영혼파동 세기 , MaxSpiritMarkForce  저장
+        DataManager.Instance.nowPlayer.MaxHealth = CurrentHealth;
+        DataManager.Instance.nowPlayer.MaxSpiritWave = CurrentSpiritWave;
+        DataManager.Instance.nowPlayer.MaxSpiritMarkForce = CurrentSpiritMarkForce;
+        //마지막으로 저장된 것들을 json으로 저장
         DataManager.Instance.SaveData();
-
 
     }
 

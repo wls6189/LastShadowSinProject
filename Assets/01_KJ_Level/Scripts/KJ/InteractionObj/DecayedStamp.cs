@@ -8,14 +8,17 @@ public class DecayedStamp : Interaction
 
     [SerializeField]
     private string currentScenesDecayedStamp;
+
+    [SerializeField]
+    private GameObject EffectPrefab;
     void Start()
     {
         if(DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Contains(currentScenesDecayedStamp))
         {
             if (DataManager.Instance.nowPlayer.DecayedStampCount > 0)
             {
-                //Destroy(this.gameObject);
-                this.gameObject.SetActive(false);
+                Destroy(this.gameObject);
+                //this.gameObject.SetActive(true);
             }
         }
         
@@ -23,11 +26,10 @@ public class DecayedStamp : Interaction
     }
 
     public override void InteractionPlayer()
-    {
-        
+    {    
         DataManager.Instance.nowPlayer.DecayedStampCount += 1;
         DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Add(currentScenesDecayedStamp);
         DataManager.Instance.SaveData();
-        Destroy(this.gameObject);
+        EffectPrefab.gameObject.SetActive(false);
     }
 }
