@@ -4,8 +4,7 @@ using System.Collections.Generic;
 public class AttackBase : MonoBehaviour
 {
     public float damageMultiplier;
-    public float impactForce;
-    public float groggyForce;
+    public TenacityAndGroggyForce groggyForce;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>();
     public AttackType currentAttackType;
     private bool isDirectAttack = false;
@@ -50,7 +49,7 @@ public class AttackBase : MonoBehaviour
             PlayerStats playerStats = target.GetComponent<PlayerStats>();
             //if (playerStats != null)
             //{
-            //    playerStats.Damaged(damage, impactForce, groggyForce, AttackType type, enemyStats, isDirectAttack);
+            //   playerStats.Damaged(finalDamage, groggyForce, currentAttackType, enemyStats, isDirectAttack);
             //}
         }
     }
