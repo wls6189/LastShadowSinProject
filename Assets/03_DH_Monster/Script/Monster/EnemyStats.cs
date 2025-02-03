@@ -1,5 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using NUnit.Framework;
+using System.Runtime.InteropServices;
+using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class EnemyStats : MonoBehaviour
 {
@@ -12,16 +16,13 @@ public class EnemyStats : MonoBehaviour
     private Animator animator;             // 몬스터 애니메이터
     public float attackPower ;
     private bool isGroggy = false;
+    public TenacityAndGroggyForce groggyForce;
+    [SerializeField] Image healthBarImage;
+    [SerializeField] Image WillpowerBarImage;
 
     // 그로기 상태별 지속 시간 설정
 
-    [System.Serializable]
-    public class ItemDrop
-    {
-        public GameObject itemPrefab; // 드랍할 아이템 프리팹
-        public float dropChance; // 드랍 확률
-    }
-    public ItemDrop[] itemDrops; // 드랍할 아이템들
+
 
     private void Start()
     {
@@ -30,7 +31,13 @@ public class EnemyStats : MonoBehaviour
         currentWillpower = maxWillpower; // 현재 영혼 게이지를 최대 영혼 게이지로 초기화
         isGroggy = false;
     }
-  
+    private void Update()
+    {
+        healthBarImage.fillAmount = currentHealth / (float)maxHealth;
+        WillpowerBarImage.fillAmount = currentWillpower/(float)maxWillpower;
+    }
+
+
     public void Damaged(float damage, float impactForce, float groggyForce, bool isdirectattack)
     {
        
@@ -90,8 +97,13 @@ public class EnemyStats : MonoBehaviour
     // 죽음 처리
     private void Die()
     {
-        DropItem();
+       
         animator.SetTrigger("Die");
+        MonsterDrop monsterDrop = GetComponent<MonsterDrop>();
+        if (monsterDrop != null)
+        {
+            monsterDrop.Drop(); // 드롭 아이템 생성
+        }
     }
 
     // 영혼 게이지 회복 메서드
@@ -118,17 +130,7 @@ public class EnemyStats : MonoBehaviour
     }
 
 
-    private void DropItem()
-    {
-        foreach (var itemDrop in itemDrops)
-        {
-            if (Random.value <= itemDrop.dropChance) // 각 아이템별 드랍 확률 체크
-            {
-                Instantiate(itemDrop.itemPrefab, transform.position, Quaternion.identity);
-                
-            }
-        }
-    }
+   
     public void RecoverHealth()
     {
         

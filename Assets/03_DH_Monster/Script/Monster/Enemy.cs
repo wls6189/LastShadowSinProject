@@ -297,6 +297,11 @@ public class Enemy : MonoBehaviour
         Attack currentAttack = currentPattern.attacks[currentAttackIndex];
         ShowAttackIndicator(currentAttack);
         // 공격 애니메이션 트리거 추가
+        AttackBase attackBase = attackCollider.GetComponent<AttackBase>();
+        if (attackBase != null)
+        {
+            attackBase.currentAttackType = currentAttack.attackType;
+        }
         animator.SetTrigger(currentAttack.attackName);  // 예: "Heavy Strike" 또는 "Quick Parry" 등
         lastAttackTime = Time.time; // 현재 시간 저장
         StartCoroutine(MoveAfterAttack());
@@ -350,7 +355,7 @@ public class Enemy : MonoBehaviour
         AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         float animationDuration = currentStateInfo.length;
 
-        // 애니메이션 진행 시간 동안 반복
+       
         float elapsedTime = 0f;
         while (elapsedTime < animationDuration)
         {
@@ -423,7 +428,7 @@ public class Enemy : MonoBehaviour
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(spawnPosition);
         Vector3 directionToSpawn = spawnPosition - transform.position;
-        directionToSpawn.y = 0; // y축 회전 방지 (수평만 회전)
+        directionToSpawn.y = 0; 
         if (directionToSpawn != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(directionToSpawn);
