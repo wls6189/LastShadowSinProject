@@ -128,44 +128,44 @@ public class AttackCheck : MonoBehaviour
 
         if (IsProjectile)
         {
-            //enemyStats.Damaged(player.PlayerStats.AttackPower * ProjectilePercentage, player.PlayerStats.AttackPower * ProjectilePercentage, TenacityAndGroggyForce.Low);
+            enemyStats.Damaged(player.PlayerStats.AttackPower * ProjectilePercentage, player.PlayerStats.AttackPower * ProjectilePercentage, TenacityAndGroggyForce.Low);
         }
         else
         {
             switch (player.CurrentPlayerState)
             {
                 case PlayerState.BasicHorizonSlash1:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * basicHorizonSlash1Percentage, player.PlayerStats.AttackPower * basicHorizonSlash1Percentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * basicHorizonSlash1Percentage, player.PlayerStats.AttackPower * basicHorizonSlash1Percentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.BasicHorizonSlash2:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * basicHorizonSlash2Percentage, player.PlayerStats.AttackPower * basicHorizonSlash2Percentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * basicHorizonSlash2Percentage, player.PlayerStats.AttackPower * basicHorizonSlash2Percentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.BasicVerticalSlash:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * basicVerticalSlashPercentage, player.PlayerStats.AttackPower * basicVerticalSlashPercentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * basicVerticalSlashPercentage, player.PlayerStats.AttackPower * basicVerticalSlashPercentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.Thrust:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * thrustPercentage, player.PlayerStats.AttackPower * thrustPercentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * thrustPercentage, player.PlayerStats.AttackPower * thrustPercentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.RetreatSlash:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * retreatSlashPercentage, player.PlayerStats.AttackPower * retreatSlashPercentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * retreatSlashPercentage, player.PlayerStats.AttackPower * retreatSlashPercentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.SpiritCleave1:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave1Percentage, player.PlayerStats.AttackPower * spiritCleave1Percentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave1Percentage, player.PlayerStats.AttackPower * spiritCleave1Percentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.SpiritCleave2:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave2Percentage, player.PlayerStats.AttackPower * spiritCleave2Percentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave2Percentage, player.PlayerStats.AttackPower * spiritCleave2Percentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.SpiritCleave3:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave3Percentage, player.PlayerStats.AttackPower * spiritCleave3Percentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave3Percentage, player.PlayerStats.AttackPower * spiritCleave3Percentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.SpiritPiercing:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritPiercingPercentage, player.PlayerStats.AttackPower * spiritPiercingPercentage, TenacityAndGroggyForce.Medium);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * spiritPiercingPercentage, player.PlayerStats.AttackPower * spiritPiercingPercentage, TenacityAndGroggyForce.Medium);
                     break;
                 case PlayerState.SpiritSwordDance:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritSwordDancePercentage, player.PlayerStats.AttackPower * spiritSwordDancePercentage, TenacityAndGroggyForce.High);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * spiritSwordDancePercentage, player.PlayerStats.AttackPower * spiritSwordDancePercentage, TenacityAndGroggyForce.High);
                     break;
                 case PlayerState.SpiritNova:
-                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritNovaPercentage, player.PlayerStats.AttackPower * spiritNovaPercentage, TenacityAndGroggyForce.High);
+                    enemyStats.Damaged(player.PlayerStats.AttackPower * spiritNovaPercentage, player.PlayerStats.AttackPower * spiritNovaPercentage, TenacityAndGroggyForce.High);
                     break;
             }
         }

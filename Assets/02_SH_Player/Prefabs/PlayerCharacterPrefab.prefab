@@ -222,6 +222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a75cac2f4f6f1d43970bd5b631c88c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  IsProjectile: 0
+  ProjectilePercentage: 0
 --- !u!1 &8105819831965737629
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,6 +1112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NearbyMonsterCheck: {fileID: 6549005347744170601}
   CameraFocusPosition: {fileID: 5544254639474283807}
+  SpiritUnboundPrefab: {fileID: 179617693071064624, guid: 60ee5f36c8f4ce44eb5fefd0e1332e8c, type: 3}
   MoveActionValue: 0
   MoveSpeed: 0
   DashSpeed: 0
@@ -1120,6 +1124,7 @@ MonoBehaviour:
   CanBasicHorizonSlash2Combo: 0
   CanSpiritCleave2Combo: 0
   CanSpiritCleave3Combo: 0
+  CanSpiritNova: 0
   IsSpiritSwordDanceSecondAttack: 0
   IsParring: 0
   IsSpiritParring: 0
@@ -1155,17 +1160,82 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  moveTabLeftAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e9992044-f4b8-45c0-a164-5784d87f9e7d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  moveTabRightAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 51c40b16-f4a6-444f-8c75-a28dd2f60504
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  moveSelectLeftAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 16f079b5-2450-4025-95e0-98cb01c4da0c
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  moveSelectRightAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: f2390f2b-d8cb-433c-a936-2a73826892c8
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  moveSelectUpAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 0663c956-5cbd-45e8-bba3-af9a5b9c886d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  moveSelectDownAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a52aa46d-4e1b-45f4-ac31-f6d15b9e34a0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  selectAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: fa8a72fe-3142-4609-9b05-b04bdaa6986c
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   CurrentPlayerState: 0
   PlayerAnimator: {fileID: 0}
   PlayerStats: {fileID: 0}
   PlayerChaliceOfAtonement: {fileID: 0}
   PlayerESMInventory: {fileID: 0}
   PlayerMarkInventory: {fileID: 0}
+  ManagePlayerEffect: {fileID: 0}
   IsGrogging: 0
   IsLookRight: 0
   IsDoSomething: 0
   IsInCombat: 0
   IsAttackSucceed: 0
+  IsRadicalESMAttackPosture: 0
 --- !u!114 &2728140308057169487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1183,12 +1253,14 @@ MonoBehaviour:
   DamageReducePercentage: 0
   GuardDamageReducePercentage: 0
   AttackPower: 0
+  AttackPowerIncreasePercentage: 0
   ParryImpactForcePercentage: 0
   PenetrateImpactForcePercentage: 0
   SpiritParryImpactForcePercentage: 0
   MaxSpiritWave: 0
   CurrentSpiritWave: 0
   RegenerationSpiritWavePerSec: 0
+  RegenerationSpiritWaveIncreasePercent: 0
   ParrySpiritWaveRegeneration: 0
   GuardSpiritWaveRegeneration: 0
   PenetrateSpiritWaveRegeneration: 0
@@ -1203,6 +1275,8 @@ MonoBehaviour:
   IsSteadfast: 0
   IsRavenous: 0
   IsEnthusiastic: 0
+  IsRagingOn: 0
+  RagingStack: 0
   SpiritAsh: 0
 --- !u!114 &8453547531713240106
 MonoBehaviour:
@@ -1216,6 +1290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c600a3c22d9e9964089b4314014b23ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInteractionReady: 0
+  isInteractionStart: 0
 --- !u!114 &5050637626733982909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1276,6 +1352,7 @@ MonoBehaviour:
   basicMaterial: {fileID: 2100000, guid: f71f5a4a13d2e2c46bf15d04c9e676f2, type: 2}
   dashTrailPrefab: {fileID: 2370931989479530282}
   characterMesh: {fileID: 7590007255733776452}
+  radicalESMPrefab: {fileID: 6974084246394710616, guid: 57e56a9cad86bea428e9be0e29d64198, type: 3}
 --- !u!1 &7590007255733776452 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8808878123899235148, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
