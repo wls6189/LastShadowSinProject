@@ -15,8 +15,6 @@ public class ESMInventory : MonoBehaviour
 
         TryGetComponent(out player);
 
-        SwapESM(MarkAndESMList.ChooseESM());
-
         if (EquipedESM != null && !EquipedESM.IsNaturalRegeneration)
         {
             player.CallWhenDamaging += RegenerationGaugeOnAction;
@@ -43,6 +41,8 @@ public class ESMInventory : MonoBehaviour
         {
             player.CallWhenDamaging -= RegenerationGaugeOnAction;
         }
+
+        SMAndESMUIManager.Instance.SetOwnedESMList();
     }
     public void ApplyESM()
     {

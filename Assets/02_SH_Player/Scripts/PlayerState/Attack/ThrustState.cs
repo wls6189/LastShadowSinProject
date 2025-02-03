@@ -14,6 +14,7 @@ public class ThrustState : IState
         player.CurrentPlayerState = PlayerState.Thrust;
         player.PlayerAnimator.SetTrigger("DoThrust");
         player.IsAttacking = true;
+        player.PlayerStats.Tenacity = TenacityAndGroggyForce.High;
         player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
     }
 
@@ -45,6 +46,7 @@ public class ThrustState : IState
         // 공격 중 상태 종료(다음 State로 이동 가능한 상태)
         if (duration >= 20f / frame)
         {
+            player.PlayerStats.Tenacity = TenacityAndGroggyForce.Medium;
             player.IsAttacking = false;
         }
 
@@ -59,5 +61,7 @@ public class ThrustState : IState
     {
         player.IsAttacking = false;
         player.IsAttackingParryColliderEnabled = false;
+        player.PlayerStats.Tenacity = TenacityAndGroggyForce.Medium;
+
     }
 }

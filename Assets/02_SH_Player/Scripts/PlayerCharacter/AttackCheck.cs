@@ -27,6 +27,23 @@ public class AttackCheck : MonoBehaviour
     Vector3 spiritSwordDancePos = new Vector3(0, 1, 1);
     Vector3 spiritSwordDanceScale = new Vector3(0.5f, 2, 1.7f);
 
+    // 공격의 공격력 배율 부분
+    float basicHorizonSlash1Percentage = 0.7f;
+    float basicHorizonSlash2Percentage = 0.9f;
+    float basicVerticalSlashPercentage = 1.1f;
+    float thrustPercentage = 0.7f;
+    float retreatSlashPercentage = 1.3f;
+    float spiritCleave1Percentage = 1.1f;
+    float spiritCleave2Percentage = 1.6f;
+    float spiritCleave3Percentage = 2.1f;
+    float spiritPiercingPercentage = 1.6f;
+    float spiritSwordDancePercentage = 0.9f;
+    float spiritNovaPercentage = 3.0f;
+    [HideInInspector] public float ProjectilePercentage;
+
+
+
+
     void Awake()
     {
         player = GetComponentInParent<PlayerController>();
@@ -108,11 +125,49 @@ public class AttackCheck : MonoBehaviour
         player.IsAttackSucceed = true;
         player.PlayerStats.CurrentSpiritWave += 0.3f;
 
-        switch (player.CurrentPlayerState)
+
+        if (IsProjectile)
         {
-            case PlayerState.BasicHorizonSlash1:
-                // 몬스터 Damaged 처리되면 작성
-                break;
+            //enemyStats.Damaged(player.PlayerStats.AttackPower * ProjectilePercentage, player.PlayerStats.AttackPower * ProjectilePercentage, TenacityAndGroggyForce.Low);
+        }
+        else
+        {
+            switch (player.CurrentPlayerState)
+            {
+                case PlayerState.BasicHorizonSlash1:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * basicHorizonSlash1Percentage, player.PlayerStats.AttackPower * basicHorizonSlash1Percentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.BasicHorizonSlash2:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * basicHorizonSlash2Percentage, player.PlayerStats.AttackPower * basicHorizonSlash2Percentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.BasicVerticalSlash:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * basicVerticalSlashPercentage, player.PlayerStats.AttackPower * basicVerticalSlashPercentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.Thrust:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * thrustPercentage, player.PlayerStats.AttackPower * thrustPercentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.RetreatSlash:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * retreatSlashPercentage, player.PlayerStats.AttackPower * retreatSlashPercentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.SpiritCleave1:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave1Percentage, player.PlayerStats.AttackPower * spiritCleave1Percentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.SpiritCleave2:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave2Percentage, player.PlayerStats.AttackPower * spiritCleave2Percentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.SpiritCleave3:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritCleave3Percentage, player.PlayerStats.AttackPower * spiritCleave3Percentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.SpiritPiercing:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritPiercingPercentage, player.PlayerStats.AttackPower * spiritPiercingPercentage, TenacityAndGroggyForce.Medium);
+                    break;
+                case PlayerState.SpiritSwordDance:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritSwordDancePercentage, player.PlayerStats.AttackPower * spiritSwordDancePercentage, TenacityAndGroggyForce.High);
+                    break;
+                case PlayerState.SpiritNova:
+                    //enemyStats.Damaged(player.PlayerStats.AttackPower * spiritNovaPercentage, player.PlayerStats.AttackPower * spiritNovaPercentage, TenacityAndGroggyForce.High);
+                    break;
+            }
         }
 
         if (player.PlayerStats.IsRavenous)
@@ -131,16 +186,7 @@ public class AttackCheck : MonoBehaviour
     {
         if (attackedMonstersByPlayer.Count != 0 && attackedMonstersByPlayer.Contains(other.gameObject)) return;
 
-        if (other.CompareTag("EnemyGuard"))
-        {
-            attackedMonstersByPlayer.Add(other.gameObject);
-
-            if (other.gameObject.transform.parent.gameObject.GetComponent<EnemyStats>() != null)
-            {
-                Damaging(other.gameObject.transform.parent.gameObject.GetComponent<EnemyStats>(), false);
-            }
-        }
-        else if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
             attackedMonstersByPlayer.Add(other.gameObject);
 

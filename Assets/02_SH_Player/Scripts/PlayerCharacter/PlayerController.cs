@@ -109,6 +109,13 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public InputAction specialAttackAction;
     InputAction spiritualAction;
     [HideInInspector] public InputAction spiritMarkAbilityAction;
+    [HideInInspector] public InputAction moveTabLeftAction;
+    [HideInInspector] public InputAction moveTabRightAction;
+    [HideInInspector] public InputAction moveSelectLeftAction;
+    [HideInInspector] public InputAction moveSelectRightAction;
+    [HideInInspector] public InputAction moveSelectUpAction;
+    [HideInInspector] public InputAction moveSelectDownAction;
+    [HideInInspector] public InputAction selectAction;
 
     // 상태 머신 관련 변수
     [HideInInspector] public AnimatorStateInfo StateInfo;
@@ -166,13 +173,26 @@ public class PlayerController : MonoBehaviour
         specialAttackAction = inputActionAsset.FindAction("SpecialAttack");
         spiritualAction = inputActionAsset.FindAction("Spiritual");
         spiritMarkAbilityAction = inputActionAsset.FindAction("SpiritMarkAbility");
+        moveTabLeftAction = inputActionAsset.FindAction("MoveTabLeft");
+        moveTabRightAction = inputActionAsset.FindAction("MoveTabRight");
+        moveSelectLeftAction = inputActionAsset.FindAction("MoveSelectLeft");
+        moveSelectRightAction = inputActionAsset.FindAction("MoveSelectRight");
+        moveSelectUpAction = inputActionAsset.FindAction("MoveSelectUp");
+        moveSelectDownAction = inputActionAsset.FindAction("MoveSelectDown");
+        selectAction = inputActionAsset.FindAction("Select");
 
         IsRadicalESMAttackPosture = true;
     }
 
+    void Start()
+    {
+        SMAndESMUIManager.Instance.SetPlayerController(this);
+        InGameUIManager.Instance.SetPlayerController(this);
+    }
     void Update()
     {
         if (CurrentPlayerState == PlayerState.Dead) return;
+        if (DialogSystem.Instance.isdialogueCanvas) return; // 다이얼로그 열리면 키 입력 및 행동 금지(추후 TimeScale로 다루는 것에 대한 여부)
 
         if (transform.position.x != 0)
         {
@@ -191,7 +211,6 @@ public class PlayerController : MonoBehaviour
 
         Gravity();
 
-        if (DialogSystem.Instance.isdialogueCanvas) return; // 다이얼로그 열리면 키 입력 및 행동 금지(추후 TimeScale로 다루는 것에 대한 여부)
         ManageRotate();
         HandleBasicHorizonSlash2Combo();
         HandleSpiritCleave2Combo();
@@ -504,7 +523,7 @@ public class PlayerController : MonoBehaviour
         {
             if (CanPenetrate)
             {
-                if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && IsRadicalESMAttackPosture) return; // 극단적인 영원의 영혼낙인 공격 자세 시엔 간파 시전 불가
+                if (PlayerESMInventory.EquipedESM != null && PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && IsRadicalESMAttackPosture) return; // 극단적인 영원의 영혼낙인 공격 자세 시엔 간파 시전 불가
 
                 PlayerStateMachine.TransitionTo(PlayerStateMachine.penetrateState);
             }
@@ -516,7 +535,7 @@ public class PlayerController : MonoBehaviour
     }
     void GuardPressed() // 가드 관리
     {
-        if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && IsRadicalESMAttackPosture) return;
+        if (PlayerESMInventory.EquipedESM != null && PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && IsRadicalESMAttackPosture) return;
 
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash) return;
 
@@ -549,7 +568,7 @@ public class PlayerController : MonoBehaviour
     }
     void Attack1Pressed() // 공격 Z키 관리
     {
-        if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !IsRadicalESMAttackPosture) return;
+        if (PlayerESMInventory.EquipedESM != null && PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !IsRadicalESMAttackPosture) return;
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
         if (attack1Action.WasPressedThisFrame())
@@ -591,7 +610,7 @@ public class PlayerController : MonoBehaviour
     }
     void Attack2Pressed() // 공격 X키 관리
     {
-        if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !IsRadicalESMAttackPosture) return;
+        if (PlayerESMInventory.EquipedESM != null && PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !IsRadicalESMAttackPosture) return;
 
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
@@ -653,6 +672,7 @@ public class PlayerController : MonoBehaviour
             GameObject go = Instantiate(SpiritUnboundPrefab);
             go.GetComponent<AttackCheck>().player = this;
             go.GetComponent<AttackCheck>().IsProjectile = true;
+            go.GetComponent<AttackCheck>().ProjectilePercentage = 1.1f;
 
             if (IsLookRight)
             {
@@ -677,18 +697,22 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < projectileCount; i++)
             {
+                float y = UnityEngine.Random.Range(1f, 2f);
+                float z = UnityEngine.Random.Range(0.2f, 1.2f);
+
                 GameObject go = Instantiate(SpiritUnboundPrefab);
                 go.GetComponent<AttackCheck>().player = this;
                 go.GetComponent<AttackCheck>().IsProjectile = true;
+                go.GetComponent<AttackCheck>().ProjectilePercentage = 1.1f;
 
                 if (IsLookRight)
                 {
-                    go.transform.position = new Vector3(transform.position.x, UnityEngine.Random.Range(1f, 2f), transform.position.z + UnityEngine.Random.Range(0.2f, 1.2f));
+                    go.transform.position = new Vector3(transform.position.x, y, transform.position.z + z);
                     go.GetComponent<Projectile>().SetIsMoveRight(true);
                 }
                 else
                 {
-                    go.transform.position = new Vector3(transform.position.x, UnityEngine.Random.Range(1f, 2f), transform.position.z - UnityEngine.Random.Range(0.2f, 1.2f));
+                    go.transform.position = new Vector3(transform.position.x, y, transform.position.z - z);
                     go.GetComponent<Projectile>().SetIsMoveRight(false);
                 }
             }
@@ -701,6 +725,7 @@ public class PlayerController : MonoBehaviour
         go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, transform.position.z);
         go.GetComponent<AttackCheck>().player = this;
         go.GetComponent<AttackCheck>().IsProjectile = true;
+        go.GetComponent<AttackCheck>().ProjectilePercentage = 2.0f;
 
         Destroy(go, 0.3f);
     }
@@ -713,7 +738,7 @@ public class PlayerController : MonoBehaviour
             go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, transform.position.z);
             go.GetComponent<AttackCheck>().player = this;
             go.GetComponent<AttackCheck>().IsProjectile = true;
-
+            go.GetComponent<AttackCheck>().ProjectilePercentage = 0.15f;
             Destroy(go, 0.3f);
 
             yield return new WaitForSeconds(0.25f);
@@ -721,6 +746,18 @@ public class PlayerController : MonoBehaviour
 
         PlayerStats.RagingStack = 0;
         yield return null;
+    }
+
+
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("DroppedItem"))
+        {
+            other.GetComponent<DroppedItem>().PickUpItem(this);
+        }
     }
 }
 

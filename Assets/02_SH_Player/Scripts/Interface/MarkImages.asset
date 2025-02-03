@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 139bae5c3f9597a42a3f8e45858a1c9c, type: 3}
+  m_Name: MarkImages
+  m_EditorClassIdentifier: 
+  eSMImageList:
+  - name: "\uC218\uD638\uD558\uB294 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: 79c96cb9c2992434fb0c060dc574e8f6, type: 3}
+  - name: "\uBD80\uB3D9\uC758 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: dfb275357840d244ba03a95e901976b2, type: 3}
+  - name: "\uAD76\uC8FC\uB9B0 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: fc286ad54e348bd499847c35a86eb754, type: 3}
+  - name: "\uC5F4\uC131\uC801\uC778 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: f62a86e0bf5944e4685d43360a5056d9, type: 3}
+  - name: "\uD30C\uAD34\uC801\uC778 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: a763c566d9b71034d8f5f350843cae73, type: 3}
+  - name: "\uADF9\uB2E8\uC801\uC778 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: 44c91951e6681e943956a9c15dfbaf85, type: 3}
+  - name: "\uBAB0\uC544\uCE58\uB294 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: 845ba9efdefc505428635d01ffeabaa9, type: 3}
+  - name: "\uD574\uBC29\uB41C \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: b555b7f90df694d4fa9f5d33b460914c, type: 3}
+  - name: "\uC19F\uAD6C\uCE58\uB294 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: e276129944a070d42ac0f09156eae3c6, type: 3}
+  - name: "\uAD11\uD3ED\uD558\uB294 \uC601\uC6D0\uC758 \uC601\uD63C\uB099\uC778"
+    image: {fileID: 21300000, guid: d47f154a3f6e20246b9c321851fb0249, type: 3}
+  spiritMarkImageList:
+  - name: FaintSpiritMark
+    image: {fileID: 21300000, guid: a96113259c657a242b617e2a57766bce, type: 3}
+  - name: VividSpiritMark
+    image: {fileID: 21300000, guid: fc764aa7bd9d00f4c94a9257152027a3, type: 3}
+  - name: AzureSpiritMark
+    image: {fileID: 21300000, guid: 82ff65924ca15354eaf72103ee84388a, type: 3}
+  markImageList: []
