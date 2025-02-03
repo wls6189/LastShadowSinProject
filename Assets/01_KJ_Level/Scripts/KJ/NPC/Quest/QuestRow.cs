@@ -21,8 +21,6 @@ public class QuestRow : MonoBehaviour
     public Image firstReward; //첫번째 보상 이미지
     public TextMeshProUGUI firstRewardAmount; //첫번째 보상의 양
 
-    public Image secondReward; //두번째 보상 이미지
-    public TextMeshProUGUI secondRewardAmount; //두번째 보상의 양
 
 
 }

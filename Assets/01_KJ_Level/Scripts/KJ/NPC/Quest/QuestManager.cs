@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI.Table;
@@ -60,19 +61,19 @@ public class QuestManager : MonoBehaviour
     [Header("QuestTracker")]
     public GameObject questTrackerContent; //현재 추적 중인 퀘스트 정보를 표시하는 UI의 콘텐츠 객체
 
-    public void AddActiveQuest(Quest quest)
+    public void AddActiveQuest(string questGvier , Quest quest)
     {
-       // allActiveQuests.Add(quest);
+        // allActiveQuests.Add(quest);
 
         DataManager.Instance.SaveActiveQuest(quest.questGiver,quest);
 
         RefreshQuestList();
     }
 
-    public void MarkQuestCompleted(Quest quest)
-    {    
 
-        DataManager.Instance.nowPlayer.allActiveQuests.Remove(quest);
+
+    public void MarkQuestCompleted(Quest quest)
+    {
 
         //allCompletedQuests.Add(quest);
 
@@ -156,10 +157,11 @@ public class QuestManager : MonoBehaviour
 
         qRow.questHint.text = finishQuest.info.hintExplain;
 
+        qRow.firstReward.sprite = finishQuest.info.rewardImage;
 
         qRow.firstRewardAmount.text = finishQuest.info.firstRequirmentAmount.ToString();
 
-        qRow.secondRewardAmount.text = finishQuest.info.secondRequirmentAmount.ToString();
+    
 
     }
 }

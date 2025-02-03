@@ -8,21 +8,25 @@ using System.Linq;
 
 public class PlayerData
 {
+    //플레이어
     public string name; //닉네임
-    //public int level = 1;
-    //public int coin = 100;
-    //  public int item = -1; 
-
     public Vector3 position = new Vector3(0.0f, 0.0f, -5.21f);
-
     public string currentScene = "StartPlayScene";
     public string currentMap = "시체 곶";
-
     public int previousSlot = -1; //PlayePrefs 
+
+    public float InitMaxHealth = 100.0f;
+    public float MaxHealth = 100.0f;
+    public float MaxSpiritWave = 10.0f;
+    public float MaxSpiritMarkForce = 100.0f;
+
+    public float SpiritAshAmount = 0;
+    public EternalSpiritMark EquipedESM = null;
 
     //퀘스트
     public List<Quest> allActiveQuests = new List<Quest>();
     public List<Quest> allCompletedQuests = new List<Quest>();
+ 
     public List<string> questGivers = new List<string>();
     
 
@@ -133,12 +137,17 @@ public class DataManager : MonoBehaviour
         string data = File.ReadAllText(path + nowSlot.ToString());
         nowPlayer = JsonUtility.FromJson<PlayerData>(data);  
 
+        Debug.Log("데이터 로드 완료! 플레이어 현재 체력 : " + nowPlayer.MaxHealth);
+        Debug.Log("데이터 로드 완료! 플레이어 현재 영혼 파동  : " + nowPlayer.MaxSpiritWave);
+
+
         Debug.Log("데이터 로드 완료! 저장된 영혼파편 개수: " + nowPlayer.saveActiveObjects.Count);
         Debug.Log("데이터 로드 완료! 저장된 활성화 퀘스트 개수: " + nowPlayer.allActiveQuests.Count);
         Debug.Log("데이터 로드 완료! 저장된 완료된 퀘스트 개수: " + nowPlayer.allCompletedQuests.Count);
-        Debug.Log("데이터 로드 완료! 저장된 활성화된  퀘스트 개수: " + nowPlayer.questGivers.Count);
+        Debug.Log("데이터 로드 완료! 저장된 퀘스트 제공자 몇명? : " + nowPlayer.questGivers.Count);
         Debug.Log("데이터 로드 완료! 저장된 영혼샘 상호작용 횟수:" + nowPlayer.SpiritSpringCount);
         Debug.Log("데이터 로드 완료! 저장된 문드러진 도장 상호작용 횟수:" + nowPlayer.DecayedStampCount);
+  
     }
 
     public void DataClear()
@@ -181,6 +190,8 @@ public class DataManager : MonoBehaviour
     public void SaveActiveQuest(string giver,Quest quest)
     {
         Debug.Log("퀘스트 제공자는 " + giver);
+
+
         nowPlayer.questGivers.Add(giver);
         nowPlayer.allActiveQuests.Add(quest);
 
@@ -188,7 +199,7 @@ public class DataManager : MonoBehaviour
     }
     public void SaveCompletedQuest(string giver,Quest quest)
     {
-       
+        nowPlayer.allActiveQuests.Clear();
 
         nowPlayer.questGivers.Add(giver);
         nowPlayer.allCompletedQuests.Add(quest);

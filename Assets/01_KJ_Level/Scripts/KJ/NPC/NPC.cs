@@ -309,6 +309,8 @@ public class NPC : MonoBehaviour
         {
             if(!DataManager.Instance.nowPlayer.questGivers.Contains(currentActiveQuest.questGiver))
             {
+                currentActiveQuest = Quests[ActiveQuestIndex];
+
                 PlayerDialouge.gameObject.SetActive(false);
                 NpcDialouge.gameObject.SetActive(true);
 
@@ -316,7 +318,7 @@ public class NPC : MonoBehaviour
 
                 npcDialogText.text = currentActiveQuest.info.InitialFinishAnswer;
 
-                QuestManager.Instance.AddActiveQuest(currentActiveQuest);
+                QuestManager.Instance.AddActiveQuest(currentActiveQuest.questGiver, currentActiveQuest);
 
                 StartCoroutine(delayTalkStop());
             }
@@ -549,6 +551,9 @@ public class NPC : MonoBehaviour
 
     private void ReceiveReward()
     {
+
+     
+
         QuestManager.Instance.MarkQuestCompleted(currentActiveQuest);
        
         if (currentActiveQuest.info.rewardItem1 != null)
@@ -562,16 +567,17 @@ public class NPC : MonoBehaviour
 
             // 오른쪽 방향으로 offset만큼 이동
             Vector3 spawnPosition = npcPosition + (rightDirection * offsetX);
-            spawnPosition.y = 0.3f;
+            spawnPosition.y = 0.03f;
+
             Quaternion spawnRotation = Quaternion.Euler(0, -90, 0);
 
             GameObject DecayedStamp =  Instantiate(currentActiveQuest.info.rewardItem1, spawnPosition, spawnRotation);
         }
 
-        if (currentActiveQuest.info.rewardItem2 != "")
-        {
-            player.GetComponent<PlayerInteraction>().CollectItem(currentActiveQuest.info.rewardItem2);
-        }
+        //if (currentActiveQuest.info.rewardItem2 != "")
+        //{
+        //    player.GetComponent<PlayerInteraction>().CollectItem(currentActiveQuest.info.rewardItem2);
+        //}
    
 
         //@@@@@@@ NPC가 보상해줄 것들이 더 많다면 여기 아래에 더 추가 할 수 있음@@@@@@@@@ 
