@@ -72,7 +72,7 @@ public class QuestManager : MonoBehaviour
     public void MarkQuestCompleted(Quest quest)
     {    
 
-       // allActiveQuests.Remove(quest);
+        DataManager.Instance.nowPlayer.allActiveQuests.Remove(quest);
 
         //allCompletedQuests.Add(quest);
 

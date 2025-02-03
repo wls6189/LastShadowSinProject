@@ -42,8 +42,8 @@ public class DialogSystem : MonoBehaviour
     public Button ReceiveBtn;
 
 
-    public GameObject TalkDialouge;
-    public GameObject QuestDialouge;
+    public GameObject NpcDialouge;
+    public GameObject PlayerTalkDialouge;
     private void Awake()
     {
         if (instance == null)

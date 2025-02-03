@@ -8,7 +8,7 @@ using System.Linq;
 
 public class PlayerData
 {
-    public string name;
+    public string name; //닉네임
     //public int level = 1;
     //public int coin = 100;
     //  public int item = -1; 
@@ -18,7 +18,7 @@ public class PlayerData
     public string currentScene = "StartPlayScene";
     public string currentMap = "시체 곶";
 
-    public int previousSlot = -1;
+    public int previousSlot = -1; //PlayePrefs 
 
     //퀘스트
     public List<Quest> allActiveQuests = new List<Quest>();
@@ -27,13 +27,22 @@ public class PlayerData
     
 
     //영혼파편
-    public List<SoulFragMent> saveActiveObjects = new List<SoulFragMent>();
-    public List<int> saveObjectId = new List<int>();
+    public List<SpiritShardOfTheDevoted> saveActiveObjects = new List<SpiritShardOfTheDevoted>();
+    public List<int> SpiritShardOfTheDevotedID = new List<int>();
     public List<string> saveObjectSceneName = new List<string>();
 
+    //영혼샘
+    public int SpiritSpringCount = 0;
+    public List<string> currentSceneSpiritSpring = new List<string>();
 
+    //문드러진 도장
+    public int DecayedStampCount = 0;
+    public List<string> currentScenesDecayedStamp = new List<string>();
 
-
+    //부음받은 자 
+    public bool isOpenChaosRift = true; //혼돈의 틈새가 아직 열려있는 상태 여부 , 처음엔 열려 있음
+    public bool isReCloseChaosRift; //혼돈의 틈새가 닫혀있는 상태에서 상호작용 할 시 
+    public bool isPromise;
 }
 public class DataManager : MonoBehaviour
 {
@@ -62,7 +71,7 @@ public class DataManager : MonoBehaviour
             instance = this;
 
         }
-        else // 1. go.AddComponent<EventBus>(); -> 2. Awake 실행이므로 evetbus가 아직 null이다. 그래서 eventbus = this를 해준다. 
+        else 
         {
             Destroy(this.gameObject);
         }
@@ -125,9 +134,11 @@ public class DataManager : MonoBehaviour
         nowPlayer = JsonUtility.FromJson<PlayerData>(data);  
 
         Debug.Log("데이터 로드 완료! 저장된 영혼파편 개수: " + nowPlayer.saveActiveObjects.Count);
-       // Debug.Log("데이터 로드 완료! 저장된 활성화된 퀘스트 개수: " + nowPlayer.allActiveQuests.Count);
+        Debug.Log("데이터 로드 완료! 저장된 활성화 퀘스트 개수: " + nowPlayer.allActiveQuests.Count);
         Debug.Log("데이터 로드 완료! 저장된 완료된 퀘스트 개수: " + nowPlayer.allCompletedQuests.Count);
         Debug.Log("데이터 로드 완료! 저장된 활성화된  퀘스트 개수: " + nowPlayer.questGivers.Count);
+        Debug.Log("데이터 로드 완료! 저장된 영혼샘 상호작용 횟수:" + nowPlayer.SpiritSpringCount);
+        Debug.Log("데이터 로드 완료! 저장된 문드러진 도장 상호작용 횟수:" + nowPlayer.DecayedStampCount);
     }
 
     public void DataClear()
@@ -146,7 +157,7 @@ public class DataManager : MonoBehaviour
 
     //헌신자 영혼파편 상호작용 시 현재 구역 세이브하는 부분. -> UI 띄우고 현재 구역 표시하기 위함.
 
-    public void SaveSoulFragment(SoulFragMent soulObj,int id, string sceneName)
+    public void SaveSoulFragment(SpiritShardOfTheDevoted soulObj,int id, string sceneName)
     {
         if(nowPlayer.saveActiveObjects.Contains(soulObj))
         {
@@ -156,7 +167,7 @@ public class DataManager : MonoBehaviour
 
         if (!nowPlayer.saveActiveObjects.Contains(soulObj))
         {
-            nowPlayer.saveObjectId.Add(id);
+            nowPlayer.SpiritShardOfTheDevotedID.Add(id);
 
             nowPlayer.saveObjectSceneName.Add(sceneName);
 
@@ -177,7 +188,8 @@ public class DataManager : MonoBehaviour
     }
     public void SaveCompletedQuest(string giver,Quest quest)
     {
-        nowPlayer.allActiveQuests.Remove(quest);
+       
+
         nowPlayer.questGivers.Add(giver);
         nowPlayer.allCompletedQuests.Add(quest);
 

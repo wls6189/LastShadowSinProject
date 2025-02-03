@@ -50,7 +50,6 @@ public class UIManager : MonoBehaviour
 
     public Button[] TabButtons;
 
-    private bool isChoose = false;
 
     EventSystem system;
 
@@ -159,22 +158,21 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void SoulImageOpen(SoulFragMent soulFragMent)
+    public void SoulImageOpen(SpiritShardOfTheDevoted soulFragMent)
     {
         SoulImages.gameObject.SetActive(true);
 
         RefreshSaveScenes(soulFragMent);
     }
 
-    [SerializeField]
-    private bool isSoulFragMentUI;
+   
 
     private string movedScene;
 
-    public void RefreshSaveScenes(SoulFragMent soulFragMent)
+    public void RefreshSaveScenes(SpiritShardOfTheDevoted soulFragMent)
     {
         DialogSystem.Instance.MouseOn();
-        isSoulFragMentUI = true;
+     
 
 
         // 기존 UI 정리
@@ -222,7 +220,6 @@ public class UIManager : MonoBehaviour
     public void SelectSceneMove()
     {
   
-        isSoulFragMentUI = false;
         SoulFragMentMoveInfo.gameObject.SetActive(false);
         SoulImages.gameObject.SetActive(false);
         SceneManager.LoadScene(movedScene);
