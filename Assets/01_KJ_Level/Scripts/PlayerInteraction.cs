@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +13,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private NPC currentNPC;
 
-    private SoulFragMent soulfragMent;
+    private SpiritShardOfTheDevoted soulfragMent;
+    private SpiritSpring soulWell;
+    private DecayedStamp crackedSeal;
+    private ChaosRift chaosRift;
 
     InputActionAsset inputActionAsset;
     InputAction interactAction;
@@ -110,7 +114,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")) //상호작용 확인.
+        if (other.CompareTag("FragMent") || other.CompareTag("NextPortal") 
+            || other.CompareTag("PreviousPortal") || other.CompareTag("SoulWell")
+            || other.CompareTag("CrackedSeal") || other.CompareTag("ChaosRift")) //상호작용 확인.
         {
             isInteractionReady = true;
 
@@ -118,7 +124,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         if (other.CompareTag("FragMent") && isInteractionStart) //헌신자 영혼파편
         {
-            soulfragMent = other.GetComponent<SoulFragMent>();
+            soulfragMent = other.GetComponent<SpiritShardOfTheDevoted>();
 
             if (!soulfragMent.isSave) // 처음 상호작용 시 저장
             {
@@ -150,18 +156,45 @@ public class PlayerInteraction : MonoBehaviour
             isInteractionStart = false;
             other.GetComponent<Portal>().LoadScene(false);
         }
+        if(other.CompareTag("SoulWell") && isInteractionStart)
+        {
+            isInteractionStart = false;
+
+            soulWell = other.GetComponent<SpiritSpring>();
+            soulWell.InteractionPlayer();
+
+        }
+        if(other.CompareTag("CrackedSeal") && isInteractionStart)
+        {
+            isInteractionStart = false;
+            crackedSeal = other.GetComponent<DecayedStamp>();
+            crackedSeal.InteractionPlayer();
+        }
+
+        if(other.CompareTag("ChaosRift") && isInteractionStart)
+        {
+            isInteractionStart = false;
+
+           
+
+            CollectItem(GetCleanName(other.gameObject.name));
+
+            chaosRift = other.GetComponent<ChaosRift>();
+            chaosRift.InteractionPlayer();
+        }
+
         if (other.CompareTag("NPC"))
         {
             isNpcInteraction = true;
             currentNPC = other.GetComponent<NPC>();
         }
     }
-
+    [SerializeField]
     private bool isInteractionReady;
 
     private bool isNpcInteraction;
 
-
+    [SerializeField]
     private bool isInteractionStart;
     private void OnTriggerExit(Collider other)
     {
@@ -187,19 +220,21 @@ public class PlayerInteraction : MonoBehaviour
     {
         Debug.Log("SAVE");
         // 플레이어 위치 및 현재 씬 저장
-        DataManager.Instance.nowPlayer.position = transform.position;
+        DataManager.Instance.nowPlayer.position = transform.position; //위치. 
 
-        DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name;
+        DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name; //현재씬 
 
-        //활성화 또는 완료된 약속들 저장
-
-
-        //현재 슬롯 저장. -> Continue 버튼을 위함.
-
-
-        // 데이터 저장
         DataManager.Instance.SaveData();
 
 
+    }
+
+
+    private string GetCleanName(string originalName)
+    {
+        // \s* -> 공백을 포함한 0개 이상의 공백 문자 제거
+        //\(.*\) -> 괄호 안에 있는 모든 문자 제거.
+
+        return Regex.Replace(originalName, @"\s*\(.*\)", "");
     }
 }

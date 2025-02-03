@@ -13,7 +13,7 @@ public class NPC : MonoBehaviour
     [SerializeField]
     float rotationSpeed; //회전속도
 
-    public bool isTalkingwithPlayer;
+  
     [SerializeField]
     public GameObject NpcTalkImage; //Talk[F] 라는  텍스트를 보여주기 위함.
 
@@ -29,20 +29,21 @@ public class NPC : MonoBehaviour
     Button OptionSecondBtn; //옵션버튼2
     TextMeshProUGUI OptionSecondBtnText; //옵션버튼2 텍스트
 
-    GameObject TalkDialouge;  //대화하는 부분 보여주기 위한 이미지
+    GameObject PlayerDialouge;  //대화하는 부분 보여주기 위한 이미지
 
-    GameObject QuestionDialouge; //선택 버튼1,2 부분 보여주기 위한 이미지.
+    GameObject NpcDialouge; //선택 버튼1,2 부분 보여주기 위한 이미지.
 
-    Button FirstBtn; //선택 버튼 1
-
-    Button SecondBtn; //선택 버튼 2
-
+  
     Button BackBtn; //선택 버튼 2
+    TextMeshProUGUI BackBtnText; //선택 버튼 2
 
 
     Button ThirdBtn; //보상 버튼 
 
-    
+    [SerializeField]
+    bool isAccepted;
+    [SerializeField]
+    bool isDecline;
 
 
     [Header("QuestInfo")]
@@ -50,8 +51,10 @@ public class NPC : MonoBehaviour
     public Quest currentActiveQuest;
     private int ActiveQuestIndex = 0;
     public bool isFirstTimeInteraction = true;
-    private int CurrentFirstDialog = 0;
-    private int CurrentSecondDialog = 0;
+
+
+    //private int CurrentFirstDialog = 0;
+    //private int CurrentSecondDialog = 0;
 
 
 
@@ -61,12 +64,13 @@ public class NPC : MonoBehaviour
 
     void Start()
     {
+        
+
         if (DataManager.Instance.nowPlayer.questGivers.Contains(QuestGiver))
         {
             if (DataManager.Instance.nowPlayer.allCompletedQuests.Count > 0)
             {
                 currentActiveQuest = Quests[ActiveQuestIndex];
-                currentActiveQuest.isCompleted = true;
             }
         }
            
@@ -83,33 +87,29 @@ public class NPC : MonoBehaviour
             OptionSecondBtnText = DialogSystem.Instance.optBtn2.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
 
 
-            FirstBtn = DialogSystem.Instance.FirstBtn;
-            SecondBtn = DialogSystem.Instance.SecondBtn;
+          
             BackBtn = DialogSystem.Instance.BackBtn;
+            BackBtnText = DialogSystem.Instance.BackBtn.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+
+
             ThirdBtn = DialogSystem.Instance.ReceiveBtn;
 
-            TalkDialouge = DialogSystem.Instance.TalkDialouge;
-            QuestionDialouge = DialogSystem.Instance.QuestDialouge;
+            NpcDialouge = DialogSystem.Instance.NpcDialouge;
+            PlayerDialouge = DialogSystem.Instance.PlayerTalkDialouge;
 
             npcGiverText = DialogSystem.Instance.NpcGiverText;
 
-            initRot = transform.rotation;
+            initRot =  transform.rotation;
         }
 
         
     }
 
     public void PlayerWithTalk()
-    {
-       
+    {    
         NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
 
-
-        if (!isTalkingwithPlayer)
-        {
-            StartTalk();
-
-        }
+        StartTalk();
     }
     public void PlayerLookNpc(Vector3 playerPos)
     {
@@ -118,465 +118,379 @@ public class NPC : MonoBehaviour
         Vector3 dir = transform.position - target;
         dir.y = 0;
 
-        Quaternion targetRotation = Quaternion.LookRotation(dir);
+        Quaternion targetRotation = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180, 0);
 
         StartCoroutine(LookAtPlayerRoutine(targetRotation));
     }
+
   
     private void StartTalk()
     {
-        if (DataManager.Instance.nowPlayer.questGivers.Contains(QuestGiver))
-        {
-            Debug.Log("0");
+        #region 잠시대기
+        //if (DataManager.Instance.nowPlayer.questGivers.Contains(QuestGiver))
+        //{
+        //    Debug.Log("0");
 
-            if (currentActiveQuest.isCompleted == true) //퀘스트를 완료했을 경우. 즉, 이미 이전에 동일한 퀘스트를 완료했는데, 또 보상 받을려고? ㅋ
-            {
-                DialogSystem.Instance.OpenDialogUI();
+        //    if (currentActiveQuest.isCompleted == true) //퀘스트를 완료했을 경우. 즉, 이미 이전에 동일한 퀘스트를 완료했는데, 또 보상 받을려고? ㅋ
+        //    {
+        //        DialogSystem.Instance.OpenDialogUI();
 
-                TalkDialouge.gameObject.SetActive(true);
+        //        PlayerDialouge.gameObject.SetActive(true);
 
-                FirstBtn.gameObject.SetActive(false);
-                SecondBtn.gameObject.SetActive(false);
-                ThirdBtn.gameObject.SetActive(false);
+        //        ThirdBtn.gameObject.SetActive(false);
 
-                npcDialogText.text = currentActiveQuest.info.CombackFinishAnswer;
+        //        npcDialogText.text = currentActiveQuest.info.CombackFinishAnswer;
 
-                StartCoroutine(delayTalkText());
+        //        StartCoroutine(delayTalkStop());
 
-                return;
-            }
+        //        return;
+        //    }
 
-            if (AreQuestRequirmentsCompleted())
-            {
-                Debug.Log("2");
-                DialogSystem.Instance.OpenDialogUI();
+        //    if (AreQuestRequirmentsCompleted())
+        //    {
+        //        Debug.Log("2");
+        //        DialogSystem.Instance.OpenDialogUI();
 
 
-                SubmitRequiredItems();
-             
-                npcDialogText.text = currentActiveQuest.info.FinishAnswer;
+        //        SubmitRequiredItems();
 
-                QuestionDialouge.gameObject.SetActive(false);
-                TalkDialouge.gameObject.SetActive(true);
+        //        npcDialogText.text = currentActiveQuest.info.FinishAnswer;
 
-                FirstBtn.gameObject.SetActive(false);
-                SecondBtn.gameObject.SetActive(false);
-                ThirdBtn.gameObject.SetActive(true);
+        //        NpcDialouge.gameObject.SetActive(false);
+        //        PlayerDialouge.gameObject.SetActive(true);
 
-                ThirdBtn.GetComponentInChildren<TextMeshProUGUI>().text = "[보상 받기]";
-                ThirdBtn.onClick.RemoveAllListeners();
-                ThirdBtn.onClick.AddListener(() =>
-                {
-                    isTalkingwithPlayer = false;
-                    TalkStop();
+        //        ThirdBtn.gameObject.SetActive(true);
 
-                    ReceiveReward();
-                    DialogSystem.Instance.CloseDialogUI();
-                });
+        //        ThirdBtn.GetComponentInChildren<TextMeshProUGUI>().text = "[보상 받기]";
+        //        ThirdBtn.onClick.RemoveAllListeners();
+        //        ThirdBtn.onClick.AddListener(() =>
+        //        {
 
-               
-            }
-            else
-            {
-                DialogSystem.Instance.OpenDialogUI();
+        //            TalkStop();
 
-                QuestionDialouge.gameObject.SetActive(false); //옵션 이미지 가리기.
+        //            ReceiveReward();
+        //            DialogSystem.Instance.CloseDialogUI();
+        //        });
 
-                TalkDialouge.gameObject.SetActive(true); //대화 이미지 보이기
 
-                FirstBtn.gameObject.SetActive(false); //버튼 가리기1
-                SecondBtn.gameObject.SetActive(false);//버튼 가리기2
+        //    }
+        //    else
+        //    {
+        //        DialogSystem.Instance.OpenDialogUI();
 
-                currentActiveQuest = Quests[ActiveQuestIndex];
-                npcDialogText.text = currentActiveQuest.info.AcceptCombackAnswer;
+        //        NpcDialouge.gameObject.SetActive(true); //옵션 이미지 가리기.
 
-                StartCoroutine(delayTalkText());
+        //        PlayerDialouge.gameObject.SetActive(false); //대화 이미지 보이기
 
-               
-            }
 
-       
+        //        currentActiveQuest = Quests[ActiveQuestIndex];
+        //        npcDialogText.text = currentActiveQuest.info.AcceptCombackAnswer;
 
-            return;
-        }
+        //        StartCoroutine(delayTalkStop());
 
-         isTalkingwithPlayer = true;
 
-       
 
-        if (isFirstTimeInteraction)
+        //    }
+
+
+
+        //    return;
+        //}
+
+        #endregion 
+
+        if (isFirstTimeInteraction) //첫 조우
         {
             isFirstTimeInteraction = false;
 
+            NpcDialouge.gameObject.SetActive(true);
+            PlayerDialouge.gameObject.SetActive(false);
+          
+
             currentActiveQuest = Quests[ActiveQuestIndex];
-            UpdateDialogUI(); // 대화 UI 초기화 및 시작
+            npcDialogText.text = currentActiveQuest.info.InitExplain;
+    
 
-            CurrentFirstDialog = 0;
-            CurrentSecondDialog = 0;
-        }
+            StartCoroutine(DelayToPlayerDialouge(1.5f));
 
-        else
+            FirstInteraction(); // 대화 UI 초기화 및 시작        
+        } 
+
+        if(DataManager.Instance.nowPlayer.isPromise)
         {
-            if (isDecline == true) //이전에 대화 첫 시작했을 때 퀘스트를 거절했을 것이다. 따라서 isDeclined가 당연히 true 였을 것임. 
-            {
-                UpdateDialogUI();
-            }
-            
-            if(isAccepted && currentActiveQuest.isCompleted == false 
-                )
-            {
-                if(AreQuestRequirmentsCompleted())
+            if (DataManager.Instance.nowPlayer.isOpenChaosRift == true) //혼돈의 틈새 열려진 상태에서 첫 조우
+            {             
+                if (AreQuestRequirmentsCompleted()) //혼돈의 틈새 열렸는지 닫혔는지에 대한 메서드 호출
                 {
+                    //열었음.  
+                    DataManager.Instance.nowPlayer.isOpenChaosRift = false;
+                }
+                else //여전히 닫혀 있음.
+                {                  
+                    Debug.Log("약속 조건인 혼돈의 틈새 여는거 불 충족");
 
                     DialogSystem.Instance.OpenDialogUI();
-                    
 
-                    SubmitRequiredItems();
-                    npcDialogText.text = currentActiveQuest.info.FinishAnswer;
+                    NpcDialouge.gameObject.SetActive(true);
+                    PlayerDialouge.gameObject.SetActive(false);
 
-                    QuestionDialouge.gameObject.SetActive(false);
-                    TalkDialouge.gameObject.SetActive(true);
+                    npcDialogText.text = currentActiveQuest.info.OpenChaosRiftExplain;
 
-                    FirstBtn.gameObject.SetActive(false);
-                    SecondBtn.gameObject.SetActive(false);
-                    ThirdBtn.gameObject.SetActive(true);
 
-                    ThirdBtn.GetComponentInChildren<TextMeshProUGUI>().text = "[보상 받기]";
-                    ThirdBtn.onClick.RemoveAllListeners();
-                    ThirdBtn.onClick.AddListener(() =>
-                    {
-                        isTalkingwithPlayer = false;
-                        TalkStop();
+                    StartCoroutine(DelayToPlayerDialouge(1.5f));
 
-                        ReceiveReward();
-                        DialogSystem.Instance.CloseDialogUI();
-                    });
-
-                }
-                else
-                {
-                    DialogSystem.Instance.OpenDialogUI();
-
-                    QuestionDialouge.gameObject.SetActive(false); //옵션 이미지 가리기.
-
-                    TalkDialouge.gameObject.SetActive(true); //대화 이미지 보이기
-
-                    FirstBtn.gameObject.SetActive(false); //버튼 가리기1
-                    SecondBtn.gameObject.SetActive(false);//버튼 가리기2
-
-                    npcDialogText.text = currentActiveQuest.info.AcceptCombackAnswer;
-
-                    StartCoroutine(delayTalkText());
-
+                    OpenChaosRiftInteraction();
                 }
             }
+             if (DataManager.Instance.nowPlayer.isOpenChaosRift == false)//혼돈의 틈새 닫혀진 상태에서 첫 조우
+            {
 
-            if (currentActiveQuest.isCompleted == true) //퀘스트를 완료했을 경우. 즉, 이미 이전에 동일한 퀘스트를 완료했는데, 또 보상 받을려고? ㅋ
+                Debug.Log("약속 조건인 혼돈의 틈새 여는거 충족");
+                DialogSystem.Instance.OpenDialogUI();
+
+                NpcDialouge.gameObject.SetActive(true);
+                PlayerDialouge.gameObject.SetActive(false);
+
+                npcDialogText.text = currentActiveQuest.info.CloseChaosRiftExplain;
+
+                StartCoroutine(DelayToPlayerDialouge(1.5f));
+
+                CloseChaosRiftInteraction();
+            }
+
+            if (DataManager.Instance.nowPlayer.isReCloseChaosRift == true && 
+                DataManager.Instance.nowPlayer.isOpenChaosRift == false) //혼돈의 틈새가 닫혀지고 재조우
             {
                 DialogSystem.Instance.OpenDialogUI();
 
-                TalkDialouge.gameObject.SetActive(true);
+                NpcDialouge.gameObject.SetActive(true);
+                PlayerDialouge.gameObject.SetActive(false);
 
-                FirstBtn.gameObject.SetActive(false);
-                SecondBtn.gameObject.SetActive(false);
-                ThirdBtn.gameObject.SetActive(false);
+                npcDialogText.text = currentActiveQuest.info.ReCloseChaosRiftExplain;
 
-                npcDialogText.text = currentActiveQuest.info.CombackFinishAnswer;
+                StartCoroutine(DelayToPlayerDialouge(1.5f));
 
-                StartCoroutine(delayTalkText());
-
+                ReCloseChaosRiftInteraction();
             }
         }
-
-       
-   
     }
 
- 
-   
-
-
-    [SerializeField]
-    bool isFirstOption; 
-    [SerializeField]
-    bool isSecondOption;
-    private void UpdateDialogUI()
+    private void FirstInteraction()
     {
-        CurrentFirstDialog = 0;
-        CurrentSecondDialog = 0;
-        DialogSystem.Instance.OpenDialogUI();
 
-        QuestionDialouge.gameObject.SetActive(true);
-        TalkDialouge.gameObject.SetActive(false);
-
-        FirstBtn.gameObject.SetActive(true);
-        SecondBtn.gameObject.SetActive(true);
-        BackBtn.gameObject.SetActive(true);
-
-        ThirdBtn.gameObject.SetActive(false);
+        ThirdBtn.gameObject.SetActive(false); //보상 버튼 비활성화
 
         npcGiverText.text = currentActiveQuest.questGiver; //퀘스트 제공자 동기화 부분
-
-
-        isFirstOption = false;
-        isSecondOption = false;
 
         OptionFirstBtnText.text = currentActiveQuest.info.InitialFirstQuestion;
         OptionFirstBtn.onClick.RemoveAllListeners();
         OptionFirstBtn.onClick.AddListener(() =>
         {
-            isFirstOption = true;
-
-            QuestionDialouge.gameObject.SetActive(false);
-            TalkDialouge.gameObject.SetActive(true);
-
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
             npcDialogText.text = currentActiveQuest.info.InitialFirstAnswer;
-            AnswerButton();
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
         });
 
         OptionSecondBtnText.text = currentActiveQuest.info.InitialSecondQuestion;
         OptionSecondBtn.onClick.RemoveAllListeners();
         OptionSecondBtn.onClick.AddListener(() =>
         {
-            isSecondOption = true;
-
-            QuestionDialouge.gameObject.SetActive(false);
-            TalkDialouge.gameObject.SetActive(true);
-
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
             npcDialogText.text = currentActiveQuest.info.InitialSecondAnswer; //마지막 대화 표시
 
-            AnswerButton();
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
         });
-        BackBtn.GetComponentInChildren<TextMeshProUGUI>().text = "돌아가기";
+
+        BackBtnText.text = currentActiveQuest.info.InitialBackQuestion;
         BackBtn.onClick.RemoveAllListeners();
         BackBtn.onClick.AddListener(() =>
         {
-            isTalkingwithPlayer = false;
-            isFirstTimeInteraction = true;
-            TalkStop();
-
-        });
-
-    }
-
- 
-    private void AnswerButton()
-    { 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 1번째 버튼 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-        if (isFirstOption)
-        {
-            if (CurrentFirstDialog < currentActiveQuest.info.First_Answer1.Count)
+            if(!DataManager.Instance.nowPlayer.questGivers.Contains(currentActiveQuest.questGiver))
             {
-                string question = currentActiveQuest.info.First_Question1[CurrentFirstDialog];
+                PlayerDialouge.gameObject.SetActive(false);
+                NpcDialouge.gameObject.SetActive(true);
 
-                FirstBtn.GetComponentInChildren<TextMeshProUGUI>().text = question;
-                FirstBtn.onClick.RemoveAllListeners();
-                FirstBtn.onClick.AddListener(() =>
-                {
-                    // FirstDialog 범위 초과 방지
-                    string lastNpcTalk = currentActiveQuest.info.First_Answer1[CurrentFirstDialog];
-                    npcDialogText.text = lastNpcTalk;
+                DataManager.Instance.nowPlayer.isPromise = true;
 
-                    CurrentFirstDialog++;
-
-                    // FirstDialog 범위 초과 방지
-                    if (CurrentFirstDialog >= currentActiveQuest.info.First_Answer1.Count)
-                    {
-
-                        CurrentFirstDialog = currentActiveQuest.info.First_Answer1.Count - 1;
-
-                        QuestCheack(lastNpcTalk);
-                        return;
-                    }
-                    AnswerButton();
-                });
-            }
-            // Second 버튼 설정
-            if (CurrentSecondDialog < currentActiveQuest.info.First_Answer2.Count)
-            {
-                string question = currentActiveQuest.info.First_Question2[CurrentSecondDialog];
-
-                SecondBtn.GetComponentInChildren<TextMeshProUGUI>().text = question;
-                SecondBtn.onClick.RemoveAllListeners();
-                SecondBtn.onClick.AddListener(() =>
-                {
-                    // FirstDialog 범위 초과 방지
-                    string lastNpcTalk = currentActiveQuest.info.First_Answer2[CurrentSecondDialog];
-                    npcDialogText.text = lastNpcTalk;
-
-                    CurrentSecondDialog++;
-
-                    // FirstDialog 범위 초과 방지
-                    if (CurrentSecondDialog >= currentActiveQuest.info.First_Answer2.Count)
-                    {
-
-                        CurrentSecondDialog = currentActiveQuest.info.First_Answer2.Count - 1;
-
-                        QuestCheack(lastNpcTalk);
-                        return;
-                    }
-                    AnswerButton();
-                });
-            }
-        }
-
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 2번째 버튼 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-        if(isSecondOption)
-        {
-            if (CurrentFirstDialog < currentActiveQuest.info.Second_Answer1.Count)
-            {
-                string question = currentActiveQuest.info.Second_Question1[CurrentFirstDialog];
-
-                FirstBtn.GetComponentInChildren<TextMeshProUGUI>().text = question;
-                FirstBtn.onClick.RemoveAllListeners();
-                FirstBtn.onClick.AddListener(() =>
-                { 
-                    // FirstDialog 범위 초과 방지
-                    string lastNpcTalk = currentActiveQuest.info.Second_Answer1[CurrentFirstDialog];
-                    npcDialogText.text = lastNpcTalk;
-
-                    CurrentFirstDialog++;
-
-                    // FirstDialog 범위 초과 방지
-                    if (CurrentFirstDialog >= currentActiveQuest.info.Second_Answer1.Count)
-                    {
-
-                        CurrentFirstDialog = currentActiveQuest.info.Second_Answer1.Count - 1;
-
-                        QuestCheack(lastNpcTalk);
-                        return;
-                    }
-                    AnswerButton();
-                });
-            }
-            // Second 버튼 설정
-            if (CurrentSecondDialog < currentActiveQuest.info.Second_Answer2.Count)
-            {
-                string question = currentActiveQuest.info.Second_Question2[CurrentSecondDialog];
-
-                SecondBtn.GetComponentInChildren<TextMeshProUGUI>().text = question;
-                SecondBtn.onClick.RemoveAllListeners();
-                SecondBtn.onClick.AddListener(() =>
-                {
-                    string lastNpcTalk = currentActiveQuest.info.Second_Answer2[CurrentSecondDialog];
-                    npcDialogText.text = lastNpcTalk;
-
-                    CurrentSecondDialog++;
-
-                    // FirstDialog 범위 초과 방지
-                    if (CurrentSecondDialog >= currentActiveQuest.info.Second_Answer2.Count)
-                    {
-                       
-                        CurrentSecondDialog = currentActiveQuest.info.Second_Answer2.Count - 1;
-
-                        QuestCheack(lastNpcTalk);
-                        return;
-                    }
-                    AnswerButton();
-                });
-            }
-        }
-    
-    }
-
-    private void QuestCheack(string laskTalk)
-    {
-        if (IsQuestRelated(laskTalk))
-        {
-            AcceptAndDecline();        
-        }
-        else
-        {
-            FirstBtn.gameObject.SetActive(false);
-            SecondBtn.gameObject.SetActive(false);
-
-            Invoke("UpdateDialogUI", 1.0f);
-        }
-    }
-
-    [SerializeField]
-    bool isAccepted;
-    [SerializeField]
-    bool isDecline;
-    private void AcceptAndDecline()
-    {
-        FirstBtn.GetComponentInChildren<TextMeshProUGUI>().text = currentActiveQuest.info.finalFirstAnswer;
-        FirstBtn.onClick.RemoveAllListeners();
-        FirstBtn.onClick.AddListener(() =>
-        {
-            if (!DataManager.Instance.nowPlayer.questGivers.Contains(currentActiveQuest.questGiver))
-            {
-                
-                isAccepted = true;
-                isDecline = false;
-                FirstBtn.gameObject.SetActive(false);
-                SecondBtn.gameObject.SetActive(false);
-
-                npcDialogText.text = currentActiveQuest.info.AcceptThankyouAnswer;
+                npcDialogText.text = currentActiveQuest.info.InitialFinishAnswer;
 
                 QuestManager.Instance.AddActiveQuest(currentActiveQuest);
 
-                StartCoroutine(delayTalkText());
+                StartCoroutine(delayTalkStop());
             }
-               
+           
 
-       
         });
-        SecondBtn.GetComponentInChildren<TextMeshProUGUI>().text = currentActiveQuest.info.finalSecondAnswer;
-        SecondBtn.onClick.RemoveAllListeners();
-        SecondBtn.onClick.AddListener(() =>
-        {
-            isDecline = true;
-            isAccepted = false;
-            FirstBtn.gameObject.SetActive(false);
-            SecondBtn.gameObject.SetActive(false);
-            npcDialogText.text = currentActiveQuest.info.DeclineAnswer;
 
-            StartCoroutine(delayTalkText());
+    }
+
+    private void OpenChaosRiftInteraction()
+    {
+        ThirdBtn.gameObject.SetActive(false); //보상 버튼 비활성화
+
+        npcGiverText.text = currentActiveQuest.questGiver; //퀘스트 제공자 동기화 부분
+
+        OptionFirstBtnText.text = currentActiveQuest.info.OpenChaosRiftFirstQuestion;
+        OptionFirstBtn.onClick.RemoveAllListeners();
+        OptionFirstBtn.onClick.AddListener(() =>
+        {
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+            npcDialogText.text = currentActiveQuest.info.OpenChaosRiftFirstAnswer;
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
+        });
+
+        OptionSecondBtnText.text = currentActiveQuest.info.OpenChaosRiftSecondQuestion;
+        OptionSecondBtn.onClick.RemoveAllListeners();
+        OptionSecondBtn.onClick.AddListener(() =>
+        {
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+            npcDialogText.text = currentActiveQuest.info.OpenChaosRiftSecondAnswer; //마지막 대화 표시
+
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
+        });
+
+        BackBtnText.text = currentActiveQuest.info.InitialBackQuestion;
+        BackBtn.onClick.RemoveAllListeners();
+        BackBtn.onClick.AddListener(() =>
+        {
+
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+
+            npcDialogText.text = currentActiveQuest.info.OpenChaosRiftFinishAnswer;
+
+    
+            StartCoroutine(delayTalkStop());
+
         });
     }
 
-    IEnumerator delayTalkText()
+    private void CloseChaosRiftInteraction()
     {
-        yield return new WaitForSecondsRealtime(1.0f);
+      
+
+        npcGiverText.text = currentActiveQuest.questGiver; //퀘스트 제공자 동기화 부분
+
+        OptionFirstBtnText.text = currentActiveQuest.info.CloseChaosRiftFirstQuestion;
+        OptionFirstBtn.onClick.RemoveAllListeners();
+        OptionFirstBtn.onClick.AddListener(() =>
+        {
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+            npcDialogText.text = currentActiveQuest.info.CloseChaosRiftFirstAnswer;
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
+        });
+
+        OptionSecondBtnText.text = currentActiveQuest.info.CloseChaosRiftSecondQuestion;
+        OptionSecondBtn.onClick.RemoveAllListeners();
+        OptionSecondBtn.onClick.AddListener(() =>
+        {
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+            npcDialogText.text = currentActiveQuest.info.CloseChaosRiftSecondAnswer; //마지막 대화 표시
+
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
+        });
+
+        BackBtnText.text = currentActiveQuest.info.InitialBackQuestion;
+        BackBtn.onClick.RemoveAllListeners();
+        BackBtn.onClick.AddListener(() =>
+        {
+
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+
+            DataManager.Instance.nowPlayer.isOpenChaosRift = false;
+            DataManager.Instance.nowPlayer.isReCloseChaosRift = true;
+
+            npcDialogText.text = currentActiveQuest.info.CloseChaosRiftFinishAnswer;
+
+
+            StartCoroutine(delayTalkStop());
+
+            //npc 옆에 문드러진 도장 생성
+            ReceiveReward();
+        });
+    }
+
+    private void ReCloseChaosRiftInteraction()
+    {
+
+        npcGiverText.text = currentActiveQuest.questGiver; //퀘스트 제공자 동기화 부분
+
+        OptionFirstBtnText.text = currentActiveQuest.info.ReCloseChaosRiftFirstQuestion;
+        OptionFirstBtn.onClick.RemoveAllListeners();
+        OptionFirstBtn.onClick.AddListener(() =>
+        {
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+            npcDialogText.text = currentActiveQuest.info.ReCloseChaosRiftFirstAnswer;
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
+        });
+
+        OptionSecondBtnText.text = currentActiveQuest.info.ReCloseChaosRiftSecondQuestion;
+        OptionSecondBtn.onClick.RemoveAllListeners();
+        OptionSecondBtn.onClick.AddListener(() =>
+        {
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+            npcDialogText.text = currentActiveQuest.info.ReCloseChaosRiftSecondAnswer; //마지막 대화 표시
+
+            StartCoroutine(DelayToPlayerDialouge(3.0f));
+        });
+
+        BackBtnText.text = currentActiveQuest.info.InitialBackQuestion;
+        BackBtn.onClick.RemoveAllListeners();
+        BackBtn.onClick.AddListener(() =>
+        {
+
+            PlayerDialouge.gameObject.SetActive(false);
+            NpcDialouge.gameObject.SetActive(true);
+
+            DataManager.Instance.nowPlayer.isOpenChaosRift = false;
+            DataManager.Instance.nowPlayer.isReCloseChaosRift = true;
+
+            npcDialogText.text = currentActiveQuest.info.ReCloseChaosRiftFinishAnswer;
+
+
+            StartCoroutine(delayTalkStop());
+
+            //npc 옆에 문드러진 도장 생성
+
+        });
+    }
+
+    IEnumerator DelayToPlayerDialouge(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        PlayerDialouge.gameObject.SetActive(true);
+        NpcDialouge.gameObject.SetActive(false);
+    }
+    IEnumerator delayTalkStop()
+    {
+        yield return new WaitForSecondsRealtime(3.0f);
+       
         TalkStop();
     }
-    //private void AcceptedQuest()
-    //{
-
-    //    if (currentActiveQuest.isHasNoRequirements) //퀘스트에 보상있는 퀘스트라면 
-    //    {
-    //        npcDialogText.text = currentActiveQuest.info.combackCompleted;
-    //        AcceptText.text = "[Take Reward]";
-    //        NpcAcceptBtn.onClick.RemoveAllListeners();
-    //        NpcAcceptBtn.onClick.AddListener(() =>
-    //        {
-    //            ReceiveReward();
-    //            NpcRotation();
-    //        });
-    //        NpcDeclineBtn.gameObject.SetActive(false); //거절 버튼 비활성화.
-    //    }
-    //    else //퀘스트에 보상이 없는 퀘스트 라면 
-    //    {
-    //        npcDialogText.text = currentActiveQuest.info.acceptAnswer;
-    //        CloseDialogUI();
-    //    }
-    //}
+   
 
     private bool AreQuestRequirmentsCompleted() //Npc가 요청한 요구사항들을 플레이어가 갖고 있는지 체크
     {
-   
+
 
         currentActiveQuest = Quests[ActiveQuestIndex];
 
-        string firstRequiredItem = currentActiveQuest.info.firstRequirmentItem;
+        string firstRequiredItem = currentActiveQuest.info.firstRequirment;
 
         int firstRequiredAmount = currentActiveQuest.info.firstRequirmentAmount;
 
         var firstItemCounter = 0; //현재 내가 들고있는 첫번째 요구한 아이템의 개수 0으로 잡고
 
+        Debug.Log(playerInteraction.collectedItems);
 
         foreach (var item in playerInteraction.collectedItems)
         {
@@ -590,7 +504,7 @@ public class NPC : MonoBehaviour
             }
         }
 
-        string secondRequiredItem = currentActiveQuest.info.secondRequirmentItem;
+        string secondRequiredItem = currentActiveQuest.info.secondRequirment;
         int secondRequirmentAmount = currentActiveQuest.info.secondRequirmentAmount;
 
         var secondItemCounter = 0;
@@ -612,7 +526,7 @@ public class NPC : MonoBehaviour
 
     private void SubmitRequiredItems() //NPC가 요구했던 아이템들을 플레이어가 제출하는 메서드
     {
-        string firstRequiredItem = currentActiveQuest.info.firstRequirmentItem;
+        string firstRequiredItem = currentActiveQuest.info.firstRequirment;
         int firstRequiredAmount = currentActiveQuest.info.firstRequirmentAmount;
 
         if (firstRequiredItem != "")
@@ -620,7 +534,7 @@ public class NPC : MonoBehaviour
             player.GetComponent<PlayerInteraction>().RemoveItem(firstRequiredItem, firstRequiredAmount);
         }
 
-        string secondRequiredItem = currentActiveQuest.info.secondRequirmentItem;
+        string secondRequiredItem = currentActiveQuest.info.secondRequirment;
         int secondRequirmentAmount = currentActiveQuest.info.secondRequirmentAmount;
 
         if (secondRequiredItem != "")
@@ -630,58 +544,44 @@ public class NPC : MonoBehaviour
 
         //@@@@@@@ NPC가 요구했던 것들이 더 많다면 여기 아래에 더 추가 할 수 있음@@@@@@@@@ 
     }
+
+    public float offsetX = 1.0f; // NPC 오른쪽으로 이동할 거리
+
     private void ReceiveReward()
     {
         QuestManager.Instance.MarkQuestCompleted(currentActiveQuest);
-
-        currentActiveQuest.isCompleted = true; //퀘스트 완료
-
-
-        if (currentActiveQuest.info.rewardItem1 != "")
+       
+        if (currentActiveQuest.info.rewardItem1 != null)
         {
-            player.GetComponent<PlayerInteraction>().CollectItem(currentActiveQuest.info.rewardItem1);
+          
+            Debug.Log("문드러진 도장 생성");
+            Vector3 npcPosition = transform.position;
+
+            // 오른쪽 위치 계산
+            Vector3 rightDirection = transform.right;
+
+            // 오른쪽 방향으로 offset만큼 이동
+            Vector3 spawnPosition = npcPosition + (rightDirection * offsetX);
+            spawnPosition.y = 0.3f;
+            Quaternion spawnRotation = Quaternion.Euler(0, -90, 0);
+
+            GameObject DecayedStamp =  Instantiate(currentActiveQuest.info.rewardItem1, spawnPosition, spawnRotation);
         }
 
         if (currentActiveQuest.info.rewardItem2 != "")
         {
             player.GetComponent<PlayerInteraction>().CollectItem(currentActiveQuest.info.rewardItem2);
         }
+   
 
         //@@@@@@@ NPC가 보상해줄 것들이 더 많다면 여기 아래에 더 추가 할 수 있음@@@@@@@@@ 
 
 
-
-
-        //ActiveQuestIndex++; //NPC_A에게 전달 받았던 퀘스트를 완료하고, NPC_A의 두번째 퀘스트를 시작하려고 인덱스 증가.
-
-        //NPC_A의 두번째 퀘스트 시작.
-        //if (ActiveQuestIndex <= quests.Count)
-        //{
-        //    currentActiveQuest = quests[ActiveQuestIndex]; //이전과는 다른 퀘스트 이고, 위에서 ActiveQuestIndex을 1증가 시켰기 때문에 
-        //    //퀘스트도 다를 것임. 따라서 다른 퀘스트를 가져와서 현재 활성화된 퀘스트에 저장
-
-        //    CurrentDialog = 0; //CurrentDialog을 0으로 해서 대화상자를 재 설정
-        //    DialogSystem.Instance.CloseDialogUI(); //대화 UI 비활성화
-        //    isTalkingwithPlayer = false;
-        //    NpcRotation();
-        //}
-        //else
-        //{
-        //    DialogSystem.Instance.CloseDialogUI();
-        //    isTalkingwithPlayer = false;
-
-        //    Debug.Log(this.gameObject.name + "의 퀘스트는 더 이상 없다.");
-        //}
     }
-    private bool IsQuestRelated(string question)
-    {
-        // 특정 조건으로 퀘스트 대화를 식별
-        return question.Contains("퀘스트") || question.Contains("미션") || question.Contains("임무");
-    }
-
     public void TalkStop()
     {
-        isTalkingwithPlayer = false;
+
+        // transform.rotation = initRot;
         StartCoroutine(LookAtPlayerRoutine(initRot));
         DialogSystem.Instance.CloseDialogUI();
     }
@@ -713,4 +613,7 @@ public class NPC : MonoBehaviour
             playerInRange = false;
         }
     }
+
+
+ 
 }
