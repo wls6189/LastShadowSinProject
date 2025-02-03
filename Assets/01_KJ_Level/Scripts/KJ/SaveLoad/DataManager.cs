@@ -19,7 +19,9 @@ public class PlayerData
     public float MaxHealth = 100.0f;
     public float MaxSpiritWave = 10.0f;
     public float MaxSpiritMarkForce = 100.0f;
- 
+
+    public float SpiritAshAmount = 0;
+    public EternalSpiritMark EquipedESM = null;
 
     //퀘스트
     public List<Quest> allActiveQuests = new List<Quest>();
