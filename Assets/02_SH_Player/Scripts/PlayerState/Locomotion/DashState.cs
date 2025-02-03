@@ -14,6 +14,8 @@ public class DashState : IState
     {
         player.CurrentPlayerState = PlayerState.Dash;
         player.IsDoSomething = true;
+        player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
+
         if (player.IsLockOn)
         {
             if (player.IsLookRight) // 오른쪽을 보고 있을 때, 즉 몬스터가 오른쪽에 있을 때
@@ -76,7 +78,6 @@ public class DashState : IState
                 {
                     player.PlayerAnimator.SetTrigger("DoDashForward");
                     moveRight = false;
-
                 }
             }
         }

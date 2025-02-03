@@ -12,6 +12,7 @@ public class ManagePlayerEffect : MonoBehaviour
     [SerializeField] Material basicMaterial;
     [SerializeField] GameObject dashTrailPrefab;
     [SerializeField] GameObject characterMesh;
+    [HideInInspector] public GameObject radicalESMPrefab;
 
     PlayerController player;
 

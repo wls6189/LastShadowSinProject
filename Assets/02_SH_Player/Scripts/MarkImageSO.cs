@@ -6,6 +6,34 @@ using UnityEngine;
 public class MarkImageSO : ScriptableObject
 {
     [Serializable]
+    public class ESMImage
+    {
+        [SerializeField] private string name;
+        [SerializeField] private Sprite image;
+
+        public string Name { get { return name; } }
+        public Sprite Image { get { return image; } }
+    }
+
+    [SerializeField] private List<ESMImage> eSMImageList = new();
+
+    public IReadOnlyList<ESMImage> ESMImageList { get { return eSMImageList; } }
+
+    [SerializeField]
+    public class SpiritMarkImage
+    {
+        [SerializeField] private string name;
+        [SerializeField] private Sprite image;
+
+        public string Name { get { return name; } }
+        public Sprite Image { get { return image; } }
+    }
+
+    [SerializeField] private List<ESMImage> spiritMarkImageList = new();
+
+    public IReadOnlyList<ESMImage> SpiritMarkImageList { get { return spiritMarkImageList; } }
+
+    [SerializeField]
     public class MarkImage
     {
         [SerializeField] private string name;
@@ -15,7 +43,7 @@ public class MarkImageSO : ScriptableObject
         public Sprite Image { get { return image; } }
     }
 
-    [SerializeField] private List<MarkImage> markImageList = new();
+    [SerializeField] private List<ESMImage> markImageList = new();
 
-    public IReadOnlyList<MarkImage> MarkImageList { get { return markImageList; } }
+    public IReadOnlyList<ESMImage> MarkImageList { get { return markImageList; } }
 }

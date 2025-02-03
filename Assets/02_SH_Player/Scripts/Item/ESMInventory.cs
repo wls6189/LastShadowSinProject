@@ -50,7 +50,7 @@ public class ESMInventory : MonoBehaviour
         {
             if (EquipedESM.IsNaturalRegeneration) // 자연 회복이라면 초당 회복
             {
-                player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.RegenerationSpiritWavePerSec) * EquipedESM.Gain * Time.deltaTime;
+                player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.RegenerationSpiritWaveIncreasePercent) * EquipedESM.Gain * Time.deltaTime;
             }
 
             EquipedESM.Ability(player);
@@ -66,6 +66,11 @@ public class ESMInventory : MonoBehaviour
     }
     public void RegenerationGaugeOnAction()
     {
-        player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.RegenerationSpiritWavePerSec) * EquipedESM.Gain;
+        player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.RegenerationSpiritWaveIncreasePercent) * EquipedESM.Gain;
+
+        if (EquipedESM.Equals(new RagingESM()) && player.PlayerStats.IsRagingOn)
+        {
+            player.PlayerStats.RagingStack += 1;
+        }
     }
 }

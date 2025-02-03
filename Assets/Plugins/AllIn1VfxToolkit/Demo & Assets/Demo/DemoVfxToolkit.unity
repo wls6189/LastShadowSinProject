@@ -4835,7 +4835,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1038504913}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: AllIn1VfxToolkit.Demo.Scripts.AllIn1DemoScaleTween,
+          AllIn1VfxDemoScriptAssemblies
         m_MethodName: ScaleUpTween
         m_Mode: 1
         m_Arguments:

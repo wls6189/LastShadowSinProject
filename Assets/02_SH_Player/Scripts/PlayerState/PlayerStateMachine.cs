@@ -30,6 +30,8 @@ public class PlayerStateMachine
     public SpiritCleave3State spiritCleave3State;
     public SpiritPiercingState spiritPiercingState;
     public SpiritSwordDanceState spiritSwordDanceState;
+    public SpiritUnboundState spiritUnboundState;
+    public SpiritNovaState spiritNovaState;
 
     public PlayerStateMachine(PlayerController player)
     {
@@ -59,6 +61,8 @@ public class PlayerStateMachine
         spiritCleave3State = new(player);
         spiritPiercingState = new(player);
         spiritSwordDanceState = new(player);
+        spiritUnboundState = new(player);
+        spiritNovaState = new(player);
     }
 
     public void Initialize(IState state)

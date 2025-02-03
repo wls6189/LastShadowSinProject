@@ -19,7 +19,9 @@ public class PlayerStats : MonoBehaviour
     [HideInInspector] public float GuardDamageReducePercentage; // 가드 시 플레이어가 받는 데미지 감쇠배율
 
     // 공격력 관련 부분
-    [HideInInspector] public float AttackPower; // 공격력
+    
+    public float AttackPower; // 공격력
+    [HideInInspector] public float AttackPowerIncreasePercentage;
 
     // 타격력 관련 부분
     [HideInInspector] public float ParryImpactForcePercentage;
@@ -30,14 +32,15 @@ public class PlayerStats : MonoBehaviour
     [HideInInspector] public float MaxSpiritWave;
     [HideInInspector] public float CurrentSpiritWave;
     [HideInInspector] public float RegenerationSpiritWavePerSec; // 초당 회복량
+    [HideInInspector] public float RegenerationSpiritWaveIncreasePercent; // 초당 회복량
     [HideInInspector] public float ParrySpiritWaveRegeneration;
     [HideInInspector] public float GuardSpiritWaveRegeneration;
     [HideInInspector] public float PenetrateSpiritWaveRegeneration;
     [HideInInspector] public float SpiritParrySpiritWaveRegeneration;
 
     // 영혼낙인력 관련 부분
-    [HideInInspector] public float MaxSpiritMarkForce;
-    [HideInInspector] public float CurrentSpiritMarkForce;
+     public float MaxSpiritMarkForce;
+     public float CurrentSpiritMarkForce;
     [HideInInspector] public float SpiritMarkForceGainIncreasePercentage; // 영혼낙인력 획득 증가 배율
 
     // 강인함 관련 부분
@@ -48,6 +51,10 @@ public class PlayerStats : MonoBehaviour
     // 그 외 부분
     [HideInInspector] public bool IsImmune; // 공격에 면역 상태인지 여부
     [HideInInspector] public bool IsSteadfast; // 막기도 패리인정이 되는지 여부
+    [HideInInspector] public bool IsRavenous; // 굶주린 영원의 영혼낙인 착용 여부. 흡혈
+    [HideInInspector] public bool IsEnthusiastic; // 열성적인 영원의 영혼낙인 착용 여부. 영혼의 파동 회복
+    [HideInInspector] public bool IsRagingOn; // 몰아치는 영원의 영혼낙인 착용 여부. 낙뢰
+    [HideInInspector] public int RagingStack; // 몰아치는 영원의 영혼낙인 착용 여부. 낙뢰
     [HideInInspector] public int SpiritAsh;
     
     void Awake()
@@ -80,7 +87,6 @@ public class PlayerStats : MonoBehaviour
         CurrentSpiritWave = Mathf.Clamp(CurrentSpiritWave, 0, MaxSpiritWave);
         CurrentSpiritMarkForce = Mathf.Clamp(CurrentSpiritMarkForce, 0, MaxSpiritMarkForce);
     }
-
     public void InitializeStats()
     {
         MaxHealth = 100;
@@ -97,6 +103,7 @@ public class PlayerStats : MonoBehaviour
         MaxSpiritWave = 10;
 
         RegenerationSpiritWavePerSec = 0.05f;
+        RegenerationSpiritWaveIncreasePercent = 0;
         GuardSpiritWaveRegeneration = 0.1f;
         ParrySpiritWaveRegeneration = 0.3f;
         PenetrateSpiritWaveRegeneration = 0.5f;
@@ -158,6 +165,11 @@ public class PlayerStats : MonoBehaviour
                         //enemyStats.CurrentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
                         CurrentSpiritWave += ParrySpiritWaveRegeneration;
                         player.CallWhenGuarding?.Invoke();
+
+                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
+                        {
+                            //enemyStats.CurrentHealth -= AttackPower * 0.2f; // 몬스터의 의지력 감소
+                        }
                     }
                     else if (player.IsAttackingParryColliderEnabled) // 패리 능력이 있는 공격
                     {
@@ -230,6 +242,11 @@ public class PlayerStats : MonoBehaviour
                         //enemyStats.CurrentWillpower -= AttackPower * PenetrateImpactForcePercentage; // 몬스터의 의지력 감소
                         CurrentSpiritWave += PenetrateSpiritWaveRegeneration;
                         player.CallWhenGuarding?.Invoke();
+
+                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
+                        {
+                            //enemyStats.CurrentHealth -= AttackPower * 0.2f; // 몬스터의 의지력 감소
+                        }
                     }
                     else if (IsSteadfast) // 만약 부동의 영원의 영혼낙인 착용 시엔 가드라도 간파 처리. 모션은 가드로
                     {
@@ -261,6 +278,11 @@ public class PlayerStats : MonoBehaviour
                         //enemyStats.CurrentWillpower -= AttackPower * SpiritParryImpactForcePercentage; // 몬스터의 의지력 감소
                         CurrentSpiritWave += SpiritParrySpiritWaveRegeneration;
                         player.CallWhenGuarding?.Invoke();
+
+                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
+                        {
+                            //enemyStats.CurrentHealth -= AttackPower * 0.2f; // 몬스터의 의지력 감소
+                        }
                     }
                     else if (IsSteadfast)  // 만약 부동의 영원의 영혼낙인 착용 시엔 가드라도 영혼패리 처리. 모션은 가드로
                     {

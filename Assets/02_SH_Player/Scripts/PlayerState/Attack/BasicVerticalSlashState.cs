@@ -28,7 +28,11 @@ public class BasicVerticalSlashState : IState
         // 공격 시 전진 여부
         if (duration >= 8f / frame && duration <= 13f / frame) // 첫 발 디딤
         {
-            player.AttackMoving(5f); // 발 디딜 때 플레이어가 움직이는 속도를 매개변수로 입력.
+            player.AttackMoving(6f); // 발 디딜 때 플레이어가 움직이는 속도를 매개변수로 입력.
+        }
+        else if (duration >= 28f/ frame && duration <= 36f / frame)
+        {
+            player.AttackMoving(4f); // 발 디딜 때 플레이어가 움직이는 속도를 매개변수로 입력.
         }
 
         // 무기 콜라이더 활성화 여부

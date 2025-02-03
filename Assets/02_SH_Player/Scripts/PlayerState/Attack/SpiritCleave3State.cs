@@ -47,6 +47,7 @@ public class SpiritCleave3State : IState
         if (duration >= 26f / frame)
         {
             player.IsAttacking = false;
+            player.CanSpiritNova = true;
         }
 
         // 별 다른 입력이 없다면 아이들 상태로 전환

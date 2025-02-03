@@ -5,7 +5,15 @@ using System;
 public class MarkAndESMList
 {
     ProtectiveESM protectiveESM = new ProtectiveESM();
-    SteadfastESM SteadfastESM = new SteadfastESM();
+    SteadfastESM steadfastESM = new SteadfastESM();
+    RavenousESM ravenousESM = new RavenousESM();
+    EnthusiasticESM enthusiasticESM = new EnthusiasticESM();
+    DestructiveESM destructiveESM = new DestructiveESM();
+    RadicalESM radicalESM = new RadicalESM();
+    RagingESM ragingESM = new RagingESM();
+    LiberatedESM liberatedESM = new LiberatedESM();
+    SurgingESM surgingESM = new SurgingESM();
+    RampagingESM rampagingESM = new RampagingESM();
 
     public static EternalSpiritMark ChooseESM()
     {
@@ -13,7 +21,16 @@ public class MarkAndESMList
 
         List<EternalSpiritMark> eSMs = new()
         {
-            instance.protectiveESM 
+            instance.protectiveESM,
+            instance.steadfastESM,
+            instance.ravenousESM,
+            instance.enthusiasticESM,
+            instance.destructiveESM,
+            instance.radicalESM,
+            instance.ragingESM,
+            instance.liberatedESM,
+            instance.surgingESM,
+            instance.rampagingESM
         };
 
         Random random = new Random();

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class AttackCheck : MonoBehaviour
 {
-    PlayerController player;
+    [HideInInspector] public PlayerController player;
     Collider attackCollider;
     HashSet<GameObject> attackedMonstersByPlayer = new(); // 중복 체크를 위한 리스트
+    [HideInInspector] public bool IsProjectile = false; // 발사체인지 여부
 
     Vector3 bHS12Pos = new Vector3(0, 1, 1);
     Vector3 bHS12Scale = new Vector3(0.5f, 2, 1.7f);
@@ -39,7 +40,13 @@ public class AttackCheck : MonoBehaviour
 
     void OnAttackColllider()
     {
-        if (player.IsAttackColliderEnabled)
+        if (IsProjectile)
+        {
+            gameObject.tag = "Untagged";
+
+            attackCollider.enabled = true;
+        }
+        else if (player.IsAttackColliderEnabled)
         {
             gameObject.tag = "Untagged";
 
@@ -99,6 +106,7 @@ public class AttackCheck : MonoBehaviour
     {
         player.CallWhenDamaging?.Invoke();
         player.IsAttackSucceed = true;
+        player.PlayerStats.CurrentSpiritWave += 0.3f;
 
         switch (player.CurrentPlayerState)
         {
@@ -106,25 +114,38 @@ public class AttackCheck : MonoBehaviour
                 // 몬스터 Damaged 처리되면 작성
                 break;
         }
+
+        if (player.PlayerStats.IsRavenous)
+        {
+            player.PlayerStats.CurrentHealth += player.PlayerStats.AttackPower * 0.5f;
+        }
+
+        if (player.PlayerStats.IsEnthusiastic)
+        {
+            player.PlayerStats.CurrentSpiritWave += 1f;
+        }
+
+        
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.transform.parent == null) return;
-        if (attackedMonstersByPlayer.Contains(other.gameObject.transform.parent.gameObject)) return;
+        if (attackedMonstersByPlayer.Count != 0 && attackedMonstersByPlayer.Contains(other.gameObject)) return;
 
         if (other.CompareTag("EnemyGuard"))
         {
+            attackedMonstersByPlayer.Add(other.gameObject);
+
             if (other.gameObject.transform.parent.gameObject.GetComponent<EnemyStats>() != null)
             {
-                attackedMonstersByPlayer.Add(other.gameObject.transform.parent.gameObject);
                 Damaging(other.gameObject.transform.parent.gameObject.GetComponent<EnemyStats>(), false);
             }
         }
         else if (other.CompareTag("Enemy"))
         {
+            attackedMonstersByPlayer.Add(other.gameObject);
+
             if (other.gameObject.GetComponent<EnemyStats>() != null)
             {
-                attackedMonstersByPlayer.Add(other.gameObject);
                 Damaging(other.gameObject.GetComponent<EnemyStats>(), true);
             }
         }

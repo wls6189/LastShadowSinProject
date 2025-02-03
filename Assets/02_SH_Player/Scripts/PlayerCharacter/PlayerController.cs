@@ -28,7 +28,7 @@ public enum PlayerState // 플레이어의 현재 행동(혹은 상태)
     SpiritCleave3,
     SpiritPiercing,
     SpiritSwordDance,
-    SpiritRelease,
+    SpiritUnbound,
     SpiritNova
 }
 
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     // 인스펙터에서 할당이 필요한 변수
     public NearbyMonsterCheck NearbyMonsterCheck; // 근처의 몬스터를 감지하는 클래스
     public Transform CameraFocusPosition; // 카메라의 포커스 위치
+    public GameObject SpiritUnboundPrefab; // 영력 해방 발사체 프리팹
 
     // 움직임 관련 변수
     [HideInInspector] public float MoveActionValue; // 움직임 방향키를 누를 때 반환되는 값을 캐싱
@@ -63,12 +64,15 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool CanBasicHorizonSlash2Combo;
     [HideInInspector] public bool CanSpiritCleave2Combo;
     [HideInInspector] public bool CanSpiritCleave3Combo;
+    [HideInInspector] public bool CanSpiritNova;
     float lastBasicHorizonSlash1AttackTime;
     float lastSpiritCleave1AttackTime;
     float lastSpiritCleave2AttackTime;
+    float lastSpiritCleave3AttackTime;
     [HideInInspector] public bool IsSpiritSwordDanceSecondAttack;
     [HideInInspector] public Action CallWhenDamaging;
     // 공격의 영혼의 파동 소모량
+    int DashSpiritWaveConsume = 1;
     int ThrustSpiritWaveConsume = 1;
     int RetreatSpiritWaveConsume = 1;
     int SpiritCleave1SpiritWaveConsume = 1;
@@ -76,7 +80,7 @@ public class PlayerController : MonoBehaviour
     int SpiritPiercingSpiritWaveConsume = 2;
     int SpiritSwordDanceSpiritWaveConsume = 3;
     int SpiritUnboundSpiritWaveConsume = 2;
-    int SpiritNoveSpiritWaveConsume = 2;
+    int SpiritNovaSpiritWaveConsume = 2;
     int SpiritParrySpiritWaveConsume = 2;
 
     // 막기 관련 변수
@@ -117,6 +121,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public ChaliceOfAtonement PlayerChaliceOfAtonement;
     [HideInInspector] public ESMInventory PlayerESMInventory;
     [HideInInspector] public MarkInventory PlayerMarkInventory;
+    [HideInInspector] public ManagePlayerEffect ManagePlayerEffect;
     [HideInInspector] public bool IsGrogging; // 행동 불능 상태 여부, 전투 및 비전투 여부도 이걸로 확인 // 현재 사용 : 짧은 행동 불능, 긴 행동 불능, 막기, 패리, 영혼 패리, 간파
     [HideInInspector] public bool IsLookRight; // 오른쪽을 보고 있는지 여부
     [HideInInspector] public bool IsDoSomething; // 다른 행위를 할 수 없는 특수 행동 중일 때 사용. 현재 사용 : 물약 사용 시
@@ -127,6 +132,7 @@ public class PlayerController : MonoBehaviour
     float lastPressCtrlZXTime;
     float lastPressCTime;
     bool canPressC;
+    [HideInInspector] public bool IsRadicalESMAttackPosture; // 극단적인 영원의 영혼낙인 자세 여부
 
 
     void Awake()
@@ -141,6 +147,7 @@ public class PlayerController : MonoBehaviour
         PlayerChaliceOfAtonement = GetComponent<ChaliceOfAtonement>();
         TryGetComponent(out PlayerESMInventory);
         TryGetComponent(out PlayerMarkInventory);
+        TryGetComponent(out ManagePlayerEffect);
         PlayerCharacterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         inputActionAsset = GetComponent<PlayerInput>().actions;
@@ -159,6 +166,8 @@ public class PlayerController : MonoBehaviour
         specialAttackAction = inputActionAsset.FindAction("SpecialAttack");
         spiritualAction = inputActionAsset.FindAction("Spiritual");
         spiritMarkAbilityAction = inputActionAsset.FindAction("SpiritMarkAbility");
+
+        IsRadicalESMAttackPosture = true;
     }
 
     void Update()
@@ -187,6 +196,7 @@ public class PlayerController : MonoBehaviour
         HandleBasicHorizonSlash2Combo();
         HandleSpiritCleave2Combo();
         HandleSpiritCleave3Combo();
+        HandleSpiritNova();
         ManageIsInCombat();
 
         GameMenuPressed();
@@ -259,7 +269,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (lastBasicHorizonSlash1AttackTime > 1.5f)
+        if (lastBasicHorizonSlash1AttackTime > 1f)
         {
             CanBasicHorizonSlash2Combo = false;
             lastBasicHorizonSlash1AttackTime = 0;
@@ -278,7 +288,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (lastSpiritCleave1AttackTime > 1.5f) // 콤보 가능 시간(1.5초인 상태)
+        if (lastSpiritCleave1AttackTime > 1f) // 콤보 가능 시간(1.5초인 상태)
         {
             CanSpiritCleave2Combo = false;
             lastSpiritCleave1AttackTime = 0;
@@ -301,6 +311,25 @@ public class PlayerController : MonoBehaviour
         {
             CanSpiritCleave3Combo = false;
             lastSpiritCleave2AttackTime = 0;
+        }
+    }
+    void HandleSpiritNova() // 혼력일섬 관리
+    {
+        if (CanSpiritNova)
+        {
+            lastSpiritCleave3AttackTime += Time.deltaTime;
+            lastSpiritCleave3AttackTime = Mathf.Clamp(lastSpiritCleave3AttackTime, 0f, 2f);
+        }
+        else
+        {
+            lastSpiritCleave3AttackTime = 0;
+            return;
+        }
+
+        if (lastSpiritCleave3AttackTime > 1f)
+        {
+            CanSpiritNova = false;
+            lastSpiritCleave3AttackTime = 0;
         }
     }
     void ManageIsInCombat()
@@ -475,9 +504,11 @@ public class PlayerController : MonoBehaviour
         {
             if (CanPenetrate)
             {
+                if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && IsRadicalESMAttackPosture) return; // 극단적인 영원의 영혼낙인 공격 자세 시엔 간파 시전 불가
+
                 PlayerStateMachine.TransitionTo(PlayerStateMachine.penetrateState);
             }
-            else
+            else if (PlayerStats.CurrentSpiritWave >= DashSpiritWaveConsume)
             {
                 PlayerStateMachine.TransitionTo(PlayerStateMachine.dashState);
             }
@@ -485,6 +516,8 @@ public class PlayerController : MonoBehaviour
     }
     void GuardPressed() // 가드 관리
     {
+        if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && IsRadicalESMAttackPosture) return;
+
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash) return;
 
         if (guardAction.IsPressed() && CurrentPlayerState != PlayerState.Guard) // IdleAndMove나 Guard일 때만 가드 전환
@@ -516,11 +549,16 @@ public class PlayerController : MonoBehaviour
     }
     void Attack1Pressed() // 공격 Z키 관리
     {
+        if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !IsRadicalESMAttackPosture) return;
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
         if (attack1Action.WasPressedThisFrame())
         {
-            if (SpiritualPressed() && SpecialAttackPressed() && PlayerStats.CurrentSpiritWave >= SpiritSwordDanceSpiritWaveConsume)
+            if (SpiritualPressed() && CanSpiritNova && PlayerStats.CurrentSpiritWave >= SpiritNovaSpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritNovaState);
+            }
+            else if (SpiritualPressed() && SpecialAttackPressed() && PlayerStats.CurrentSpiritWave >= SpiritSwordDanceSpiritWaveConsume)
             {
                 PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritSwordDanceState);
             }
@@ -553,11 +591,17 @@ public class PlayerController : MonoBehaviour
     }
     void Attack2Pressed() // 공격 X키 관리
     {
+        if (PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !IsRadicalESMAttackPosture) return;
+
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash || CurrentPlayerState == PlayerState.Guard) return;
 
         if (attack2Action.WasPressedThisFrame())
         {
-            if (SpiritualPressed() && PlayerStats.CurrentSpiritWave >= SpiritPiercingSpiritWaveConsume) // 영혼 관통. 영혼의 파동 2개 이상 시
+            if (SpiritualPressed() && SpecialAttackPressed() && PlayerStats.CurrentSpiritWave >= SpiritUnboundSpiritWaveConsume)
+            {
+                PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritUnboundState);
+            }
+            else if (SpiritualPressed() && PlayerStats.CurrentSpiritWave >= SpiritPiercingSpiritWaveConsume) // 영혼 관통. 영혼의 파동 2개 이상 시
             {
                 PlayerStateMachine.TransitionTo(PlayerStateMachine.spiritPiercingState);
             }
@@ -601,6 +645,82 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         IsParring = false;
         IsClashGuard = false;
+    }
+    public void FireSpiritUnboundProjectile(float surgingESMPercent)
+    {
+        if (surgingESMPercent < 0)
+        {
+            GameObject go = Instantiate(SpiritUnboundPrefab);
+            go.GetComponent<AttackCheck>().player = this;
+            go.GetComponent<AttackCheck>().IsProjectile = true;
+
+            if (IsLookRight)
+            {
+                go.transform.position = new Vector3(transform.position.x, 1.57f, transform.position.z + 0.7f);
+                go.GetComponent<Projectile>().SetIsMoveRight(true);
+            }
+            else
+            {
+                go.transform.position = new Vector3(transform.position.x, 1.57f, transform.position.z - 0.7f);
+                go.GetComponent<Projectile>().SetIsMoveRight(false);
+            }
+        }
+        else if (surgingESMPercent >= 0)
+        {
+            int projectileCount = 0;
+
+            if (surgingESMPercent >= 100) projectileCount = 10;
+            else if (surgingESMPercent >= 50) projectileCount = 5;
+            else if (surgingESMPercent >= 25) projectileCount = 2;
+
+            if (projectileCount == 0) return;
+
+            for (int i = 0; i < projectileCount; i++)
+            {
+                GameObject go = Instantiate(SpiritUnboundPrefab);
+                go.GetComponent<AttackCheck>().player = this;
+                go.GetComponent<AttackCheck>().IsProjectile = true;
+
+                if (IsLookRight)
+                {
+                    go.transform.position = new Vector3(transform.position.x, UnityEngine.Random.Range(1f, 2f), transform.position.z + UnityEngine.Random.Range(0.2f, 1.2f));
+                    go.GetComponent<Projectile>().SetIsMoveRight(true);
+                }
+                else
+                {
+                    go.transform.position = new Vector3(transform.position.x, UnityEngine.Random.Range(1f, 2f), transform.position.z - UnityEngine.Random.Range(0.2f, 1.2f));
+                    go.GetComponent<Projectile>().SetIsMoveRight(false);
+                }
+            }
+        }
+    }
+    public void FireRadicalESMProjectile()
+    {
+        GameObject go = Instantiate(ManagePlayerEffect.radicalESMPrefab);
+
+        go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, transform.position.z);
+        go.GetComponent<AttackCheck>().player = this;
+        go.GetComponent<AttackCheck>().IsProjectile = true;
+
+        Destroy(go, 0.3f);
+    }
+    public IEnumerator FireRagingESMProjectile()
+    {
+        for (int i = 0; i < PlayerStats.RagingStack; i++)
+        {
+            GameObject go = Instantiate(ManagePlayerEffect.radicalESMPrefab);
+
+            go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, transform.position.z);
+            go.GetComponent<AttackCheck>().player = this;
+            go.GetComponent<AttackCheck>().IsProjectile = true;
+
+            Destroy(go, 0.3f);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        PlayerStats.RagingStack = 0;
+        yield return null;
     }
 }
 

@@ -685,19 +685,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsGameMenuOpen: 0
   TabButtons:
-  - {fileID: 1971718124336413524}
-  - {fileID: 1971718124336413523}
-  - {fileID: 1971718124336413522}
-  - {fileID: 1971718124336413521}
-  - {fileID: 1971718124336413520}
-  - {fileID: 1971718124336413519}
-  firstInput: {fileID: 1971718124336413524}
-  GameMenu: {fileID: 1971718124336413518}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  firstInput: {fileID: 0}
   SoulFragMentInfo: {fileID: 0}
   SoulFragMentMoveInfo: {fileID: 0}
-  SoulCanvas: {fileID: 0}
-  CurrentAreaText: {fileID: 0}
+  SoulImages: {fileID: 0}
   SoulFragMentContent: {fileID: 0}
+  GameMenu: {fileID: 0}
+  isSoulFragMentUI: 0
 --- !u!4 &915325092
 Transform:
   m_ObjectHideFlags: 0
@@ -2032,7 +2032,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fragmentID: 2
   isSave: 0
-  currentSceneName: 1-2
   sceneflow: {fileID: 11400000, guid: 87683062a2f712641898d5236d220d44, type: 2}
 --- !u!114 &5582096779250036755
 MonoBehaviour:
@@ -2123,3 +2122,5 @@ SceneRoots:
   - {fileID: 201382365}
   - {fileID: 155189265}
   - {fileID: 50443978932864471}
+  - {fileID: 84478850}
+  - {fileID: 915325092}

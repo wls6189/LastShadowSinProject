@@ -1607,7 +1607,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: 
   nowSlot: 0
-  saveActiveObjects: []
 --- !u!4 &443695426
 Transform:
   m_ObjectHideFlags: 0
@@ -6869,3 +6868,4 @@ SceneRoots:
   - {fileID: 767071970}
   - {fileID: 1604973654}
   - {fileID: 485923258}
+  - {fileID: 237964336}
