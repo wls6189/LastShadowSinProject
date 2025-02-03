@@ -743,7 +743,7 @@ PrefabInstance:
     - target: {fileID: 3397009368617138634, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
       propertyPath: enemyStats
       value: 
-      objectReference: {fileID: 998727864}
+      objectReference: {fileID: 0}
     - target: {fileID: 3397009368617138634, guid: 4ad4379d43f94634097295557d5885aa, type: 3}
       propertyPath: attackTrail
       value: 

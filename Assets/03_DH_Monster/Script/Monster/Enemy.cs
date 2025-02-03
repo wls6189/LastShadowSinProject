@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
     private int currentAttackIndex = 0;  // 현재 패턴 내 공격 인덱스
     public enum State { Idle, Chasing, Returning, Guard, Parry }
     public State currentState;
-    public EnemyStats enemyStats;
+    private EnemyStats enemyStats;
 
 
     public TextMeshProUGUI indicatorText;
@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-
+        enemyStats = GetComponent<EnemyStats>();
         attackTrail.SetActive(false);
         spiritattackTrail.SetActive(false);
         parryCollider = transform.Find("Parry").GetComponent<Collider>();
