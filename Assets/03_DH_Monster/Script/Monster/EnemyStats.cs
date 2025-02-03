@@ -39,27 +39,20 @@ public class EnemyStats : MonoBehaviour
     }
 
 
-    public void Damaged(float damage, float impactForce, TenacityAndGroggyForce groggyForce, bool isdirectattack)
+    public void Damaged(float damage, float impactForce, TenacityAndGroggyForce groggyForce)
     {
-        if (isRecovering)
+        if (isRecovering || (enemy != null && enemy.currentState == Enemy.State.Parry))
         {
             return;
-        }
-        if (enemy != null && enemy.currentState == Enemy.State.Parry)
-        {
-    
-            return; 
         }
 
         if (enemy.isGuarding)
         {
             animator.SetTrigger("Guard");
-        }
-            if (!isdirectattack || (enemy != null && !enemy.isAttacking))
-        {
             damage *= 0.1f; // 데미지 10%
             impactForce *= 0.3f; // 소울 데미지 30%
         }
+ 
         if (!isGroggy)
         {
             DetermineGroggyState(groggyForce);
