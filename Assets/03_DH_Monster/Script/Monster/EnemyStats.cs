@@ -12,11 +12,12 @@ public class EnemyStats : MonoBehaviour
     private Enemy enemy;
     public float maxWillpower;     // 최대 영혼 게이지
     public float currentWillpower;        // 현재 영혼 게이지
-    public float tenacity ;          // 몬스터의 강인함 (1하,2중,3상,4최상)
+    
     private Animator animator;             // 몬스터 애니메이터
     public float attackPower ;
     private bool isGroggy = false;
-    public TenacityAndGroggyForce groggyForce;
+    private bool isRecovering = false;
+    public TenacityAndGroggyForce tenacity;
     [SerializeField] Image healthBarImage;
     [SerializeField] Image WillpowerBarImage;
 
@@ -38,21 +39,20 @@ public class EnemyStats : MonoBehaviour
     }
 
 
-    public void Damaged(float damage, float impactForce, float groggyForce, bool isdirectattack)
+    public void Damaged(float damage, float impactForce, TenacityAndGroggyForce groggyForce)
     {
-       
-        if (enemy != null && enemy.currentState == Enemy.State.Parry)
+        if (isRecovering || (enemy != null && enemy.currentState == Enemy.State.Parry))
         {
-    
-            return; 
+            return;
         }
 
-
-        if (!isdirectattack || (enemy != null && !enemy.isAttacking))
+        if (enemy.isGuarding)
         {
+            animator.SetTrigger("Guard");
             damage *= 0.1f; // 데미지 10%
             impactForce *= 0.3f; // 소울 데미지 30%
         }
+ 
         if (!isGroggy)
         {
             DetermineGroggyState(groggyForce);
@@ -76,7 +76,7 @@ public class EnemyStats : MonoBehaviour
     }
 
 
-    private void DetermineGroggyState(float groggyForce)
+    private void DetermineGroggyState(TenacityAndGroggyForce groggyForce)
     {
         if (groggyForce < tenacity) // Force가 강인함보다 낮음
         {
@@ -133,14 +133,39 @@ public class EnemyStats : MonoBehaviour
    
     public void RecoverHealth()
     {
+        if (isRecovering)
+        {
+            return;
+        }
+
+        // 회복 시작
+        isRecovering = true;
+        StartCoroutine(RecoverHealthCoroutine());
+    }
+    private IEnumerator RecoverHealthCoroutine()
+    {
+        float recoveryDuration = 2f; // 회복에 걸리는 시간 (초 단위)
+        float healthRecoverySpeed = (maxHealth - currentHealth) / recoveryDuration;
+        float willpowerRecoverySpeed = (maxWillpower - currentWillpower) / recoveryDuration;
+
+        // 체력과 영혼 게이지를 서서히 회복
+        while (currentHealth < maxHealth || currentWillpower < maxWillpower)
+        {
+            currentHealth = Mathf.MoveTowards(currentHealth, maxHealth, healthRecoverySpeed * Time.deltaTime);
+            currentWillpower = Mathf.MoveTowards(currentWillpower, maxWillpower, willpowerRecoverySpeed * Time.deltaTime);
+
+           
+            yield return null;
+        }
+
         
         currentHealth = maxHealth;
         currentWillpower = maxWillpower;
+        isRecovering = false;
     }
-
     public void OnDeathAnimationEnd()//애니메이션 이벤트 추가
     {
-        Destroy(gameObject);
+        Destroy(gameObject,5f);
     }
     public void ExitGroggy()
     {

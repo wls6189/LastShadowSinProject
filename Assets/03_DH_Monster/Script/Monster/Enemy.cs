@@ -22,14 +22,15 @@ public class Enemy : MonoBehaviour
     private int guardSuccessCount = 0; // 가드 성공 횟수
     
     private Collider parryCollider; // 패리 콜라이더
-    public Collider attackCollider;
+   
 
     public bool isAttacking = false;
-
+    public bool isGuarding = false;
     public AttackPattern[] attackPatterns; // 사용할 공격 패턴 배열
     public AttackPattern currentPattern;
 
-
+    public GameObject attackTrail;
+    public GameObject spiritattackTrail;
 
     private float lastAttackTime; // 마지막 공격 시간
 
@@ -47,7 +48,7 @@ public class Enemy : MonoBehaviour
     private int currentAttackIndex = 0;  // 현재 패턴 내 공격 인덱스
     public enum State { Idle, Chasing, Returning, Guard, Parry }
     public State currentState;
-    public EnemyStats enemyStats;
+    private EnemyStats enemyStats;
 
 
     public TextMeshProUGUI indicatorText;
@@ -60,10 +61,18 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-
-       
+        enemyStats = GetComponent<EnemyStats>();
+        attackTrail.SetActive(false);
+        spiritattackTrail.SetActive(false);
         parryCollider = transform.Find("Parry").GetComponent<Collider>();
-        attackCollider.gameObject.SetActive(false);
+        foreach (Transform attackObject in transform)
+        {
+            Collider attackCollider = attackObject.GetComponent<Collider>();
+            if (attackCollider != null)
+            {
+                attackCollider.gameObject.SetActive(false); //공격콜라이더 비활성화
+            }
+        }
         attackCooldown = 0f;
        
         parryCollider.gameObject.SetActive(false);
@@ -84,6 +93,8 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        UpdateAnimation();
+        if (isAttacking || isGuarding) return;
         if (transform.position.x != 0)
         {
             transform.position = new Vector3(0, transform.position.y, transform.position.z);
@@ -113,15 +124,17 @@ public class Enemy : MonoBehaviour
         switch (currentState)
         {
             case State.Idle:
-                animator.SetTrigger("Idle");
-
                 CheckForChase();
+                if (currentState == State.Idle) return;
+                
+
+                
                 break;
 
             case State.Chasing:
                 if (isAttacking) return;
                 navMeshAgent.isStopped = false;
-                animator.SetTrigger("Run");
+                
 
                 if (isPlayerOnNavMesh)
                 {
@@ -133,7 +146,9 @@ public class Enemy : MonoBehaviour
                 break;
 
             case State.Returning:
+
                 navMeshAgent.SetDestination(spawnPosition);
+                enemyStats.RecoverHealth(); // 체력 회복
                 if (distanceFromSpawn < 0.5f) // 거의 도착했을 때
                 {
                     ResetEnemy(); // 상태 초기화
@@ -148,17 +163,22 @@ public class Enemy : MonoBehaviour
                 break;
 
             case State.Guard:
-                animator.SetTrigger("Guard");
-                navMeshAgent.isStopped = true;
 
-                StartCoroutine(SwitchToChasingAfterDelay(0.1f));
+                if (!isGuarding) 
+                {
+                    isGuarding = true;
+                    
+                    navMeshAgent.isStopped = true;
+
+                    StartCoroutine(SwitchToChasingAfterGuardAnimation());
+                }
                 break;
 
             case State.Parry:
                 animator.SetTrigger("Parry");
                 navMeshAgent.isStopped = true;
                 guardSuccessCount = 0; // 카운트 초기화
-                StartCoroutine(SwitchToChasingAfterDelay(0.1f));
+                StartCoroutine(SwitchToChasingAfterGuardAnimation());
 
                 break;
         }
@@ -173,18 +193,24 @@ public class Enemy : MonoBehaviour
         isPlayerOnNavMesh = NavMesh.SamplePosition(player.position, out hit, 1.0f, NavMesh.AllAreas);
 
     }
-    private IEnumerator SwitchToChasingAfterDelay(float delay)
+    private IEnumerator SwitchToChasingAfterGuardAnimation()
     {
-        yield return new WaitForSeconds(delay); // 지정된 시간 동안 대기
+        
+        AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float animationDuration = currentStateInfo.length;
 
+       
+        yield return new WaitForSeconds(animationDuration);
+
+        
         if (currentState == State.Guard || currentState == State.Parry)
         {
             currentState = State.Chasing;
-           
-            parryCollider.gameObject.SetActive(false);
-            navMeshAgent.isStopped = false; // 이동 재개
 
+            parryCollider.gameObject.SetActive(false); // 패리 콜라이더 비활성화
+            navMeshAgent.isStopped = false; // 이동 재개
         }
+        isGuarding = false;
     }
 
     private void CheckForChase()
@@ -220,9 +246,14 @@ public class Enemy : MonoBehaviour
         {
             navMeshAgent.ResetPath(); // 공격 범위 안에서는 이동 멈춤
         }
+       
     }
     private void CheckForGuard()
     {
+        if (currentState == State.Guard)
+        {
+            return;
+        }
         float distance = Vector3.Distance(transform.position, player.position);
 
         // 공격 쿨타임이 끝나지 않았다면 가드를 하고, 쿨타임이 끝나면 패리로 전환
@@ -296,14 +327,22 @@ public class Enemy : MonoBehaviour
 
         Attack currentAttack = currentPattern.attacks[currentAttackIndex];
         ShowAttackIndicator(currentAttack);
-        // 공격 애니메이션 트리거 추가
-        AttackBase attackBase = attackCollider.GetComponent<AttackBase>();
-        if (attackBase != null)
+
+
+        if (attackTrail != null)
+            attackTrail.SetActive(true);
+
+        if (currentAttack.attackType == AttackType.Spirit)
         {
-            attackBase.currentAttackType = currentAttack.attackType;
+            if (spiritattackTrail != null)
+                spiritattackTrail.SetActive(true);
         }
+        // 공격 애니메이션 트리거 추가
+       
         animator.SetTrigger(currentAttack.attackName);  // 예: "Heavy Strike" 또는 "Quick Parry" 등
         lastAttackTime = Time.time; // 현재 시간 저장
+        float attackDuration = GetAnimationLength(currentAttack.attackName);
+        StartCoroutine(ManageAttackCollider(currentAttack.attackName, attackDuration, currentAttack.attackType));
         StartCoroutine(MoveAfterAttack());
 
 
@@ -322,6 +361,41 @@ public class Enemy : MonoBehaviour
             currentPatternIndex = (currentPatternIndex + 1) % attackPatterns.Length;
         }
 
+    }
+    private float GetAnimationLength(string animationName)
+    {
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+        foreach (AnimationClip clip in ac.animationClips)
+        {
+            if (clip.name == animationName)
+            {
+                return clip.length; // 해당 애니메이션의 길이 반환
+            }
+        }
+        return 1.0f; // 기본값 (애니메이션 길이를 찾지 못하면 1초로 설정)
+    }
+    private IEnumerator ManageAttackCollider(string attackTypeName, float duration, AttackType attackType)
+    {
+        Transform attackObject = transform.Find(attackTypeName);
+        if (attackObject != null)
+        {
+            Collider attackCollider = attackObject.GetComponent<Collider>();
+            if (attackCollider != null)
+            {
+                attackCollider.gameObject.SetActive(true);
+
+                // AttackBase의 attackType 설정
+                AttackBase attackBase = attackCollider.GetComponent<AttackBase>();
+                if (attackBase != null)
+                {
+                    attackBase.currentAttackType = attackType;
+                }
+
+                yield return new WaitForSeconds(duration * 0.8f); // 공격 애니메이션 중간쯤에 비활성화
+
+                attackCollider.gameObject.SetActive(false);
+            }
+        }
     }
     private IEnumerator MoveAfterAttack()
     {
@@ -344,10 +418,15 @@ public class Enemy : MonoBehaviour
 
             yield return null; // 한 프레임 대기
         }
+        if (attackTrail != null)
+            attackTrail.SetActive(false);
 
+        if (spiritattackTrail != null)
+            spiritattackTrail.SetActive(false);
         // 애니메이션 끝난 후 이동 재개
         navMeshAgent.isStopped = false; // 이동 재개
         isAttacking = false;
+
     }
     private IEnumerator MoveBackwardAfterGuard()
     {
@@ -410,16 +489,7 @@ public class Enemy : MonoBehaviour
 
         }
     }
-    public void EnableAttackCollider()
-    {
-        attackCollider.gameObject.SetActive(true); // 콜라이더 활성화
-    }
-
-    // 공격 애니메이션에서 콜라이더 비활성화
-    public void DisableAttackCollider()
-    {
-        attackCollider.gameObject.SetActive(false); // 콜라이더 비활성화
-    }
+    
 
     private void ReturnToSpawn()
     {
@@ -439,8 +509,13 @@ public class Enemy : MonoBehaviour
     {
         
         currentState = State.Idle;
-        animator.SetTrigger("Idle");
-        enemyStats.RecoverHealth(); // 체력 회복
+        
+     
     }
+    private void UpdateAnimation()
+    {
+        float speed = navMeshAgent.velocity.magnitude;
+        animator.SetFloat("Speed", speed);
 
+    }
 }
