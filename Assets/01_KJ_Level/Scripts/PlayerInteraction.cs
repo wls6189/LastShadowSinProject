@@ -19,7 +19,7 @@ public class PlayerInteraction : MonoBehaviour
     private RadiantTorch radiantTorch;
     private ChaosRift chaosRift;
     private DroppedItem droppedItem;
-    private MonsterSpawner monsterSpawner;
+    //private MonsterSpawner monsterSpawner; 임시용
 
 
     InputActionAsset inputActionAsset;
@@ -37,7 +37,7 @@ public class PlayerInteraction : MonoBehaviour
 
         transform.position = DataManager.Instance.nowPlayer.position;
 
-        monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
+        //monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
 
         LoadStatDataWhenQuit();
     }
@@ -51,11 +51,11 @@ public class PlayerInteraction : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            monsterSpawner.OnMonsterDeath(); //임시 사용
-            //InventoryCheck();
-        }
+        //if(Input.GetKeyDown(KeyCode.I))
+        //{
+        //    //monsterSpawner.OnMonsterDeath(); //임시 사용
+        //    //InventoryCheck();
+        //}
 
 
         if (currentNPC != null && currentNPC.playerInRange)
@@ -271,8 +271,8 @@ public class PlayerInteraction : MonoBehaviour
        
     }
 
- 
 
+    //LoadStatDataWhenQuit() 글씨 띄우고 딜레이 5초 준다음에 부활 위치. 
     public void LoadStatDataWhenQuit()
     {
         //헌신자의 영혼파편과 상호작용하여 세이브하고 나서 다시 로드 했을 때 세이브 했을 때의  CurrentHealth, MaxSpiritWave 저장

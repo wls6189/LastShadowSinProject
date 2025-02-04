@@ -34,21 +34,4 @@ public class MonsterSpawner : MonoBehaviour
         monster = Instantiate(monsterPrefabs[monsterIndex], spawnPos.position, spawnPos.rotation); // 몬스터 스폰
         currentMonsters++; // 현재 몬스터 수 증가
     }
-
-    // 몬스터가 죽을 때 호출되는 메서드
-    public void OnMonsterDeath()
-    {
-        if (currentMonsters > 0)
-        {
-            currentMonsters--; // 죽은 몬스터 수 감소
-            Debug.Log("몬스터 죽음, 현재 몬스터 수: " + currentMonsters);
-        }
-
-
-    }
-
-    void OnDestroy()
-    {
-        StopAllCoroutines(); // 씬 전환 시 스폰 중지
-    }
 }
