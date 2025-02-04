@@ -123,7 +123,8 @@ public class EnemyStats : MonoBehaviour
     // 죽음 처리
     private void Die()
     {
-        if (isDead) return; 
+        if (isDead) return;
+        AudioManager.instance.PlaySFX(AudioManager.ESfx.SFX_UI, 2);//이런느낌으로 사운드사용
         isDead = true;
         animator.ResetTrigger("Knockdown");
         animator.ResetTrigger("ShortGroggy");

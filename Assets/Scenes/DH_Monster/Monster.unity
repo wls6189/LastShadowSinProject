@@ -673,12 +673,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleBgm: []
   gameBgm: []
-  uiSfx: []
+  uiSfx:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: 4a4560fbc12512340b327bfe66085acc, type: 3}
   npcSfx: []
   playerSfx: []
-  monsterSfx:
-  - {fileID: 8300000, guid: 4a4560fbc12512340b327bfe66085acc, type: 3}
-  - {fileID: 8300000, guid: b6b9f452541e25046a078320c737a616, type: 3}
   audioBgm: {fileID: 64877010}
   audioSfx: {fileID: 1273988647}
 --- !u!4 &543493021
@@ -920,46 +920,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 292514728311416331, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Size.y
-      value: 2.484316
-      objectReference: {fileID: 0}
-    - target: {fileID: 292514728311416331, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Size.z
-      value: 0.21257752
-      objectReference: {fileID: 0}
-    - target: {fileID: 292514728311416331, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Center.y
-      value: 0.74216056
-      objectReference: {fileID: 0}
-    - target: {fileID: 292514728311416331, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Center.z
-      value: -0.3937107
-      objectReference: {fileID: 0}
-    - target: {fileID: 1472882268507527085, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.552
-      objectReference: {fileID: 0}
-    - target: {fileID: 2666639683085686332, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 6264148015336647737, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Size.y
-      value: 2.4388242
-      objectReference: {fileID: 0}
-    - target: {fileID: 6264148015336647737, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Size.z
-      value: 0.62704736
-      objectReference: {fileID: 0}
-    - target: {fileID: 6264148015336647737, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Center.y
-      value: 0.71941334
-      objectReference: {fileID: 0}
-    - target: {fileID: 6264148015336647737, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_Center.z
-      value: -0.18647593
-      objectReference: {fileID: 0}
     - target: {fileID: 7422630930128287859, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -970,7 +930,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7422630930128287859, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 4.508
       objectReference: {fileID: 0}
     - target: {fileID: 7422630930128287859, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1003,10 +963,6 @@ PrefabInstance:
     - target: {fileID: 7802956041501532873, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
       propertyPath: m_Name
       value: StarveDevilPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 7802956041501532873, guid: 4fcfd595c4163cf48bf59c9159b49f83, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1286,6 +1242,10 @@ PrefabInstance:
     - target: {fileID: 1824956201004332371, guid: 1961e745ffa31634fb8b2e9064f40e2d, type: 3}
       propertyPath: m_Name
       value: WeakDevilPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 4229361118621519154, guid: 1961e745ffa31634fb8b2e9064f40e2d, type: 3}
+      propertyPath: groggyForce
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
