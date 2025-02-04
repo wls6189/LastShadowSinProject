@@ -142,10 +142,7 @@ public class UIManager : MonoBehaviour
         {
             QuestManager.Instance.RefreshQuestList();
         }
-
-     
-
-     
+        
         IsGameMenuOpen = true;
         DialogSystem.Instance.MouseOn();
     }
@@ -156,6 +153,63 @@ public class UIManager : MonoBehaviour
         GameMenu.gameObject.SetActive(false);
         IsGameMenuOpen = false;
   
+    }
+
+    //메인 메뉴로 이동 - 저장할지 말지 팝업 띄운다.
+
+    //사운드 ui - 
+
+    //종료하기 
+
+
+    [SerializeField]
+    Button MenuMainMenuYesBtn;
+
+    [SerializeField]
+    GameObject MainMenuMovePopup;
+
+
+    public void MainMenuBtn()
+    {
+
+        MainMenuMovePopup.gameObject.SetActive(true);
+
+        MenuMainMenuYesBtn.onClick.RemoveAllListeners();
+        MenuMainMenuYesBtn.onClick.AddListener(() =>
+        {
+            MaineMenuMove();
+        });
+    }
+
+    private void MaineMenuMove()
+    {
+        MainMenuMovePopup.gameObject.SetActive(false);
+        GameMenu.gameObject.SetActive(false);
+        RemoveSpecificDontDestroyObjects();
+
+        SceneManager.LoadScene("MainMenu");
+    }
+    private void RemoveSpecificDontDestroyObjects()
+    {
+        string[] targetNames = { "MainCanvas", "DialogSystem", "InGameCanvas" };
+
+        foreach (string name in targetNames)
+        {
+            GameObject obj = GameObject.Find(name);
+            if (obj != null && obj.scene.buildIndex == -1) // DontDestroyOnLoad 상태인지 확인
+            {
+                Destroy(obj);
+            }
+        }
+    }
+
+    public void QuitButtonGame()
+    {
+        if(MainMenuMovePopup.activeSelf == false)
+        {
+            Application.Quit();
+        }
+       
     }
 
 
@@ -228,6 +282,37 @@ public class UIManager : MonoBehaviour
         IsSpiritShardOfTheDevotedMenuOpen = false;
         SceneManager.LoadScene(movedScene);
     }
+
+
+
+
+
+    [SerializeField]
+    Image[] NoneCombatScenes;
+    [SerializeField]
+    Image[] CombatScenes;
+
+    [SerializeField]
+    Image StartPlaySceneMapCursor;
+    [SerializeField]
+    Image VillageMapCursor;
+
+    public void InteractRadiantTorch() //중심부에서 
+    {
+        StartPlaySceneMapCursor.gameObject.SetActive(false); 
+        VillageMapCursor.gameObject.SetActive(true);
+
+        for (int i = 0; i < NoneCombatScenes.Length; i++)
+        {
+            NoneCombatScenes[i].gameObject.SetActive(true);
+        }
+        for (int i = 0; i < CombatScenes.Length; i++)
+        {
+            CombatScenes[i].gameObject.SetActive(true);
+        }
+    }
+
+
 
     public void CloseBtn()
     {

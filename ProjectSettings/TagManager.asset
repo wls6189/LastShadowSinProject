@@ -17,6 +17,7 @@ TagManager:
   - SoulWell
   - CrackedSeal
   - ChaosRift
+  - RadiantTorch
   layers:
   - Default
   - TransparentFX
