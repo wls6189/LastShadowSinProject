@@ -48,7 +48,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-
+    //AudioManager.instance.PlaySFX(AudioManager.ESfx.SFX_UI, 2);  // 세 번째 UI 사운드 효과를 재생
     public void PlayBGM(EBgm bgmCategory, int index)
     {
         switch (bgmCategory)

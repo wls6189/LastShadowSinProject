@@ -37,14 +37,14 @@ public class Parry : MonoBehaviour
 
         if (enemyStats != null)
         {
-            float finalDamage = enemyStats.attackPower * damageMultiplier;
+            float damage = enemyStats.attackPower * damageMultiplier;
 
 
             PlayerStats playerStats = target.GetComponent<PlayerStats>();
-            //if (playerStats != null)
-            //{
-            //    playerStats.Damaged(finalDamage, groggyForce, currentAttackType, enemyStats, isDirectAttack);
-            //}
+            if (playerStats != null)
+            {
+                playerStats.Damaged(damage, groggyForce, currentAttackType, enemyStats, isDirectAttack);
+            }
         }
     }
 
