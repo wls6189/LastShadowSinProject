@@ -17,8 +17,9 @@ public class PlayerInteraction : MonoBehaviour
     private SpiritSpring soulWell;
     private DecayedStamp crackedSeal;
     private ChaosRift chaosRift;
-
     private DroppedItem droppedItem;
+    private MonsterSpawner monsterSpawner;
+
 
     InputActionAsset inputActionAsset;
     InputAction interactAction;
@@ -35,17 +36,13 @@ public class PlayerInteraction : MonoBehaviour
 
         transform.position = DataManager.Instance.nowPlayer.position;
 
+        monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
+
         LoadStatDataWhenQuit();
     }
 
     private void Update()
     {
-        if (CurrentHealth <= 0)
-        {
-            PlayerDie();
-            return;
-        }
-
 
         if (interactAction.WasPressedThisFrame() && isInteractionReady)
         {
@@ -55,7 +52,8 @@ public class PlayerInteraction : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.I))
         {
-            InventoryCheck();
+            monsterSpawner.OnMonsterDeath(); //임시 사용
+            //InventoryCheck();
         }
 
 
@@ -124,7 +122,7 @@ public class PlayerInteraction : MonoBehaviour
     }
 
   
-    void PlayerDie()
+    public void PlayerDie()
     {
         SceneManager.LoadScene(DataManager.Instance.nowPlayer.currentScene);
         transform.position = DataManager.Instance.nowPlayer.position;
@@ -152,7 +150,7 @@ public class PlayerInteraction : MonoBehaviour
 
             if (!soulfragMent.isSave) // 처음 상호작용 시 저장
             {
-                CurrentHealth = DataManager.Instance.nowPlayer.InitMaxHealth;
+                GetComponent<PlayerStats>().CurrentHealth = DataManager.Instance.nowPlayer.InitMaxHealth;
 
                 SpriritShardOfTheDevotedSave();
 
@@ -264,19 +262,16 @@ public class PlayerInteraction : MonoBehaviour
        
     }
 
-    public float MaxSpiritWave;
-    public float CurrentSpiritWave;
-    public float CurrentSpiritMarkForce;
-    public float CurrentHealth;
+
 
     public void LoadStatDataWhenQuit()
     {
         //헌신자의 영혼파편과 상호작용하여 세이브하고 나서 다시 로드 했을 때 세이브 했을 때의  CurrentHealth, MaxSpiritWave 저장
-        CurrentHealth = DataManager.Instance.nowPlayer.MaxHealth;
+        GetComponent<PlayerStats>().CurrentHealth = DataManager.Instance.nowPlayer.MaxHealth;
 
-        CurrentSpiritWave = DataManager.Instance.nowPlayer.MaxSpiritWave;
+        GetComponent<PlayerStats>().CurrentSpiritWave = DataManager.Instance.nowPlayer.MaxSpiritWave;
 
-        CurrentSpiritMarkForce = DataManager.Instance.nowPlayer.MaxSpiritMarkForce;
+        GetComponent<PlayerStats>().CurrentSpiritMarkForce = DataManager.Instance.nowPlayer.MaxSpiritMarkForce;
     }
     private void SpriritShardOfTheDevotedSave()
     {
@@ -284,9 +279,9 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.position = transform.position; //위치. 
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name; //현재씬 
         //플레이어 체력 , 영혼파동 세기 , MaxSpiritMarkForce  저장
-        DataManager.Instance.nowPlayer.MaxHealth = CurrentHealth;
-        DataManager.Instance.nowPlayer.MaxSpiritWave = CurrentSpiritWave;
-        DataManager.Instance.nowPlayer.MaxSpiritMarkForce = CurrentSpiritMarkForce;
+        DataManager.Instance.nowPlayer.MaxHealth = GetComponent<PlayerStats>().CurrentHealth;
+        DataManager.Instance.nowPlayer.MaxSpiritWave = GetComponent<PlayerStats>().CurrentSpiritWave;
+        DataManager.Instance.nowPlayer.MaxSpiritMarkForce = GetComponent<PlayerStats>().CurrentSpiritMarkForce;
         //마지막으로 저장된 것들을 json으로 저장
         DataManager.Instance.SaveData();
 

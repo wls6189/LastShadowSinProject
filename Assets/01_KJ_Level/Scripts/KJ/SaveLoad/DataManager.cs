@@ -16,17 +16,23 @@ public class PlayerData
     public int previousSlot = -1; //PlayePrefs 
 
     public float InitMaxHealth = 100.0f;
+
     public float MaxHealth = 100.0f;
     public float MaxSpiritWave = 10.0f;
     public float MaxSpiritMarkForce = 100.0f;
+    public float CurrentHealth = 100.0f;
+    public float CurrentSpiritWave = 0.0f;
+    public float CurrentSpiritMarkForce = 0.0f;
 
     public float SpiritAshAmount = 0;
     public EternalSpiritMark EquipedESM = null;
 
+    HashSet<EternalSpiritMark> OwnedESM = new();
+
     //퀘스트
     public List<Quest> allActiveQuests = new List<Quest>();
     public List<Quest> allCompletedQuests = new List<Quest>();
- 
+
     public List<string> questGivers = new List<string>();
     
 
