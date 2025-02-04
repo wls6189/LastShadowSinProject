@@ -12,16 +12,18 @@ public class AttackBase : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         GameObject target;
-        
+       
         // 가드 콜라이더인지 확인
         if (other.CompareTag("PlayerGuard"))
         {
             target = other.transform.parent.gameObject; // 부모(GameObject)를 가져옴
+           
         }
         // 본체 콜라이더인지 확인
         else if (other.CompareTag("Player"))
         {
             target = other.gameObject; // 바로 대상
+          
             isDirectAttack = true;
         }
         else
@@ -32,25 +34,32 @@ public class AttackBase : MonoBehaviour
         // 이미 맞춘 대상인지 확인
         if (hitTargets.Contains(target))
         {
+
+            
             return; // 이미 처리된 대상은 무시
         }
 
         // 대상 기록
+       
         hitTargets.Add(target);
 
         // EnemyStats 컴포넌트 가져오기
-        EnemyStats enemyStats = GetComponent<EnemyStats>();
+        EnemyStats enemyStats = GetComponentInParent<EnemyStats>();
 
         if (enemyStats != null)
         {
-            float finalDamage = enemyStats.attackPower * damageMultiplier;
+           
+            float damage = enemyStats.attackPower * damageMultiplier;
 
 
             PlayerStats playerStats = target.GetComponent<PlayerStats>();
-            //if (playerStats != null)
-            //{
-            //   playerStats.Damaged(finalDamage, groggyForce, currentAttackType, enemyStats, isDirectAttack);
-            //}
+            if (playerStats != null)
+            {
+              
+                playerStats.Damaged(damage, groggyForce, currentAttackType, enemyStats, isDirectAttack);
+                
+            }
+     
         }
     }
 
