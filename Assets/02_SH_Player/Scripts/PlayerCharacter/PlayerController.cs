@@ -758,18 +758,6 @@ public class PlayerController : MonoBehaviour
         PlayerStats.RagingStack = 0;
         yield return null;
     }
-
-
-
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("DroppedItem"))
-        {
-            other.GetComponent<DroppedItem>().PickUpItem(this);
-        }
-    }
 }
 
 

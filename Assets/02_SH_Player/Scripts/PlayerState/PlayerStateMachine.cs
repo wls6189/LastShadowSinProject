@@ -1,4 +1,5 @@
 using PlayerPart;
+using System.Xml;
 using UnityEngine;
 
 public class PlayerStateMachine
@@ -6,6 +7,7 @@ public class PlayerStateMachine
     public IState CurrentState { get; private set; }
     PlayerController player;
 
+    public DeadState deadState;
     public IdleAndMoveState idleAndMoveState;
     public UseChaliceOfAtonementState useChaliceOfAtonementState;
     public DashState dashState;
@@ -37,6 +39,7 @@ public class PlayerStateMachine
     {
         this.player = player;
 
+        deadState = new(player);
         idleAndMoveState = new(player);
         useChaliceOfAtonementState = new(player);
         dashState = new(player);

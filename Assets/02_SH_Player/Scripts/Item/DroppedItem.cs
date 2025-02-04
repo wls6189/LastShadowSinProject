@@ -51,7 +51,6 @@ public class DroppedItem : MonoBehaviour
             }
         }
 
-        //DataManager.Instance.nowPlayer.OwnedESM.Add(~)
         SMAndESMUIManager.Instance.SetOwnedESMList(); // æ∆¿Ã≈€ »πµÊ »ƒ ESMList ¿Áº≥¡§
         Destroy(gameObject, 0.2f);
     }

@@ -5,6 +5,7 @@ public class RampagingESM : EternalSpiritMark
     float increaseAmount = 0;
     float decreaseAmount = 0;
     bool isRampaging = false;
+    bool isAttackPowerUp;
     public RampagingESM() : base(
         "광폭하는 영원의 영혼낙인",
         "매 초 20의 영혼낙인력을 얻습니다.",
