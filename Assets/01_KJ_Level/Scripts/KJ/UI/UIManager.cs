@@ -245,7 +245,7 @@ public class UIManager : MonoBehaviour
             if (button == clickedButton)
             {
                 // 클릭된 버튼은 파란색
-                buttonImage.color = Color.blue;
+                buttonImage.color = Color.black;
             }
             else
             {

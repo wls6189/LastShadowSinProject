@@ -1754,64 +1754,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 455410366}
   m_CullTransparentMesh: 1
---- !u!1 &485923256
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 485923258}
-  - component: {fileID: 485923257}
-  m_Layer: 0
-  m_Name: ButtonManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &485923257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485923256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0c5a01e1e0f3c6468639462a413fb88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttons:
-  - {fileID: 183857818}
-  - {fileID: 1585491908}
-  - {fileID: 698111158}
-  - {fileID: 660535158}
-  - {fileID: 878959321}
-  - {fileID: 267469736}
-  - {fileID: 968959563}
-  - {fileID: 1814314458}
-  - {fileID: 267469736}
-  - {fileID: 811592668}
-  defaultSprite: {fileID: 21300000, guid: 485cd2ab0486a8e4aaa55e94ec27c6b6, type: 3}
-  hoverSprite: {fileID: 21300000, guid: 6b8728d20b5d4c540b335c3789517218, type: 3}
-  clickSprite: {fileID: 21300000, guid: 4b3d2095baccc2041b973b66b786b9d0, type: 3}
---- !u!4 &485923258
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485923256}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &500786802
 GameObject:
   m_ObjectHideFlags: 0
@@ -6857,6 +6799,103 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &3538597991198886326
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224293956419751587, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486280069809596005, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: m_Name
+      value: 'MainMenuButtonManager '
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[0]'
+      value: 
+      objectReference: {fileID: 183857818}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1585491908}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[2]'
+      value: 
+      objectReference: {fileID: 698111158}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[3]'
+      value: 
+      objectReference: {fileID: 660535158}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[4]'
+      value: 
+      objectReference: {fileID: 878959321}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[5]'
+      value: 
+      objectReference: {fileID: 267469736}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[6]'
+      value: 
+      objectReference: {fileID: 968959563}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1814314458}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[8]'
+      value: 
+      objectReference: {fileID: 267469736}
+    - target: {fileID: 7621615628115844379, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
+      propertyPath: 'buttons.Array.data[9]'
+      value: 
+      objectReference: {fileID: 811592668}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d9c257d7fd322544ba980c72b9b31061, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6866,5 +6905,5 @@ SceneRoots:
   - {fileID: 443695426}
   - {fileID: 767071970}
   - {fileID: 1604973654}
-  - {fileID: 485923258}
+  - {fileID: 3538597991198886326}
   - {fileID: 237964336}

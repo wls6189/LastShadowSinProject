@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/02_SH_Player/Assets/3DModel_Terrain/TerrainMaterial.mat.meta
 guid: 0d108d7a5a5ffa14dbac80d1d8f61df9
 NativeFormatImporter:
+========
+guid: fe3230e753fbf134fba90f68c75f93e3
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> origin/Level_9:Assets/01_KJ_Level/Resources/UI/DefaceGames/Fantasy Map Assets Pack Lite/Assets.meta
   externalObjects: {}
   mainObjectFileID: 2100000
   userData: 

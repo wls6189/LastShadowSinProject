@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/InputSystem.inputsettings.asset.meta
 guid: 1e7e34fb8da43074ea5b179025a26f49
 NativeFormatImporter:
+========
+guid: a51ff5579a923704dbc5ab72263246f9
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> origin/Level_9:Assets/01_KJ_Level/Resources/UI/DefaceGames/Fantasy Map Assets Pack Lite/Assets/backgrounds.meta
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
