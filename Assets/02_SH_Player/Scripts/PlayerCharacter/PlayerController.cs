@@ -207,7 +207,9 @@ public class PlayerController : MonoBehaviour
 
         if (transform.position.x != 0)
         {
-            transform.position = new Vector3(0, transform.position.y, transform.position.z);
+            Vector3 newPosition = new Vector3(0, transform.position.y, transform.position.z);
+            Vector3 moveDirection = newPosition - transform.position;  // 이동할 방향 계산
+            PlayerCharacterController.Move(moveDirection);
         }
 
         ManagePressArrow();
@@ -219,6 +221,8 @@ public class PlayerController : MonoBehaviour
         MoveActionValue = moveAction.ReadValue<float>();
 
         PlayerStateMachine.Execute();
+
+        if (CurrentPlayerState == PlayerState.HitLongGroggy && CurrentPlayerState == PlayerState.HitShortGroggy && CurrentPlayerState == PlayerState.GuardHit && CurrentPlayerState == PlayerState.Parry) return;
 
         Gravity();
 

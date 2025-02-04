@@ -34,7 +34,7 @@ namespace PlayerPart
                 player.AttackMoving(-6f);
             }
 
-            if (duration >= 20f / frame)
+            if (duration >= 28f / frame)
             {
                 player.IsGrogging = false;
 
