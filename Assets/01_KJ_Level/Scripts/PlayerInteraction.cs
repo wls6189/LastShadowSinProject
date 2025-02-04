@@ -16,6 +16,7 @@ public class PlayerInteraction : MonoBehaviour
     private SpiritShardOfTheDevoted soulfragMent;
     private SpiritSpring soulWell;
     private DecayedStamp crackedSeal;
+    private RadiantTorch radiantTorch;
     private ChaosRift chaosRift;
     private DroppedItem droppedItem;
     private MonsterSpawner monsterSpawner;
@@ -139,7 +140,7 @@ public class PlayerInteraction : MonoBehaviour
         if ( other.CompareTag("NextPortal") 
             || other.CompareTag("PreviousPortal") || other.CompareTag("SoulWell")
             || other.CompareTag("CrackedSeal") || other.CompareTag("ChaosRift")
-            || other.CompareTag("DroppedItem")) //상호작용 확인.
+            || other.CompareTag("DroppedItem") || other.CompareTag("RadiantTorch")) //상호작용 확인.
         {
             isInteractionReady = true;
             other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI 텍스트 업데이트                
@@ -216,11 +217,17 @@ public class PlayerInteraction : MonoBehaviour
             currentNPC = other.GetComponent<NPC>();
         }
 
-        if (other.CompareTag("DroppedItem") & isInteractionStart)
+        if (other.CompareTag("DroppedItem") && isInteractionStart)
         {
             isInteractionStart = false;
             droppedItem = other.GetComponent<DroppedItem>();
             droppedItem.PickUpItem(this.GetComponent<PlayerController>());
+        }
+        if (other.CompareTag("RadiantTorch") && isInteractionStart)
+        {
+            isInteractionStart = false;
+            radiantTorch = other.GetComponent<RadiantTorch>();
+            radiantTorch.InteractionPlayer();
         }
     }
     [SerializeField]
@@ -234,18 +241,20 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (other.CompareTag("FragMent"))
         {
-            isInteractionReady = false;
             soulfragMent = null;
         }
         if (other.CompareTag("DroppedItem"))
         {
-            isInteractionStart = false;
             droppedItem = null;
         }
-
+        if (other.CompareTag("RadiantTorch"))
+        {
+            radiantTorch = null;
+        }
         if (other.CompareTag("NextPortal")|| other.CompareTag("PreviousPortal") 
             || other.CompareTag("SoulWell") || other.CompareTag("CrackedSeal") 
-            || other.CompareTag("ChaosRift") || other.CompareTag("DroppedItem")) //상호작용 확인.
+            || other.CompareTag("ChaosRift") || other.CompareTag("DroppedItem")
+            || other.CompareTag("RadiantTorch") || other.CompareTag("FragMent")) //상호작용 확인.
         {
             isInteractionReady = false;
             other.GetComponentInChildren<TextMeshProUGUI>().text = ""; // UI 텍스트 업데이트
@@ -262,7 +271,7 @@ public class PlayerInteraction : MonoBehaviour
        
     }
 
-
+ 
 
     public void LoadStatDataWhenQuit()
     {
@@ -282,7 +291,16 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.MaxHealth = GetComponent<PlayerStats>().CurrentHealth;
         DataManager.Instance.nowPlayer.MaxSpiritWave = GetComponent<PlayerStats>().CurrentSpiritWave;
         DataManager.Instance.nowPlayer.MaxSpiritMarkForce = GetComponent<PlayerStats>().CurrentSpiritMarkForce;
-        //마지막으로 저장된 것들을 json으로 저장
+
+        DataManager.Instance.nowPlayer.EquipedESM = GetComponent<PlayerController>().PlayerESMInventory.EquipedESM; // 장착중인 영원의 영혼낙인
+
+        DataManager.Instance.nowPlayer.OwnedESM = GetComponent<PlayerController>().PlayerESMInventory.OwnedESM; // 보유 중인 영원의 영혼낙인
+        DataManager.Instance.nowPlayer.CurrentHealth = GetComponent<PlayerController>().PlayerStats.CurrentHealth; // 현재 체력
+        DataManager.Instance.nowPlayer.CurrentSpiritWave = GetComponent<PlayerController>().PlayerStats.CurrentSpiritWave; // 현재 영혼의 파동
+        DataManager.Instance.nowPlayer.CurrentSpiritMarkForce = GetComponent<PlayerController>().PlayerStats.CurrentSpiritMarkForce; // 현재 영혼낙인력
+        DataManager.Instance.nowPlayer.SpiritAshAmount = GetComponent<PlayerController>().PlayerStats.SpiritAsh; // 영혼재
+                                                                                                                 //마지막으로 저장된 것들을 json으로 저장
+        
         DataManager.Instance.SaveData();
 
     }

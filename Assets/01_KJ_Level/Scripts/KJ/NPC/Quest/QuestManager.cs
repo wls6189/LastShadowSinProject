@@ -61,9 +61,9 @@ public class QuestManager : MonoBehaviour
     [Header("QuestTracker")]
     public GameObject questTrackerContent; //현재 추적 중인 퀘스트 정보를 표시하는 UI의 콘텐츠 객체
 
-    public void AddActiveQuest(string questGvier , Quest quest)
+    public void AddActivePromiseSave(string questGvier , Quest quest)
     {
-        // allActiveQuests.Add(quest);
+       // allActiveQuests.Add(quest);
 
         DataManager.Instance.SaveActiveQuest(quest.questGiver,quest);
 
@@ -71,9 +71,9 @@ public class QuestManager : MonoBehaviour
     }
 
 
-
-    public void MarkQuestCompleted(Quest quest)
+    public void AddCompletedPromiseSave(Quest quest)
     {
+        //allActiveQuests.Remove(quest);
 
         //allCompletedQuests.Add(quest);
 

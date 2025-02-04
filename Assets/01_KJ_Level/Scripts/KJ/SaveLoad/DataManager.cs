@@ -27,7 +27,7 @@ public class PlayerData
     public float SpiritAshAmount = 0;
     public EternalSpiritMark EquipedESM = null;
 
-    HashSet<EternalSpiritMark> OwnedESM = new();
+    public HashSet<EternalSpiritMark> OwnedESM = new();
 
     //퀘스트
     public List<Quest> allActiveQuests = new List<Quest>();

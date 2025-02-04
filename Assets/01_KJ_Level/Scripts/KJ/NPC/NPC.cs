@@ -105,6 +105,8 @@ public class NPC : MonoBehaviour
         
     }
 
+
+
     public void PlayerWithTalk()
     {    
         NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
@@ -318,7 +320,7 @@ public class NPC : MonoBehaviour
 
                 npcDialogText.text = currentActiveQuest.info.InitialFinishAnswer;
 
-                QuestManager.Instance.AddActiveQuest(currentActiveQuest.questGiver, currentActiveQuest);
+                QuestManager.Instance.AddActivePromiseSave(currentActiveQuest.questGiver, currentActiveQuest);
 
                 StartCoroutine(delayTalkStop());
             }
@@ -554,7 +556,7 @@ public class NPC : MonoBehaviour
 
      
 
-        QuestManager.Instance.MarkQuestCompleted(currentActiveQuest);
+        QuestManager.Instance.AddCompletedPromiseSave(currentActiveQuest);
        
         if (currentActiveQuest.info.rewardItem1 != null)
         {
