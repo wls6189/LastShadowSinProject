@@ -7,6 +7,9 @@ using Unity.VisualScripting;
 
 public class EnemyStats : MonoBehaviour
 {
+    public int monsterNumber; // 몬스터별 고유 번호
+    public AudioClip[] monsterSfxClips;
+
     public float maxHealth;        // 최대 체력
     public float currentHealth;           // 현재 체력
     private Enemy enemy;
@@ -33,6 +36,8 @@ public class EnemyStats : MonoBehaviour
         currentHealth = maxHealth; // 현재 체력을 최대 체력으로 초기화
         currentWillpower = maxWillpower; // 현재 영혼 게이지를 최대 영혼 게이지로 초기화
         isGroggy = false;
+
+        AudioManager.instance.RegisterMonsterSfx(monsterNumber, monsterSfxClips);
     }
     private void Update()
     {
@@ -56,7 +61,10 @@ public class EnemyStats : MonoBehaviour
         animator.SetFloat("Speed", enemy.navMeshAgent.velocity.magnitude);
     }
 
-
+    public void PlayMonsterSfx(int sfxIndex)
+    {
+        AudioManager.instance.PlayMonsterSfx(monsterNumber, sfxIndex);
+    }
     public void Damaged(float damage, float impactForce, TenacityAndGroggyForce groggyForce)
     {
         if (isDead || isRecovering || (enemy != null && enemy.currentState == Enemy.State.Parry))
@@ -68,6 +76,7 @@ public class EnemyStats : MonoBehaviour
         // **그로기가 아니어야만 가드 실행 가능**
         if (enemy.isGuarding)
         {
+            PlayMonsterSfx(0); // 방어 사운드
             animator.SetTrigger("Guard");
             damage *= 0.1f; // 데미지 10%
             impactForce *= 0.3f; // 소울 데미지 30%
@@ -79,7 +88,8 @@ public class EnemyStats : MonoBehaviour
        
         currentHealth -= damage; // 체력 감소
         currentWillpower -= impactForce; // 영혼 게이지 감소
-      
+        PlayMonsterSfx(1); // 피격 사운드
+
         if (currentHealth <= 0)
         {
             isGroggy = false;
@@ -123,9 +133,9 @@ public class EnemyStats : MonoBehaviour
     // 죽음 처리
     private void Die()
     {
-        if (isDead) return;
-        AudioManager.instance.PlaySFX(AudioManager.ESfx.SFX_UI, 2);//이런느낌으로 사운드사용
+        if (isDead) return;        
         isDead = true;
+        PlayMonsterSfx(2); // 사망 사운드
         animator.ResetTrigger("Knockdown");
         animator.ResetTrigger("ShortGroggy");
         animator.SetTrigger("Die");
