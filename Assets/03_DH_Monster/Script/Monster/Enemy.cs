@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
 
     private float lastAttackTime; // 마지막 공격 시간
 
-    private NavMeshAgent navMeshAgent; // NavMeshAgent 컴포넌트
+    public NavMeshAgent navMeshAgent; // NavMeshAgent 컴포넌트
     private bool isPlayerOnNavMesh = true; // 플레이어가 NavMesh에 있는지 여부
 
 
@@ -93,8 +93,12 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (isAttacking || isGuarding || enemyStats.isDead || enemyStats.isGroggy)
+        {
+            return;
+        }
         UpdateAnimation();
-        if (isAttacking || isGuarding) return;
+
         if (transform.position.x != 0)
         {
             transform.position = new Vector3(0, transform.position.y, transform.position.z);
@@ -199,18 +203,25 @@ public class Enemy : MonoBehaviour
         AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         float animationDuration = currentStateInfo.length;
 
-       
-        yield return new WaitForSeconds(animationDuration);
 
-        
+        yield return new WaitForSeconds(animationDuration); // 가드 애니메이션이 끝날 때까지 대기
+
         if (currentState == State.Guard || currentState == State.Parry)
         {
-            currentState = State.Chasing;
+            currentState = State.Chasing; // 다시 추격 상태로 전환
+            isGuarding = false; // 가드 종료
+            parryCollider.gameObject.SetActive(false);
+            // **이동 재개**
+            navMeshAgent.isStopped = false;
+            if (player != null)
+            {
+                navMeshAgent.SetDestination(player.position); // 플레이어를 다시 추적
+            }
 
-            parryCollider.gameObject.SetActive(false); // 패리 콜라이더 비활성화
-            navMeshAgent.isStopped = false; // 이동 재개
+          
+            animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
         }
-        isGuarding = false;
+       
     }
 
     private void CheckForChase()
@@ -281,7 +292,7 @@ public class Enemy : MonoBehaviour
 
     private bool IsPlayerAttacking()
     {
-        return player != null && player.GetComponent<PlayerController>().IsAttacking;
+        return player != null && player.GetComponent<PlayerController>().IsAttackColliderEnabled;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -382,6 +393,7 @@ public class Enemy : MonoBehaviour
             Collider attackCollider = attackObject.GetComponent<Collider>();
             if (attackCollider != null)
             {
+                yield return new WaitForSeconds(duration *0.2f);
                 attackCollider.gameObject.SetActive(true);
 
                 // AttackBase의 attackType 설정
@@ -391,7 +403,7 @@ public class Enemy : MonoBehaviour
                     attackBase.currentAttackType = attackType;
                 }
 
-                yield return new WaitForSeconds(duration * 0.8f); // 공격 애니메이션 중간쯤에 비활성화
+                yield return new WaitForSeconds(duration * 0.7f); // 공격 애니메이션 중간쯤에 비활성화
 
                 attackCollider.gameObject.SetActive(false);
             }
