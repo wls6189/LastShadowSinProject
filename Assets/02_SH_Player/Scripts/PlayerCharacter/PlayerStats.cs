@@ -54,7 +54,7 @@ public class PlayerStats : MonoBehaviour
     [HideInInspector] public bool IsRavenous; // 굶주린 영원의 영혼낙인 착용 여부. 흡혈
     [HideInInspector] public bool IsEnthusiastic; // 열성적인 영원의 영혼낙인 착용 여부. 영혼의 파동 회복
     [HideInInspector] public bool IsRagingOn; // 몰아치는 영원의 영혼낙인 착용 여부. 낙뢰
-    [HideInInspector] public int RagingStack; // 몰아치는 영원의 영혼낙인 착용 여부. 낙뢰
+    [HideInInspector] public int RagingStack; // 몰아치는 영원의 영혼낙인 공격 스택
     [HideInInspector] public int SpiritAsh;
     
     void Awake()
@@ -343,6 +343,7 @@ public class PlayerStats : MonoBehaviour
         if (CurrentHealth <= 0)
         {
             player.CurrentPlayerState = PlayerState.Dead;
+            //GetComponent<PlayerInteraction>().PlayerDie();
         }
     }
 }

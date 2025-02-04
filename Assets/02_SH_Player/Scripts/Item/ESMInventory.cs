@@ -10,8 +10,8 @@ public class ESMInventory : MonoBehaviour
     [HideInInspector] public EternalSpiritMark EquipedESM;
     void Awake()
     {
-        // OwnedESM = JsonConvert // 세이브에서 가져오기
-        // CurrentEquipedESM = JsonConvert // 세이브에서 가져오기
+        //OwnedESM = JsonConvert // 세이브에서 가져오기
+        EquipedESM = DataManager.Instance.nowPlayer.EquipedESM; // 세이브에서 장착 중인 장비 불러오기
 
         TryGetComponent(out player);
 
@@ -31,6 +31,7 @@ public class ESMInventory : MonoBehaviour
     public void SwapESM(EternalSpiritMark replacedESM)
     {
         EquipedESM = replacedESM;
+
         player.PlayerStats.CurrentSpiritMarkForce = 0; // 영원의 영혼낙인 교체 시 영혼낙인력 초기화
 
         if (!EquipedESM.IsNaturalRegeneration)
@@ -42,6 +43,7 @@ public class ESMInventory : MonoBehaviour
             player.CallWhenDamaging -= RegenerationGaugeOnAction;
         }
 
+        DataManager.Instance.nowPlayer.EquipedESM = EquipedESM; // 스왑하면 바로바로 저장하기
         SMAndESMUIManager.Instance.SetOwnedESMList();
     }
     public void ApplyESM()

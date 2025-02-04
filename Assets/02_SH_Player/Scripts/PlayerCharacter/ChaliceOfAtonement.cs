@@ -7,13 +7,14 @@ public class ChaliceOfAtonement : MonoBehaviour
 
     PlayerController player;
     float recoveryAmount;
+    float spiritSpringPercent = 5;
 
     void Awake()
     {
         TryGetComponent(out player);
-        MaxChaliceOfAtonementCount = 2; // 추후 세이브에서 불러오는 걸로
+        MaxChaliceOfAtonementCount = 2 + DataManager.Instance.nowPlayer.SpiritSpringCount; // 세이브에서 영혼샘 상호작용 횟수 불러오기
         CurrentChaliceOfAtonementCount = MaxChaliceOfAtonementCount;
-        recoveryAmount = 30; // 추후 세이브에서 불러오기
+        recoveryAmount = 30 + (spiritSpringPercent * DataManager.Instance.nowPlayer.SpiritSpringCount); // 세이브에서 영혼샘 상호작용 횟수 불러오기
     }
 
 

@@ -142,8 +142,13 @@ public class SMAndESMUIManager : MonoBehaviour
             selectESMInfoGainDescription.text = ownedESMList[currentESMSlotIndex].GetComponent<ESMSlot>().ThisESM.GainDescription;
             selectESMInfoAbilityDescription.text = ownedESMList[currentESMSlotIndex].GetComponent<ESMSlot>().ThisESM.AbilityDescription;
         }
+        else
+        {
+            selectESMInfoName.text = "";
+            selectESMInfoGainDescription.text = "";
+            selectESMInfoAbilityDescription.text = "";
+        }
     }
-
 }
 
 

@@ -193,6 +193,17 @@ public class PlayerController : MonoBehaviour
     {
         if (CurrentPlayerState == PlayerState.Dead) return;
         if (DialogSystem.Instance.isdialogueCanvas) return; // 다이얼로그 열리면 키 입력 및 행동 금지(추후 TimeScale로 다루는 것에 대한 여부)
+        if (UIManager.Instance.IsSpiritShardOfTheDevotedMenuOpen) return;
+        if (UIManager.Instance.IsGameMenuOpen)
+        {
+            Time.timeScale = 0f;
+            GameMenuPressed();
+            return;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
 
         if (transform.position.x != 0)
         {

@@ -48,5 +48,6 @@ EditorBuildSettings:
     path: Assets/Scenes/KJ_Level/CorpseCape/Village.unity
     guid: a48753407e102c04b95554f696fa1829
   m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 1e7e34fb8da43074ea5b179025a26f49, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
