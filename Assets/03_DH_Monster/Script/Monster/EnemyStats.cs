@@ -48,8 +48,9 @@ public class EnemyStats : MonoBehaviour
         }
         else if (!animator.IsInTransition(0) &&
         (currentState.IsName("Knockdown") || currentState.IsName("ShortGroggy")) &&
-        currentState.normalizedTime >= 0.99f)
+        currentState.normalizedTime >= 0.9f)
         {
+          
             isGroggy = false;
         }
         animator.SetFloat("Speed", enemy.navMeshAgent.velocity.magnitude);

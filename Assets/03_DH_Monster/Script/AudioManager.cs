@@ -18,13 +18,18 @@ public class AudioManager : MonoBehaviour
     {
         SFX_UI,
         SFX_NPC,
-        SFX_PLAYER,
-        SFX_MONSTER
+        SFX_PLAYER
     }
 
     //audio clip 담을 수 있는 배열
-    [SerializeField] AudioClip[] bgms;
-    [SerializeField] AudioClip[] sfxs;
+    [SerializeField] private AudioClip[] titleBgm;   // 타이틀 화면 음악
+    [SerializeField] private AudioClip[] gameBgm;    // 게임 내 배경 음악
+
+    // SFX 각 카테고리별로 여러 사운드 클립을 담는 배열
+    [SerializeField] private AudioClip[] uiSfx;      // UI 관련 효과음
+    [SerializeField] private AudioClip[] npcSfx;     // NPC 관련 효과음
+    [SerializeField] private AudioClip[] playerSfx;  // 플레이어 관련 효과음
+
 
     //플레이하는 AudioSource
     [SerializeField] AudioSource audioBgm;
@@ -44,22 +49,47 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    public void PlayBGM(EBgm bgmIdx)
+    public void PlayBGM(EBgm bgmCategory, int index)
     {
-    
-        audioBgm.clip = bgms[(int)bgmIdx];
+        switch (bgmCategory)
+        {
+            case EBgm.BGM_TITLE:
+                audioBgm.clip = titleBgm[index];
+                break;
+            case EBgm.BGM_GAME:
+                audioBgm.clip = gameBgm[index];
+                break;
+            default:
+                return;
+        }
         audioBgm.Play();
     }
 
-  
     public void StopBGM()
     {
-        audioBgm.Stop();
+        audioBgm.Stop();//bgm끄기
     }
 
-    // ESfx 열거형을 매개변수로 받아 해당하는 효과음 클립을 재생
-    public void PlaySFX(ESfx esfx)
+    public void PlaySFX(ESfx sfxCategory, int index)
     {
-        audioSfx.PlayOneShot(sfxs[(int)esfx]);
+        switch (sfxCategory)
+        {
+            case ESfx.SFX_UI:
+                audioSfx.PlayOneShot(uiSfx[index]);
+                break;
+            case ESfx.SFX_NPC:
+                audioSfx.PlayOneShot(npcSfx[index]);
+                break;
+            case ESfx.SFX_PLAYER:
+                audioSfx.PlayOneShot(playerSfx[index]);
+                break;
+
+            default:
+                return;
+        }
+    }
+    public void StopSFX()
+    {
+        audioSfx.Stop();  // 효과음 끄기
     }
 }
