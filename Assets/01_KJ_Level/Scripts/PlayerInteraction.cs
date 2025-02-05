@@ -51,13 +51,6 @@ public class PlayerInteraction : MonoBehaviour
 
         }
 
-        //if(Input.GetKeyDown(KeyCode.I))
-        //{
-        //    //monsterSpawner.OnMonsterDeath(); //임시 사용
-        //    //InventoryCheck();
-        //}
-
-
         if (currentNPC != null && currentNPC.playerInRange)
         {
             currentNPC.NpcTalkImage.gameObject.SetActive(true);
@@ -82,30 +75,16 @@ public class PlayerInteraction : MonoBehaviour
 
         if (collectedItems.ContainsKey(itemName))
         {
-            collectedItems[itemName] += 1; // 기존 아이템 개수 증가
+            DataManager.Instance.collectedItems[itemName] += 1; // 기존 아이템 개수 증가
         }
         else
         {
-            collectedItems.Add(itemName, 1); // 새 아이템 추가
+            DataManager.Instance.collectedItems.Add(itemName, 1); // 새 아이템 추가
 
         }
 
     } //임시 메서드1
 
-    void InventoryCheck()
-    {
-
-        foreach (var item in collectedItems)
-        {
-            Debug.Log($"아이템: {item.Key}, 개수: {item.Value}");
-        }
-
-
-        if (collectedItems.Count == 0)
-        {
-            Debug.Log("인벤토리가 비어 있습니다.");
-        }
-    } //임시 메서드2
 
     public void RemoveItem(string itemName,int count) ////임시 메서드3
     {
@@ -125,22 +104,48 @@ public class PlayerInteraction : MonoBehaviour
   
     public void PlayerDie()
     {
-        SceneManager.LoadScene(DataManager.Instance.nowPlayer.currentScene);
-        transform.position = DataManager.Instance.nowPlayer.position;
+        if (UIManager.Instance.isPlayerDieUI == false)
+        {
+            StartCoroutine(UIManager.Instance.PlayerDieUI(this));
+        }      
     }
 
+    public void RespawnPlayer()
+    {
+        UIManager.Instance.PlayerDieUISet();
+        SceneManager.LoadScene(DataManager.Instance.nowPlayer.currentScene);
+        transform.position = DataManager.Instance.nowPlayer.position;
+
+    }
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("FragMent"))
+        if(other.CompareTag("FragMent") )
         {
             isInteractionReady = true;
         }
+        if (other.CompareTag("SoulWell"))
+        {
+            isInteractionReady = true;
+            if (!DataManager.Instance.nowPlayer.currentSceneSpiritSpring.Contains
+            (other.GetComponent< SpiritSpring>().currentSceneSpiritSpring))
+            {
+                other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]";
+            }
+                
+        }
+        if(other.CompareTag("CrackedSeal"))
+        {
+            isInteractionReady = true;
+            if (!DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Contains
+                 (other.GetComponent<DecayedStamp>().currentScenesDecayedStamp))
+            {
+                other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]";
+            }
+        }
 
-        if ( other.CompareTag("NextPortal") 
-            || other.CompareTag("PreviousPortal") || other.CompareTag("SoulWell")
-            || other.CompareTag("CrackedSeal") || other.CompareTag("ChaosRift")
-            || other.CompareTag("DroppedItem") || other.CompareTag("RadiantTorch")) //상호작용 확인.
+        if ( other.CompareTag("NextPortal") || other.CompareTag("PreviousPortal")
+            || other.CompareTag("ChaosRift") || other.CompareTag("DroppedItem") || other.CompareTag("RadiantTorch")) //상호작용 확인.
         {
             isInteractionReady = true;
             other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI 텍스트 업데이트                
@@ -155,20 +160,14 @@ public class PlayerInteraction : MonoBehaviour
 
                 SpriritShardOfTheDevotedSave();
 
-
                 soulfragMent.isSave = true; // 이미 저장된 상태로 플래그 설정
-                DataManager.Instance.SaveSoulFragment(soulfragMent, soulfragMent.fragmentID,soulfragMent.sceneflow.currentSceneName);
                 
-                //DataManager.Instance.SaveObjectFunc(soulfragMent);
-                
-                other.GetComponentInChildren<TextMeshProUGUI>().text = "Saved! [F]"; // UI 텍스트 업데이트
+                other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI 텍스트 업데이트
                 Debug.Log("영혼 파편이 저장.");
             }
             else // 이미 저장된 상태에서 다시 상호작용
             {
                 UIManager.Instance.SoulImageOpen(soulfragMent);
-                other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI 텍스트 업데이트
-                Debug.Log("영혼 파편이 이미 저장.");
             }
             isInteractionStart = false;
         }
@@ -186,9 +185,9 @@ public class PlayerInteraction : MonoBehaviour
         if(other.CompareTag("SoulWell") && isInteractionStart)
         {
             isInteractionStart = false;
-           
 
-            soulWell = other.GetComponent<SpiritSpring>();
+             soulWell = other.GetComponent<SpiritSpring>();
+            other.GetComponentInChildren<TextMeshProUGUI>().text = " ";
             soulWell.InteractionPlayer();
 
         }
@@ -197,6 +196,7 @@ public class PlayerInteraction : MonoBehaviour
             isInteractionStart = false;
 
             crackedSeal = other.GetComponent<DecayedStamp>();
+            other.GetComponentInChildren<TextMeshProUGUI>().text = " ";
             crackedSeal.InteractionPlayer();
         }
 
@@ -237,6 +237,9 @@ public class PlayerInteraction : MonoBehaviour
 
     [SerializeField]
     private bool isInteractionStart;
+
+
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("FragMent"))
@@ -254,7 +257,7 @@ public class PlayerInteraction : MonoBehaviour
         if (other.CompareTag("NextPortal")|| other.CompareTag("PreviousPortal") 
             || other.CompareTag("SoulWell") || other.CompareTag("CrackedSeal") 
             || other.CompareTag("ChaosRift") || other.CompareTag("DroppedItem")
-            || other.CompareTag("RadiantTorch") || other.CompareTag("FragMent")) //상호작용 확인.
+            || other.CompareTag("RadiantTorch")) //상호작용 확인.
         {
             isInteractionReady = false;
             other.GetComponentInChildren<TextMeshProUGUI>().text = ""; // UI 텍스트 업데이트
@@ -265,7 +268,6 @@ public class PlayerInteraction : MonoBehaviour
         {
             isNpcInteraction = false;
             currentNPC.NpcTalkImage.gameObject.SetActive(false);
-            currentNPC = null;
         }
 
        
@@ -284,6 +286,9 @@ public class PlayerInteraction : MonoBehaviour
     }
     private void SpriritShardOfTheDevotedSave()
     {
+        //영혼파편 세이브 관련
+        DataManager.Instance.SaveSoulFragment(soulfragMent, soulfragMent.fragmentID, soulfragMent.sceneflow.currentSceneName);
+
         // 플레이어 위치 및 현재 씬 저장
         DataManager.Instance.nowPlayer.position = transform.position; //위치. 
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name; //현재씬 

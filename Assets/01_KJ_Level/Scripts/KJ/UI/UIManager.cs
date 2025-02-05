@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -49,8 +50,9 @@ public class UIManager : MonoBehaviour
     public bool IsGameMenuOpen;
     public bool IsSpiritShardOfTheDevotedMenuOpen;
 
-    public Button[] TabButtons;
+    private string movedScene;
 
+    public Button[] TabButtons;
 
     EventSystem system;
 
@@ -58,18 +60,29 @@ public class UIManager : MonoBehaviour
 
     private Button lastSelectedButton; // 마지막으로 선택된 버튼
 
+    [SerializeField]
+    GameObject GameMenu;
+
+    [Header("SpiritShardOfTheDevoted")]
     public GameObject SoulFragMentInfo;
-
-
     public GameObject SoulFragMentMoveInfo;
-
-
     public GameObject SoulImages;
-
-  
-
     public GameObject SoulFragMentContent;
 
+    [Header("MapCursor")]
+    [SerializeField]
+    Image[] NoneCombatScenes;
+    [SerializeField]
+    Image[] CombatScenes;
+    [SerializeField]
+    Image StartPlaySceneMapCursor;
+    [SerializeField]
+    Image VillageMapCursor;
+    [Header("OptionTab")]
+    [SerializeField]
+    Button MenuMainMenuYesBtn;
+    [SerializeField]
+    GameObject MainMenuMovePopup;
     void Start()
     {
 
@@ -97,40 +110,35 @@ public class UIManager : MonoBehaviour
             NavigateButtons(false); 
         }
     }
-    private void NavigateButtons(bool isShiftPressed)
-    {
-        // 현재 선택된 Selectable 가져오기
-        Selectable current = system.currentSelectedGameObject?.GetComponent<Selectable>();
-
-        if (current == null && lastSelectedButton != null) //마우스로 빈 공간 선택시 current가 null이므로, null일 경우
-        {
-            lastSelectedButton.Select(); //마지막 버튼 선택
-            current = lastSelectedButton; //마지막으로 버튼을 current에 저장.
-        }
-
-        if (current != null)
-        {
-            Selectable next = isShiftPressed ? current.FindSelectableOnLeft() : current.FindSelectableOnRight();  //true/false에 따른 왼쪽 이동과 오른쪽이동.
-
-            if (next != null)
-            {
-                Debug.Log("2");
-                next.Select();
-
-                Button nextButton = next.GetComponent<Button>(); //선
-                if (nextButton != null && nextButton != lastSelectedButton)
-                {
-                    Debug.Log("3");
-                    nextButton.onClick.Invoke();
-                    lastSelectedButton = nextButton; // 마지막 선택된 버튼 업데이트
-                    ColorChange(lastSelectedButton);
-                }
-            }
-        }
-    }
 
     [SerializeField]
-    GameObject GameMenu;
+    GameObject PlayerDieImage;
+    [SerializeField]
+    TextMeshProUGUI DieText;
+    [SerializeField]
+    public bool isPlayerDieUI;
+    
+    public IEnumerator PlayerDieUI(PlayerInteraction player)
+    {
+        isPlayerDieUI = true;
+        PlayerDieImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2.0f);
+        DieText.text = "3";
+        yield return new WaitForSeconds(1f);
+        DieText.text = "2";
+        yield return new WaitForSeconds(1f);
+        DieText.text = "1";
+        yield return new WaitForSeconds(1f);
+        DieText.text = " ";
+        yield return new WaitForSeconds(0.1f);
+        player.RespawnPlayer();
+    }
+    public void PlayerDieUISet()
+    {
+        isPlayerDieUI = false;
+        PlayerDieImage.gameObject.SetActive(false);
+        DieText.text = "YOU DiED";
+    }
     public void GameMenuOpen()
     {
         GameMenu.gameObject.SetActive(true);
@@ -155,18 +163,6 @@ public class UIManager : MonoBehaviour
   
     }
 
-    //메인 메뉴로 이동 - 저장할지 말지 팝업 띄운다.
-
-    //사운드 ui - 
-
-    //종료하기 
-
-
-    [SerializeField]
-    Button MenuMainMenuYesBtn;
-
-    [SerializeField]
-    GameObject MainMenuMovePopup;
 
 
     public void MainMenuBtn()
@@ -212,7 +208,6 @@ public class UIManager : MonoBehaviour
        
     }
 
-
     public void SoulImageOpen(SpiritShardOfTheDevoted soulFragMent)
     {
         IsSpiritShardOfTheDevotedMenuOpen = true;
@@ -221,10 +216,6 @@ public class UIManager : MonoBehaviour
 
         RefreshSaveScenes(soulFragMent);
     }
-
-   
-
-    private string movedScene;
 
     public void RefreshSaveScenes(SpiritShardOfTheDevoted soulFragMent)
     {
@@ -283,20 +274,6 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(movedScene);
     }
 
-
-
-
-
-    [SerializeField]
-    Image[] NoneCombatScenes;
-    [SerializeField]
-    Image[] CombatScenes;
-
-    [SerializeField]
-    Image StartPlaySceneMapCursor;
-    [SerializeField]
-    Image VillageMapCursor;
-
     public void InteractRadiantTorch() //중심부에서 
     {
         StartPlaySceneMapCursor.gameObject.SetActive(false); 
@@ -311,14 +288,43 @@ public class UIManager : MonoBehaviour
             CombatScenes[i].gameObject.SetActive(true);
         }
     }
-
-
-
     public void CloseBtn()
     {
         DialogSystem.Instance.MouseOff();
         SoulImages.gameObject.SetActive(false);
         IsSpiritShardOfTheDevotedMenuOpen = false;
+    }
+
+    private void NavigateButtons(bool isShiftPressed)
+    {
+        // 현재 선택된 Selectable 가져오기
+        Selectable current = system.currentSelectedGameObject?.GetComponent<Selectable>();
+
+        if (current == null && lastSelectedButton != null) //마우스로 빈 공간 선택시 current가 null이므로, null일 경우
+        {
+            lastSelectedButton.Select(); //마지막 버튼 선택
+            current = lastSelectedButton; //마지막으로 버튼을 current에 저장.
+        }
+
+        if (current != null)
+        {
+            Selectable next = isShiftPressed ? current.FindSelectableOnLeft() : current.FindSelectableOnRight();  //true/false에 따른 왼쪽 이동과 오른쪽이동.
+
+            if (next != null)
+            {
+                Debug.Log("2");
+                next.Select();
+
+                Button nextButton = next.GetComponent<Button>(); //선
+                if (nextButton != null && nextButton != lastSelectedButton)
+                {
+                    Debug.Log("3");
+                    nextButton.onClick.Invoke();
+                    lastSelectedButton = nextButton; // 마지막 선택된 버튼 업데이트
+                    ColorChange(lastSelectedButton);
+                }
+            }
+        }
     }
     public void ColorChange(Button clickedButton)
     {

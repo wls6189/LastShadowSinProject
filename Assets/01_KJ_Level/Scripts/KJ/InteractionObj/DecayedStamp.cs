@@ -1,4 +1,6 @@
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DecayedStamp : Interaction
 {
@@ -7,13 +9,17 @@ public class DecayedStamp : Interaction
    
 
     [SerializeField]
-    private string currentScenesDecayedStamp;
+    public string currentScenesDecayedStamp;
 
     [SerializeField]
     private GameObject EffectPrefab;
+
+ 
     void Start()
     {
-        if(DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Contains(currentScenesDecayedStamp))
+        currentScenesDecayedStamp = SceneManager.GetActiveScene().name;
+
+        if (DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Contains(currentScenesDecayedStamp))
         {
             if (DataManager.Instance.nowPlayer.DecayedStampCount > 0)
             {
@@ -25,8 +31,13 @@ public class DecayedStamp : Interaction
 
     }
 
-    public override void InteractionPlayer()
-    {    
+    public override void InteractionPlayer( )
+    {
+        if (DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Contains(currentScenesDecayedStamp))
+        {
+            Debug.Log("이미 데이터 저장되서 카운트 못 올림");
+            return;
+        }
         DataManager.Instance.nowPlayer.DecayedStampCount += 1;
         DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Add(currentScenesDecayedStamp);
         DataManager.Instance.SaveData();

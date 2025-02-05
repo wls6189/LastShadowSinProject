@@ -51,8 +51,8 @@ public class SceneSelect : MonoBehaviour
                 DataManager.Instance.LoadData();
 
                 slotText[i].text = DataManager.Instance.nowPlayer.name; //해당 슬롯0번의 텍스트가 PlayerData의 name으로 저장
-                slotSceneText[i].text = "현재 위치 : " + DataManager.Instance.nowPlayer.currentMap +
-                    DataManager.Instance.nowPlayer.currentScene; //해당 슬롯0번의 텍스트가 PlayerData의 name으로 저장
+                slotSceneText[i].text = "현재 맵 : " + DataManager.Instance.nowPlayer.currentMap + "\n" +
+                   "현재 구역 : " +  DataManager.Instance.nowPlayer.currentScene; //해당 슬롯0번의 텍스트가 PlayerData의 name으로 저장
                
             }
             else
@@ -226,6 +226,9 @@ public class SceneSelect : MonoBehaviour
     {
         SlotImageOpen();
     }
+
+  
+
     public void SlotImageOpen()
     {
         if(continueCheackImage.activeSelf == false)
@@ -335,5 +338,12 @@ public class SceneSelect : MonoBehaviour
     }
 
   
+    public void QuitButton()
+    {
+        if(continueCheackImage.activeSelf == false)
+        {
+            Application.Quit();
+        }
+    }
 
 }

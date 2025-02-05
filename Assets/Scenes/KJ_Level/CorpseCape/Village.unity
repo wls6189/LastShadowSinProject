@@ -1294,6 +1294,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4919159229085422703, guid: 7da16ca51427c8f458731d73e743600d, type: 3}
+      propertyPath: currentSceneSpiritSpring
+      value: Village
+      objectReference: {fileID: 0}
     - target: {fileID: 8070093909321171524, guid: 7da16ca51427c8f458731d73e743600d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.64
@@ -2615,6 +2619,14 @@ PrefabInstance:
     - target: {fileID: 3470437401867442067, guid: 2d6ae0fc8f78bff4ea89bff940b0e9ce, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347151244845028896, guid: 2d6ae0fc8f78bff4ea89bff940b0e9ce, type: 3}
+      propertyPath: sceneflow
+      value: 
+      objectReference: {fileID: 11400000, guid: 6fbb4e335e0ab094eab41e6961156e12, type: 2}
+    - target: {fileID: 5347151244845028896, guid: 2d6ae0fc8f78bff4ea89bff940b0e9ce, type: 3}
+      propertyPath: fragmentID
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7305401193399735873, guid: 2d6ae0fc8f78bff4ea89bff940b0e9ce, type: 3}
       propertyPath: m_LocalRotation.w
