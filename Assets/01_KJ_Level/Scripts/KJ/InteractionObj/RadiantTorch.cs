@@ -25,6 +25,8 @@ public class RadiantTorch : Interaction
             case "SouthernVillage":
                 UIManager.Instance.InteractRadiantTorchWestVillage();
                 break;
-        }  
+        }
+
+        AudioManager.instance.Playsfx(AudioManager.Sfx.InteractAdventure);
     }
 }

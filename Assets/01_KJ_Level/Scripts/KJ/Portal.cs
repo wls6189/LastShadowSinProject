@@ -24,16 +24,38 @@ public class Portal : MonoBehaviour
             case "4-1":
             case "5-1":
             case "5-2":
+                UIManager.Instance.WestStartMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestVillageMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestHavenMap.gameObject.SetActive(false);
+                UIManager.Instance.CorpseCapeMap.gameObject.SetActive(false);
+                break;
+            case "StartPlayScene":
+                StartCoroutine(UIManager.Instance.CurrentSceneUI("시체 곶"));
+                UIManager.Instance.WestStartMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestVillageMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestHavenMap.gameObject.SetActive(false);
+                UIManager.Instance.CorpseCapeMap.gameObject.SetActive(false);
+                break;
+            case "LastVillage":
+                StartCoroutine(UIManager.Instance.CurrentSceneUI("폐허 된 마을"));
+                UIManager.Instance.WestStartMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestVillageMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestHavenMap.gameObject.SetActive(false);
+                UIManager.Instance.CorpseCapeMap.gameObject.SetActive(false);
+                break;
+            case "Village":
+                StartCoroutine(UIManager.Instance.CurrentSceneUI("마을"));
+                UIManager.Instance.WestStartMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestVillageMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestHavenMap.gameObject.SetActive(false);
+                UIManager.Instance.CorpseCapeMap.gameObject.SetActive(false);
+                break;
             case "5-2_Boss":
                 UIManager.Instance.WestStartMapCursor.gameObject.SetActive(false);
                 UIManager.Instance.WestVillageMapCursor.gameObject.SetActive(false);
-                break;
-            case "StartPlayScene":
-            case "LastVillage":
-            case "Village":
-                StartCoroutine(UIManager.Instance.CurrentSceneUI(currentSceneData.currentSceneName));
-                UIManager.Instance.WestStartMapCursor.gameObject.SetActive(false);
-                UIManager.Instance.WestVillageMapCursor.gameObject.SetActive(false);
+                UIManager.Instance.WestHavenMap.gameObject.SetActive(false);
+                UIManager.Instance.CorpseCapeMap.gameObject.SetActive(false);
+                AudioManager.instance.Playsfx(AudioManager.Sfx.BossBGM);
                 break;
             // 서쪽안식처
             case "6-2":
@@ -42,15 +64,23 @@ public class Portal : MonoBehaviour
             case "8-1":
             case "9-1":
             case "10-1":
-            case "10-2_Boss":       
                 UIManager.Instance.InteractRadiantTorchWestStart(); //맵 ui동기화
                 break;
             case "6-1":
-            case "DeapSouthernVillage":
-            case "SouthernVillage":
-                StartCoroutine(UIManager.Instance.CurrentSceneUI(currentSceneData.currentSceneName));
+                StartCoroutine(UIManager.Instance.CurrentSceneUI("서쪽 안식처"));
                 UIManager.Instance.InteractRadiantTorchWestStart(); //맵 ui동기화
-
+                break;
+            case "DeapSouthernVillage":
+                StartCoroutine(UIManager.Instance.CurrentSceneUI("깊은서쪽 마을"));
+                UIManager.Instance.InteractRadiantTorchWestStart(); //맵 ui동기화
+                break;
+            case "SouthernVillage":
+                StartCoroutine(UIManager.Instance.CurrentSceneUI("서쪽 마을"));
+                UIManager.Instance.InteractRadiantTorchWestStart(); //맵 ui동기화
+                break;
+            case "10-2_Boss":
+                AudioManager.instance.Playsfx(AudioManager.Sfx.BossBGM);
+                UIManager.Instance.InteractRadiantTorchWestStart(); //맵 ui동기화
                 break;
         }
       

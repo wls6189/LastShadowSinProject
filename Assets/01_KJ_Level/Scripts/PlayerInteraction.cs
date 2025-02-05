@@ -34,7 +34,10 @@ public class PlayerInteraction : MonoBehaviour
     {
         interactAction = inputActionAsset.FindAction("Interact");
 
+        //if(DataManager.Instance.nowPlayer.saveActiveObjects.Contains(soulfragMent))
+        //{
 
+        //}
         transform.position = DataManager.Instance.nowPlayer.Initposition;
 
         //monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
@@ -150,6 +153,7 @@ public class PlayerInteraction : MonoBehaviour
             isInteractionReady = true;
             other.GetComponentInChildren<TextMeshProUGUI>().text = "Interaction [F]"; // UI ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®                
         }
+
         if (other.CompareTag("FragMent") && isInteractionStart) //Çå½ÅÀÚ ¿µÈ¥ÆÄÆí
         {
             soulfragMent = other.GetComponent<SpiritShardOfTheDevoted>();
@@ -170,38 +174,39 @@ public class PlayerInteraction : MonoBehaviour
                 UIManager.Instance.SoulImageOpen(soulfragMent);
             }
             isInteractionStart = false;
-        }
+        } //Çå½ÅÀÚ ¿µÈ¥ÆÄÆí
 
         if (other.CompareTag("NextPortal") && isInteractionStart)
         {
             isInteractionStart = false;
             other.GetComponent<Portal>().LoadScene(true);
-        }
+        } //´ÙÀ½ Æ÷Å»
         if (other.CompareTag("PreviousPortal") && isInteractionStart)
         {
             isInteractionStart = false;
             other.GetComponent<Portal>().LoadScene(false);
-        }
+        } //ÀÌÀü Æ÷Å»
         if(other.CompareTag("SoulWell") && isInteractionStart)
         {
             isInteractionStart = false;
 
-            GetComponent<PlayerController>().PlayerChaliceOfAtonement.LoadCOAData();
-
-            soulWell = other.GetComponent<SpiritSpring>();
+           soulWell = other.GetComponent<SpiritSpring>();
             other.GetComponentInChildren<TextMeshProUGUI>().text = " ";
             soulWell.InteractionPlayer();
 
-        }
+            GetComponent<PlayerController>().PlayerChaliceOfAtonement.LoadCOAData();
+
+        } //¿µÈ¥»ù
         if(other.CompareTag("CrackedSeal") && isInteractionStart)
         {
             isInteractionStart = false;
 
-            GetComponent<PlayerController>().PlayerMarkInventory.LoadSMData();
             crackedSeal = other.GetComponent<DecayedStamp>();
             other.GetComponentInChildren<TextMeshProUGUI>().text = " ";
             crackedSeal.InteractionPlayer();
-        }
+
+            GetComponent<PlayerController>().PlayerMarkInventory.LoadSMData();
+        } //¹®µå·¯Áø µµÀå
 
         if(other.CompareTag("ChaosRift") && isInteractionStart)
         {
@@ -212,21 +217,21 @@ public class PlayerInteraction : MonoBehaviour
 
             chaosRift = other.GetComponent<ChaosRift>();
             chaosRift.InteractionPlayer();
-        }
+        } //È¥µ·ÀÇÆ´»õ
 
         if (other.CompareTag("NPC"))
         {
             isNpcInteraction = true;
             currentNPC = other.GetComponent<NPC>();
         }
-
+         
         if (other.CompareTag("DroppedItem") && isInteractionStart)
         {
             isInteractionStart = false;
             droppedItem = other.GetComponent<DroppedItem>();
             droppedItem.PickUpItem(this.GetComponent<PlayerController>());
-        }
-        if (other.CompareTag("RadiantTorch") && isInteractionStart)
+        } //µå¶ø ¾ÆÀÌÅÛ
+        if (other.CompareTag("RadiantTorch") && isInteractionStart) //ºû³ª´Â È½ºÒ
         {
             isInteractionStart = false;
             radiantTorch = other.GetComponent<RadiantTorch>();
@@ -289,6 +294,21 @@ public class PlayerInteraction : MonoBehaviour
     }
     private void SpriritShardOfTheDevotedSave()
     {
+        if (DataManager.Instance.nowPlayer.currentScene == "StartPlayScene" ||
+         DataManager.Instance.nowPlayer.currentScene == "LastVillage" ||
+         DataManager.Instance.nowPlayer.currentScene == "Village")
+        {
+            DataManager.Instance.nowPlayer.currentMap = "½ÃÃ¼ °ù";
+        }
+
+        if (DataManager.Instance.nowPlayer.currentScene == "DeapSouthernVillage" ||
+            DataManager.Instance.nowPlayer.currentScene == "SouthernVillage")
+        {
+            DataManager.Instance.nowPlayer.currentMap = "¼­ÂÊ ¾È½ÄÃ³";
+        }
+
+     
+
         //¿µÈ¥ÆÄÆí ¼¼ÀÌºê °ü·Ã
         DataManager.Instance.SaveSoulFragment(soulfragMent, soulfragMent.fragmentID, soulfragMent.sceneflow.currentSceneName);
 

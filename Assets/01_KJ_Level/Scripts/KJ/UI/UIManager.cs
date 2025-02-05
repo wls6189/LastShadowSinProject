@@ -278,9 +278,9 @@ public class UIManager : MonoBehaviour
     }
 
     [SerializeField]
-    GameObject CorpseCapeMap;
+    public GameObject CorpseCapeMap;
     [SerializeField]
-    GameObject WestHavenMap;
+    public GameObject WestHavenMap;
     [SerializeField]
     Image[] WestNoneCombatScenes;
     [SerializeField]
@@ -343,7 +343,10 @@ public class UIManager : MonoBehaviour
     {
         currentSceneUI.gameObject.SetActive(true);
         currentSceneName.text = $"{sceneName}";
-        yield return new WaitForSeconds(5.0f);
+
+        AudioManager.instance.Playsfx(AudioManager.Sfx.NewLocation);
+
+        yield return new WaitForSeconds(3.0f);
         CurrentSceneUISet();
     }
     private void CurrentSceneUISet()
