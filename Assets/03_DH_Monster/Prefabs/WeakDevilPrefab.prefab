@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2507197501771227886
 Transform:
   m_ObjectHideFlags: 0
@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.767913, z: 0.42422676}
-  m_Center: {x: 0, y: 0.88395727, z: -0.28788662}
+  m_Size: {x: 1, y: 2.767913, z: 1.4593115}
+  m_Center: {x: 0, y: 0.88395727, z: 0.22965574}
 --- !u!114 &4695179406520758098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,6 +875,7 @@ MonoBehaviour:
   successfulGuardsToParry: 3
   isAttacking: 0
   isGuarding: 0
+  isPiercing: 0
   attackPatterns:
   - {fileID: 11400000, guid: df8108e7d99ba64479b3deae6d4a48d6, type: 2}
   currentPattern: {fileID: 0}
@@ -912,6 +913,7 @@ MonoBehaviour:
   tenacity: 1
   healthBarImage: {fileID: 8686492068274369445}
   WillpowerBarImage: {fileID: 6393913215731748755}
+  guardEffectPrefab: {fileID: 3291244538907713110, guid: 40cce613a56bac44d97776c3d541d76b, type: 3}
 --- !u!114 &6230930066071454433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -924,7 +926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d6f59e44c24188439f8c8c6441d23ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropItemPrefab: {fileID: 1223526616464650, guid: 70a82210779738f46b2edd4df6854499, type: 3}
+  DropItemPrefab: {fileID: 3029093760776844414, guid: 976c0530bb9c9eb4b9ba386f0417e4d5, type: 3}
   Ash: 10
   FaintProbability: 0.01
   MaxFaint: 1

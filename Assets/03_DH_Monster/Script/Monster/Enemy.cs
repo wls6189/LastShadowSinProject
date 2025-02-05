@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
 
     public bool isAttacking = false;
     public bool isGuarding = false;
+    public bool isPiercing = false;
     public AttackPattern[] attackPatterns; // 사용할 공격 패턴 배열
     public AttackPattern currentPattern;
 
@@ -318,7 +319,7 @@ public class Enemy : MonoBehaviour
 
         // 쿨다운 확인
         if (Time.time - lastAttackTime < attackCooldown) return;
-        attackCooldown = Random.Range(3.5f, 4.5f);
+        attackCooldown = Random.Range(2f, 3f);
         // 플레이어가 공격 범위 안에 있을 경우
         if (Vector3.Distance(transform.position, player.position) <= attackRange)
         {
@@ -332,9 +333,12 @@ public class Enemy : MonoBehaviour
     {
         if (attackPatterns.Length == 0) return;
 
-        // 현재 패턴과 공격 가져오기
-        currentPattern = attackPatterns[currentPatternIndex];
-        if (currentPattern.attacks.Length == 0) return;
+        if (currentAttackIndex == 0)
+        {
+            currentPatternIndex = Random.Range(0, attackPatterns.Length);
+            currentPattern = attackPatterns[currentPatternIndex];
+          
+        }
 
         Attack currentAttack = currentPattern.attacks[currentAttackIndex];
         ShowAttackIndicator(currentAttack);
@@ -348,12 +352,16 @@ public class Enemy : MonoBehaviour
             if (spiritattackTrail != null)
                 spiritattackTrail.SetActive(true);
         }
+        if (currentAttack.attackType == AttackType.Piercing)
+        {
+            isPiercing = true;
+        }
         // 공격 애니메이션 트리거 추가
-       
+
         animator.SetTrigger(currentAttack.attackName);  // 예: "Heavy Strike" 또는 "Quick Parry" 등
         lastAttackTime = Time.time; // 현재 시간 저장
         float attackDuration = GetAnimationLength(currentAttack.attackName);
-        StartCoroutine(ManageAttackCollider(currentAttack.attackName, attackDuration, currentAttack.attackType));
+        
         StartCoroutine(MoveAfterAttack());
 
 
@@ -362,16 +370,14 @@ public class Enemy : MonoBehaviour
 
 
 
-        // 다음 공격으로 이동
-        //currentAttackIndex = (currentAttackIndex + 1) % currentPattern.attacks.Length;//이건 순차적으로 공격
-        currentAttackIndex = Random.Range(0, currentPattern.attacks.Length);//이건 랜덤
+        // 다음 공격으로 이동 (순차적)
+        currentAttackIndex++;
 
-        // 패턴 변경 로직 (원하는 시점에)
-        if (currentAttackIndex == 0)
+        // 패턴 내 모든 공격을 마치면 공격 인덱스 초기화 (새 랜덤 패턴을 위해)
+        if (currentAttackIndex >= currentPattern.attacks.Length)
         {
-            currentPatternIndex = (currentPatternIndex + 1) % attackPatterns.Length;
+            currentAttackIndex = 0;  // 패턴 초기화 -> 다음 실행 시 랜덤 패턴 선택됨
         }
-
     }
     private float GetAnimationLength(string animationName)
     {
@@ -385,30 +391,8 @@ public class Enemy : MonoBehaviour
         }
         return 1.0f; // 기본값 (애니메이션 길이를 찾지 못하면 1초로 설정)
     }
-    private IEnumerator ManageAttackCollider(string attackTypeName, float duration, AttackType attackType)
-    {
-        Transform attackObject = transform.Find(attackTypeName);
-        if (attackObject != null)
-        {
-            Collider attackCollider = attackObject.GetComponent<Collider>();
-            if (attackCollider != null)
-            {
-                yield return new WaitForSeconds(duration *0.2f);
-                attackCollider.gameObject.SetActive(true);
-
-                // AttackBase의 attackType 설정
-                AttackBase attackBase = attackCollider.GetComponent<AttackBase>();
-                if (attackBase != null)
-                {
-                    attackBase.currentAttackType = attackType;
-                }
-
-                yield return new WaitForSeconds(duration * 0.7f); // 공격 애니메이션 중간쯤에 비활성화
-
-                attackCollider.gameObject.SetActive(false);
-            }
-        }
-    }
+   
+    
     private IEnumerator MoveAfterAttack()
     {
         // 애니메이션이 진행 중인지 확인
@@ -436,6 +420,7 @@ public class Enemy : MonoBehaviour
         if (spiritattackTrail != null)
             spiritattackTrail.SetActive(false);
         // 애니메이션 끝난 후 이동 재개
+        isPiercing = false;
         navMeshAgent.isStopped = false; // 이동 재개
         isAttacking = false;
 
@@ -482,7 +467,10 @@ public class Enemy : MonoBehaviour
         // 공격 전조 텍스트 설정
         indicatorText.text = new string('!', attack.indicatorhLevel); // 느낌표 갯수
         indicatorText.color = attack.indicatorColor; // 전조 색상 설정
-
+        if (attack.indicatorhLevel > 0)
+        {
+            AudioManager.instance.Playsfx(AudioManager.Sfx.Warning);
+        }
 
 
         // 일정 시간 후 인디케이터 숨기기
@@ -529,5 +517,9 @@ public class Enemy : MonoBehaviour
         float speed = navMeshAgent.velocity.magnitude;
         animator.SetFloat("Speed", speed);
 
+    }
+    public void PlayAttackSound()
+    {
+        AudioManager.instance.Playsfx(AudioManager.Sfx.EnemyAtk);
     }
 }

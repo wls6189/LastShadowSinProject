@@ -18,7 +18,7 @@ public class AudioManager : MonoBehaviour
     AudioSource[] sfxPlayers;
     int channelIndex;
 
-    public enum Sfx { Dead, Hit, Guard }//플레이어나 npc용 사운드이름 추가
+    public enum Sfx { Guard,Hit,Dead,EnemyAtk, Warning }//플레이어나 npc용 사운드이름 추가
 
 
     [Header("#Monster SFX")]

@@ -15,4 +15,3 @@ MonoBehaviour:
   patternName: 
   attacks:
   - {fileID: 11400000, guid: 3bd0b7ce060fd7e48908dd7cb21fc022, type: 2}
-  - {fileID: 11400000, guid: 51ce0afa539b93a40a4e87cf41f7e240, type: 2}

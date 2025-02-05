@@ -24,7 +24,7 @@ public class EnemyStats : MonoBehaviour
     public TenacityAndGroggyForce tenacity;
     [SerializeField] Image healthBarImage;
     [SerializeField] Image WillpowerBarImage;
-
+    [SerializeField] private GameObject guardEffectPrefab;
     // 그로기 상태별 지속 시간 설정
 
 
@@ -77,10 +77,20 @@ public class EnemyStats : MonoBehaviour
         if (enemy.isGuarding)
         {
             PlayMonsterSfx(0); // 방어 사운드
+            AudioManager.instance.Playsfx(AudioManager.Sfx.Guard);
             animator.SetTrigger("Guard");
             damage *= 0.1f; // 데미지 10%
             impactForce *= 0.3f; // 소울 데미지 30%
             isGroggy = false;
+            if (guardEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(guardEffectPrefab, transform.position + Vector3.up * 1.5f, Quaternion.identity);
+                ParticleSystem particle = effect.GetComponent<ParticleSystem>();
+                if (particle != null)
+                {
+                    particle.Play(); // 이펙트 실행
+                }
+            }
             return;
         }
 
@@ -89,7 +99,7 @@ public class EnemyStats : MonoBehaviour
         currentHealth -= damage; // 체력 감소
         currentWillpower -= impactForce; // 영혼 게이지 감소
         PlayMonsterSfx(1); // 피격 사운드
-
+        AudioManager.instance.Playsfx(AudioManager.Sfx.Hit);
         if (currentHealth <= 0)
         {
             isGroggy = false;
@@ -136,6 +146,7 @@ public class EnemyStats : MonoBehaviour
         if (isDead) return;        
         isDead = true;
         PlayMonsterSfx(2); // 사망 사운드
+        AudioManager.instance.Playsfx(AudioManager.Sfx.Dead);
         animator.ResetTrigger("Knockdown");
         animator.ResetTrigger("ShortGroggy");
         animator.SetTrigger("Die");
