@@ -68,7 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageMultiplier: 2
   groggyForce: 1
-  currentAttackType: 0
+  currentAttackType: 4
 --- !u!1 &3877902001448458033
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageMultiplier: 1.2
   groggyForce: 1
-  currentAttackType: 0
+  currentAttackType: 1
 --- !u!1 &4531629283166558007
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageMultiplier: 1.2
   groggyForce: 1
-  currentAttackType: 0
+  currentAttackType: 1
 --- !u!1 &5416308117147690883
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageMultiplier: 2
   groggyForce: 1
-  currentAttackType: 0
+  currentAttackType: 4
 --- !u!1 &7009694380277359614
 GameObject:
   m_ObjectHideFlags: 0
