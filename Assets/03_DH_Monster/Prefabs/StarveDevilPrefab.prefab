@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2666639683085686332
 Transform:
   m_ObjectHideFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1975378490257045215}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.22}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -67,8 +67,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.4388242, z: 0.62704736}
-  m_Center: {x: 0, y: 0.71941334, z: -0.18647593}
+  m_Size: {x: 1, y: 2.4388242, z: 2.637141}
+  m_Center: {x: 0, y: 0.71941334, z: 0.8185715}
 --- !u!1 &3018558929597141222
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1472882268507527085
 Transform:
   m_ObjectHideFlags: 0
@@ -130,7 +130,7 @@ Transform:
   m_GameObject: {fileID: 6152990591246443287}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.552}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -170,8 +170,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.484316, z: 0.21257752}
-  m_Center: {x: 0, y: 0.74216056, z: -0.3937107}
+  m_Size: {x: 1, y: 2.484316, z: 1.9742897}
+  m_Center: {x: 0, y: 0.74216056, z: 0.48714584}
 --- !u!1001 &596310434573578848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -258,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2242194841264655831, guid: ae801b2399ea5f34e89d625a9e800844, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 2242194841264655831, guid: ae801b2399ea5f34e89d625a9e800844, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -876,10 +876,10 @@ MonoBehaviour:
   successfulGuardsToParry: 3
   isAttacking: 0
   isGuarding: 0
+  isPiercing: 0
   attackPatterns:
   - {fileID: 11400000, guid: 00a941c4cd0e6c14da2d1d5864d3af9a, type: 2}
   - {fileID: 11400000, guid: 5a73f958738c3c54cb87fef99ea89417, type: 2}
-  - {fileID: 11400000, guid: a9618c417ecbb8d42a663ab6a4f1a65d, type: 2}
   currentPattern: {fileID: 0}
   attackTrail: {fileID: 1942498970768127731}
   spiritattackTrail: {fileID: 8627715576528993624}
@@ -915,6 +915,7 @@ MonoBehaviour:
   tenacity: 1
   healthBarImage: {fileID: 2194731739330777981}
   WillpowerBarImage: {fileID: 8292345297502578937}
+  guardEffectPrefab: {fileID: 3291244538907713110, guid: 40cce613a56bac44d97776c3d541d76b, type: 3}
 --- !u!114 &8923262603192262112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -927,7 +928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d6f59e44c24188439f8c8c6441d23ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropItemPrefab: {fileID: 1223526616464650, guid: 70a82210779738f46b2edd4df6854499, type: 3}
+  DropItemPrefab: {fileID: 3029093760776844414, guid: 976c0530bb9c9eb4b9ba386f0417e4d5, type: 3}
   Ash: 15
   FaintProbability: 0.01
   MaxFaint: 1

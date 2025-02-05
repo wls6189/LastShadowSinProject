@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7754044078213395201
 Transform:
   m_ObjectHideFlags: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.71428573, y: 0.71428573, z: 0.71428573}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6403303239189580707}
@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.3692634, z: 0.15169069}
-  m_Center: {x: 0, y: 0.6846318, z: 0.08700569}
+  m_Size: {x: 1, y: 2.070418, z: 2.5672414}
+  m_Center: {x: 0, y: 0.53520894, z: 0.7836191}
 --- !u!114 &5794837265913953725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2614908181136827747
 Transform:
   m_ObjectHideFlags: 0
@@ -97,7 +97,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.71428573, y: 0.71428573, z: 0.71428573}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6403303239189580707}
@@ -121,8 +121,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.6426082, z: 0.15169069}
-  m_Center: {x: 0, y: 0.9978318, z: 0.08700569}
+  m_Size: {x: 1, y: 2.3336852, z: 2.3694038}
+  m_Center: {x: 0, y: 0.6668424, z: 0.6847015}
 --- !u!114 &1929571206857203596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,7 +189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3145572561630364552
 Transform:
   m_ObjectHideFlags: 0
@@ -200,7 +200,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.71428573, y: 0.71428573, z: 0.71428573}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6403303239189580707}
@@ -224,8 +224,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.74439216, z: 0.15169069}
-  m_Center: {x: 0, y: 1.4970676, z: 0.08700569}
+  m_Size: {x: 1, y: 2.3163297, z: 2.5784967}
+  m_Center: {x: 0, y: 0.6581638, z: 0.78924674}
 --- !u!114 &6697683807962404410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,9 +576,10 @@ MonoBehaviour:
   attackPower: 15
   isGroggy: 0
   isDead: 0
-  tenacity: 1
+  tenacity: 2
   healthBarImage: {fileID: 5131013659406874529}
   WillpowerBarImage: {fileID: 3361967811443870740}
+  guardEffectPrefab: {fileID: 3291244538907713110, guid: 40cce613a56bac44d97776c3d541d76b, type: 3}
 --- !u!114 &7896956480335179329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d6f59e44c24188439f8c8c6441d23ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropItemPrefab: {fileID: 1223526616464650, guid: 70a82210779738f46b2edd4df6854499, type: 3}
+  DropItemPrefab: {fileID: 3029093760776844414, guid: 976c0530bb9c9eb4b9ba386f0417e4d5, type: 3}
   Ash: 25
   FaintProbability: 0.1
   MaxFaint: 1
