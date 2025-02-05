@@ -152,9 +152,12 @@ public class SMAndESMUIManager : MonoBehaviour
         // 초기화 부분
         ownedSMList.Clear();
 
-        for (int i = sMListContent.childCount - 1; i >= 0; i--)
+        if (sMListContent.childCount > 0)
         {
-            Destroy(sMListContent.GetChild(i).gameObject);
+            for (int i = sMListContent.childCount - 1; i >= 0; i--)
+            {
+                Destroy(sMListContent.GetChild(i).gameObject);
+            }
         }
         foreach (var pos in sMInfoImagePos)
         {

@@ -31,7 +31,11 @@ public class AudioManager : MonoBehaviour
     {
         instance = this;
         Init();
-        bgmPlayer.Play();
+
+        if (!bgmPlayer.isPlaying)
+        {
+            bgmPlayer.Play();
+        }
     }
 
     void Init()
