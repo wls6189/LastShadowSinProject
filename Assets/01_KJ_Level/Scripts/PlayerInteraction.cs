@@ -35,7 +35,7 @@ public class PlayerInteraction : MonoBehaviour
         interactAction = inputActionAsset.FindAction("Interact");
 
 
-        transform.position = DataManager.Instance.nowPlayer.position;
+        transform.position = DataManager.Instance.nowPlayer.Initposition;
 
         //monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
 

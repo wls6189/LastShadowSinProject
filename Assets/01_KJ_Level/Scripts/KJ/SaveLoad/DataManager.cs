@@ -10,6 +10,7 @@ public class PlayerData
 {
     //플레이어
     public string name; //닉네임
+    public Vector3 Initposition = new Vector3(0.0f, 0.0f, -5.21f);
     public Vector3 position = new Vector3(0.0f, 0.0f, -5.21f);
     public string currentScene = "StartPlayScene";
     public string currentMap = "시체 곶";

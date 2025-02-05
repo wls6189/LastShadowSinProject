@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RadiantTorch : Interaction
 {
@@ -14,6 +15,16 @@ public class RadiantTorch : Interaction
     {
         EffectObject.gameObject.SetActive(true);
 
-        UIManager.Instance.InteractRadiantTorch();
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        switch(currentSceneName)
+        {
+            case "Village":
+                UIManager.Instance.InteractRadiantTorchCCVillage();
+                break;
+            case "SouthernVillage":
+                UIManager.Instance.InteractRadiantTorchWestVillage();
+                break;
+        }  
     }
 }

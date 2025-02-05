@@ -1207,7 +1207,7 @@ PrefabInstance:
     - target: {fileID: 6894866209967640294, guid: c4809bdb108dbfa40b5438d9790dcefe, type: 3}
       propertyPath: m_NavMeshData
       value: 
-      objectReference: {fileID: 23800000, guid: 3f589c3317a709949bb49de6f6b34043, type: 2}
+      objectReference: {fileID: 23800000, guid: 4cdc1be2fb6456d48ae653453198ae52, type: 2}
     - target: {fileID: 7122329995346553869, guid: c4809bdb108dbfa40b5438d9790dcefe, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.922304
@@ -1672,6 +1672,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5524489289701300550, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
       propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7025553397616915907, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
+      propertyPath: monsterPrefabs.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7025553397616915907, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}

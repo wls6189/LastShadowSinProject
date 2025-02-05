@@ -75,9 +75,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     Image[] CombatScenes;
     [SerializeField]
-    Image StartPlaySceneMapCursor;
+    public Image StartPlaySceneMapCursor;
     [SerializeField]
-    Image VillageMapCursor;
+    public Image VillageMapCursor;
     [Header("OptionTab")]
     [SerializeField]
     Button MenuMainMenuYesBtn;
@@ -141,6 +141,9 @@ public class UIManager : MonoBehaviour
     }
     public void GameMenuOpen()
     {
+      
+
+
         GameMenu.gameObject.SetActive(true);
         if (DataManager.Instance.nowPlayer.allActiveQuests.Count > 0)
         {
@@ -274,8 +277,18 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(movedScene);
     }
 
-    public void InteractRadiantTorch() //중심부에서 
+    [SerializeField]
+    GameObject CorpseCapeMap;
+    [SerializeField]
+    GameObject WestHavenMap;
+    [SerializeField]
+    Image[] WestNoneCombatScenes;
+    [SerializeField]
+    Image[] WestCombatScenes;
+    public void InteractRadiantTorchCCVillage() //중심부에서 
     {
+        CorpseCapeMap.gameObject.SetActive(true); 
+
         StartPlaySceneMapCursor.gameObject.SetActive(false); 
         VillageMapCursor.gameObject.SetActive(true);
 
@@ -287,6 +300,56 @@ public class UIManager : MonoBehaviour
         {
             CombatScenes[i].gameObject.SetActive(true);
         }
+    }
+    public void InteractRadiantTorchWestStart() //시작부분 
+    {
+        CorpseCapeMap.gameObject.SetActive(true);
+        WestHavenMap.gameObject.SetActive(false);
+
+        StartPlaySceneMapCursor.gameObject.SetActive(false); //시체곶 시작 부분 커서 끄기
+        VillageMapCursor.gameObject.SetActive(false); //시체 곶 중심부 커서 끄기
+        WestVillageMapCursor.gameObject.SetActive(false); //서쪽 마을 중심부 커서 끄기
+
+        WestStartMapCursor.gameObject.SetActive(true);
+
+    }
+    public GameObject WestStartMapCursor;
+    public GameObject WestVillageMapCursor;
+    public void InteractRadiantTorchWestVillage() //중심부에서 
+    {
+        CorpseCapeMap.gameObject.SetActive(true);
+        WestHavenMap.gameObject.SetActive(true);
+
+        WestStartMapCursor.gameObject.SetActive(false);
+        StartPlaySceneMapCursor.gameObject.SetActive(false);
+        WestVillageMapCursor.gameObject.SetActive(true);
+
+        for (int i = 0; i < WestNoneCombatScenes.Length; i++)
+        {
+            NoneCombatScenes[i].gameObject.SetActive(true);
+        }
+        for (int i = 0; i < WestCombatScenes.Length; i++)
+        {
+            WestCombatScenes[i].gameObject.SetActive(true);
+        }
+    }
+
+    [SerializeField]
+    GameObject currentSceneUI;
+
+    [SerializeField]
+    TextMeshProUGUI currentSceneName;
+    public IEnumerator CurrentSceneUI(string sceneName)
+    {
+        currentSceneUI.gameObject.SetActive(true);
+        currentSceneName.text = $"{sceneName}";
+        yield return new WaitForSeconds(5.0f);
+        CurrentSceneUISet();
+    }
+    private void CurrentSceneUISet()
+    {
+        currentSceneUI.gameObject.SetActive(false);
+        currentSceneName.text = "";
     }
     public void CloseBtn()
     {
