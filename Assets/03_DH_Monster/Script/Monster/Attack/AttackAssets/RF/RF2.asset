@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RF2
   m_EditorClassIdentifier: 
   attackName: RF2
-  attackType: 0
+  attackType: 4
   attackRange: 3
-  indicatorhLevel: 0
-  indicatorColor: {r: 0, g: 0, b: 0, a: 0}
+  indicatorhLevel: 1
+  indicatorColor: {r: 1, g: 0, b: 0, a: 1}
