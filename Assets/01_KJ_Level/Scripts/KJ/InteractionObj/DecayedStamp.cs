@@ -42,5 +42,7 @@ public class DecayedStamp : Interaction
         DataManager.Instance.nowPlayer.currentScenesDecayedStamp.Add(currentScenesDecayedStamp);
         DataManager.Instance.SaveData();
         EffectPrefab.gameObject.SetActive(false);
+
+        AudioManager.instance.Playsfx(AudioManager.Sfx.InteractAdventure);
     }
 }

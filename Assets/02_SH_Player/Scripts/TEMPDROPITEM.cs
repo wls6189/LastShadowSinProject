@@ -7,10 +7,12 @@ public class TEMPDROPITEM : MonoBehaviour
     private void Awake()
     {
         TryGetComponent(out m);
+        
     }
 
     private void Start()
     {
         m.Drop();
+        Destroy(this.gameObject);
     }
 }

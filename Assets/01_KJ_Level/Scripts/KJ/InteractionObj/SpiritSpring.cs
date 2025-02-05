@@ -41,6 +41,7 @@ public class SpiritSpring : Interaction
         DataManager.Instance.nowPlayer.currentSceneSpiritSpring.Add(currentSceneSpiritSpring);
 
         DataManager.Instance.SaveData();
-       
+
+        AudioManager.instance.Playsfx(AudioManager.Sfx.InteractAdventure);
     }
 }

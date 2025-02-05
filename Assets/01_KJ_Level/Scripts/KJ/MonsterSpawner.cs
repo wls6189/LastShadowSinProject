@@ -23,6 +23,8 @@ public class MonsterSpawner : MonoBehaviour
             SpawnMonster(); // 몬스터 스폰
             yield return new WaitForSeconds(spawnInterval); // 주기적인 대기
         }
+
+
     }
 
     private GameObject monster;
@@ -34,4 +36,7 @@ public class MonsterSpawner : MonoBehaviour
         monster = Instantiate(monsterPrefabs[monsterIndex], spawnPos.position, spawnPos.rotation); // 몬스터 스폰
         currentMonsters++; // 현재 몬스터 수 증가
     }
+
+
+
 }
