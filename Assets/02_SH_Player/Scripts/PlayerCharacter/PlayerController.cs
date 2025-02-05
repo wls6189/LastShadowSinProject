@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
     int SpiritSwordDanceSpiritWaveConsume = 3;
     int SpiritUnboundSpiritWaveConsume = 2;
     int SpiritNovaSpiritWaveConsume = 2;
-    int SpiritParrySpiritWaveConsume = 2;
+    int SpiritParrySpiritWaveConsume = 1;
 
     // 막기 관련 변수
     [HideInInspector] public bool IsParring;
