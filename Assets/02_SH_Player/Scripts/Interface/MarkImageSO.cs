@@ -16,10 +16,9 @@ public class MarkImageSO : ScriptableObject
     }
 
     [SerializeField] private List<ESMImage> eSMImageList = new();
-
     public IReadOnlyList<ESMImage> ESMImageList { get { return eSMImageList; } }
 
-    [SerializeField]
+    [Serializable]
     public class SpiritMarkImage
     {
         [SerializeField] private string name;
@@ -29,11 +28,10 @@ public class MarkImageSO : ScriptableObject
         public Sprite Image { get { return image; } }
     }
 
-    [SerializeField] private List<ESMImage> spiritMarkImageList = new();
+    [SerializeField] private List<SpiritMarkImage> spiritMarkImageList = new();
+    public IReadOnlyList<SpiritMarkImage> SpiritMarkImageList { get { return spiritMarkImageList; } }
 
-    public IReadOnlyList<ESMImage> SpiritMarkImageList { get { return spiritMarkImageList; } }
-
-    [SerializeField]
+    [Serializable]
     public class MarkImage
     {
         [SerializeField] private string name;
@@ -43,7 +41,7 @@ public class MarkImageSO : ScriptableObject
         public Sprite Image { get { return image; } }
     }
 
-    [SerializeField] private List<ESMImage> markImageList = new();
+    [SerializeField] private List<MarkImage> markImageList = new();
 
-    public IReadOnlyList<ESMImage> MarkImageList { get { return markImageList; } }
+    public IReadOnlyList<MarkImage> MarkImageList { get { return markImageList; } }
 }

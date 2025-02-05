@@ -14,7 +14,7 @@ public class Mark
     public virtual void Effect(PlayerController player, int count) { }// Awake에서 호출 요
     public override bool Equals(object obj) // 이름이 같으면 같다고 해버리기
     {
-        if (obj is EternalSpiritMark other)
+        if (obj is Mark other)
         {
             return Name == other.Name;
         }

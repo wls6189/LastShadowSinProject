@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MarkInventory : MonoBehaviour
 {
@@ -11,24 +12,24 @@ public class MarkInventory : MonoBehaviour
 
     void Awake()
     {
-        // OwnedSpiritMark = JsonConvert // 세이브에서 가져오기
-        // EquipedSpiritMark = JsonConvert // 세이브에서 가져오기
-        int count = 3; // 추후 세이브에서 문드러진 도장과 상호작용한 횟수를 가져와서 추가하기
-
-        EquipedSpiritMark = new SpiritMark[1 + count];
-
         TryGetComponent(out player);
 
-        player.PlayerStats.InitializeStats();
+        // 세이브에서 불러오기
+        LoadSMData();
 
         CheckActivatedMark();
         ApplyAbilityToStats();
-
-        player.PlayerStats.CurrentHealth = player.PlayerStats.MaxHealth;
     }
-
+    public void LoadSMData() // 문드러진 낙인 상호작용 시 호출
+    {
+        EquipedSpiritMark = new SpiritMark[1 + DataManager.Instance.nowPlayer.DecayedStampCount]; // 세이브에서 문드러진 도장과 상호작용한 횟수를 가져와서 추가하기
+        // OwnedSpiritMark = JsonConvert // 세이브에서 가져오기
+        // EquipedSpiritMark = JsonConvert // 세이브에서 가져오기
+    }
     void CheckActivatedMark()
     {
+        ActivatedMark.Clear();
+
         foreach (SpiritMark spiritMark in EquipedSpiritMark)
         {
             if (spiritMark != null)
@@ -49,8 +50,14 @@ public class MarkInventory : MonoBehaviour
     }
     void ApplyAbilityToStats()
     {
+        player.PlayerStats.InitializeStats();
+
         foreach (Mark mark in ActivatedMark.Keys)
         {
+            if (!ActivatedMark.ContainsKey(mark))
+            {
+                Debug.Log(mark.Name);
+            }
             mark.Effect(player, ActivatedMark[mark]);
         }
 
@@ -58,19 +65,28 @@ public class MarkInventory : MonoBehaviour
         {
             if (spiritMark != null)
             {
-                player.PlayerStats.MaxHealth += spiritMark.Health;
-                player.PlayerStats.AttackPower += spiritMark.AttackPower;
+                player.PlayerStats.MaxHealthIncreaseAmount += spiritMark.Health;
+                player.PlayerStats.AttackPowerIncreaseAmount += spiritMark.AttackPower;
             }
         }
+
+        player.PlayerStats.CalculateStatsChange();
     }
     public void SwapSpiritMark(int whichSpiritMark, SpiritMark spiritMark) // 장비 시 모든 스탯 상승 효과를 초기화
     {
-        EquipedSpiritMark[whichSpiritMark] = spiritMark;
-
-        player.PlayerStats.InitializeStats();
+        if (spiritMark == null)
+        {
+            EquipedSpiritMark[whichSpiritMark] = null;
+        }
+        else
+        {
+            EquipedSpiritMark[whichSpiritMark] = spiritMark;
+        }
 
         CheckActivatedMark();
         ApplyAbilityToStats();
+
+        SMAndESMUIManager.Instance.SetOwnedSMList();
     }
     public bool IsInventoryFull()
     {

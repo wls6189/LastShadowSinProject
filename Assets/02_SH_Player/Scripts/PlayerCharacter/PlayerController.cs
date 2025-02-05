@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
     // 인스펙터에서 할당이 필요한 변수
     public NearbyMonsterCheck NearbyMonsterCheck; // 근처의 몬스터를 감지하는 클래스
     public Transform CameraFocusPosition; // 카메라의 포커스 위치
-    public GameObject SpiritUnboundPrefab; // 영력 해방 발사체 프리팹
 
     // 움직임 관련 변수
     [HideInInspector] public float MoveActionValue; // 움직임 방향키를 누를 때 반환되는 값을 캐싱
@@ -680,62 +679,27 @@ public class PlayerController : MonoBehaviour
         IsParring = false;
         IsClashGuard = false;
     }
-    public void FireSpiritUnboundProjectile(float surgingESMPercent)
+    public void FireSpiritUnboundProjectile()
     {
-        if (surgingESMPercent < 0)
-        {
-            GameObject go = Instantiate(SpiritUnboundPrefab);
-            go.GetComponent<AttackCheck>().player = this;
-            go.GetComponent<AttackCheck>().IsProjectile = true;
-            go.GetComponent<AttackCheck>().ProjectilePercentage = 1.1f;
+        GameObject go = Instantiate(ManagePlayerEffect.SpiritUnboundEffectPrefab);
+        go.GetComponent<AttackCheck>().player = this;
+        go.GetComponent<AttackCheck>().IsProjectile = true;
+        go.GetComponent<AttackCheck>().ProjectilePercentage = 1.1f;
 
-            if (IsLookRight)
-            {
-                go.transform.position = new Vector3(transform.position.x, 1.57f, transform.position.z + 0.7f);
-                go.GetComponent<Projectile>().SetIsMoveRight(true);
-            }
-            else
-            {
-                go.transform.position = new Vector3(transform.position.x, 1.57f, transform.position.z - 0.7f);
-                go.GetComponent<Projectile>().SetIsMoveRight(false);
-            }
+        if (IsLookRight)
+        {
+            go.transform.position = new Vector3(transform.position.x, 1.57f, transform.position.z + 0.7f);
+            go.GetComponent<Projectile>().SetIsMoveRight(true);
         }
-        else if (surgingESMPercent >= 0)
+        else
         {
-            int projectileCount = 0;
-
-            if (surgingESMPercent >= 100) projectileCount = 10;
-            else if (surgingESMPercent >= 50) projectileCount = 5;
-            else if (surgingESMPercent >= 25) projectileCount = 2;
-
-            if (projectileCount == 0) return;
-
-            for (int i = 0; i < projectileCount; i++)
-            {
-                float y = UnityEngine.Random.Range(1f, 2f);
-                float z = UnityEngine.Random.Range(0.2f, 1.2f);
-
-                GameObject go = Instantiate(SpiritUnboundPrefab);
-                go.GetComponent<AttackCheck>().player = this;
-                go.GetComponent<AttackCheck>().IsProjectile = true;
-                go.GetComponent<AttackCheck>().ProjectilePercentage = 1.1f;
-
-                if (IsLookRight)
-                {
-                    go.transform.position = new Vector3(transform.position.x, y, transform.position.z + z);
-                    go.GetComponent<Projectile>().SetIsMoveRight(true);
-                }
-                else
-                {
-                    go.transform.position = new Vector3(transform.position.x, y, transform.position.z - z);
-                    go.GetComponent<Projectile>().SetIsMoveRight(false);
-                }
-            }
+            go.transform.position = new Vector3(transform.position.x, 1.57f, transform.position.z - 0.7f);
+            go.GetComponent<Projectile>().SetIsMoveRight(false);
         }
     }
     public void FireRadicalESMProjectile()
     {
-        GameObject go = Instantiate(ManagePlayerEffect.radicalESMPrefab);
+        GameObject go = Instantiate(ManagePlayerEffect.RadicalESMPrefab);
 
         go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, transform.position.z);
         go.GetComponent<AttackCheck>().player = this;
@@ -744,11 +708,27 @@ public class PlayerController : MonoBehaviour
 
         Destroy(go, 0.3f);
     }
+    public void FireDestructiveESMProjectile()
+    {
+        GameObject go = Instantiate(ManagePlayerEffect.DestructiveESMPrefab);
+        go.GetComponent<AttackCheck>().player = this;
+        go.GetComponent<AttackCheck>().IsProjectile = true;
+        go.GetComponent<AttackCheck>().ProjectilePercentage = 3.0f;
+        go.transform.position = new Vector3(transform.position.x, 0, transform.position.z + 0.7f);
+        go.GetComponent<Projectile>().SetIsMoveRight(true);
+
+        GameObject go1 = Instantiate(ManagePlayerEffect.DestructiveESMPrefab);
+        go1.GetComponent<AttackCheck>().player = this;
+        go1.GetComponent<AttackCheck>().IsProjectile = true;
+        go1.GetComponent<AttackCheck>().ProjectilePercentage = 3.0f;
+        go1.transform.position = new Vector3(transform.position.x, 0, transform.position.z - 0.7f);
+        go1.GetComponent<Projectile>().SetIsMoveRight(false);
+    }
     public IEnumerator FireRagingESMProjectile()
     {
         for (int i = 0; i < PlayerStats.RagingStack; i++)
         {
-            GameObject go = Instantiate(ManagePlayerEffect.radicalESMPrefab);
+            GameObject go = Instantiate(ManagePlayerEffect.RadicalESMPrefab);
 
             go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, transform.position.z);
             go.GetComponent<AttackCheck>().player = this;
@@ -760,6 +740,48 @@ public class PlayerController : MonoBehaviour
         }
 
         PlayerStats.RagingStack = 0;
+        yield return null;
+    }
+    public IEnumerator FireRampagingESMProjectile()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject go = Instantiate(ManagePlayerEffect.RampagingESMPrefab);
+
+            go.transform.position = new Vector3(0, 0, transform.position.z + UnityEngine.Random.Range(-3f, 3f));
+            go.GetComponent<AttackCheck>().player = this;
+            go.GetComponent<AttackCheck>().IsProjectile = true;
+            go.GetComponent<AttackCheck>().ProjectilePercentage = 0.3f;
+            Destroy(go, 0.3f);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        yield return null;
+    }
+    public IEnumerator FireSurgingESMProjectile(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject go = Instantiate(ManagePlayerEffect.SpiritUnboundEffectPrefab);
+
+            go.transform.position = new Vector3(0, UnityEngine.Random.Range(0f, 2f), transform.position.z + UnityEngine.Random.Range(-2f, 2f));
+            go.GetComponent<AttackCheck>().player = this;
+            go.GetComponent<AttackCheck>().IsProjectile = true;
+            go.GetComponent<AttackCheck>().ProjectilePercentage = 1.1f;
+
+            if (IsLookRight)
+            {
+                go.GetComponent<Projectile>().SetIsMoveRight(true);
+            }
+            else
+            {
+                go.GetComponent<Projectile>().SetIsMoveRight(false);
+            }
+
+            yield return new WaitForSeconds(0.15f);
+        }
+
         yield return null;
     }
 }

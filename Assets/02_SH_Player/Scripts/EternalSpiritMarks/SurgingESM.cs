@@ -19,17 +19,18 @@ public class SurgingESM : EternalSpiritMark
             if (player.PlayerStats.CurrentSpiritMarkForce >= player.PlayerStats.MaxSpiritMarkForce)
             {
                 player.PlayerStats.CurrentSpiritMarkForce -= 100;
-                player.FireSpiritUnboundProjectile(100);
+                player.StartCoroutine(player.FireSurgingESMProjectile(10));
+
             }
             else if (player.PlayerStats.CurrentSpiritMarkForce >= 50)
             {
                 player.PlayerStats.CurrentSpiritMarkForce -= 50;
-                player.FireSpiritUnboundProjectile(50);
+                player.StartCoroutine(player.FireSurgingESMProjectile(5));
             }
             else if (player.PlayerStats.CurrentSpiritMarkForce >= 25)
             {
                 player.PlayerStats.CurrentSpiritMarkForce -= 25;
-                player.FireSpiritUnboundProjectile(25);
+                player.StartCoroutine(player.FireSurgingESMProjectile(2));
             }
         }
     }

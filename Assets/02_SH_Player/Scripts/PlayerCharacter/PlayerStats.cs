@@ -17,11 +17,14 @@ public class PlayerStats : MonoBehaviour
     [HideInInspector] public float CurrentHealth;
     [HideInInspector] public float DamageReducePercentage; // 초기값은 0. 영혼낙인에 의해 설정되는 변수
     [HideInInspector] public float GuardDamageReducePercentage; // 가드 시 플레이어가 받는 데미지 감쇠배율
+    [HideInInspector] public float MaxHealthReducePercentage; // 최대체력 감소 배율
+    [HideInInspector] public float MaxHealthIncreaseAmount; // 최대체력 증가량
 
     // 공격력 관련 부분
-    
+
     public float AttackPower; // 공격력
     [HideInInspector] public float AttackPowerIncreasePercentage;
+    [HideInInspector] public float AttackPowerIncreaseAmount;
 
     // 타격력 관련 부분
     [HideInInspector] public float ParryImpactForcePercentage;
@@ -32,7 +35,7 @@ public class PlayerStats : MonoBehaviour
     [HideInInspector] public float MaxSpiritWave;
     [HideInInspector] public float CurrentSpiritWave;
     [HideInInspector] public float RegenerationSpiritWavePerSec; // 초당 회복량
-    [HideInInspector] public float RegenerationSpiritWaveIncreasePercent; // 초당 회복량
+    [HideInInspector] public float RegenerationSpiritWaveIncreasePercent; // 영혼의 파동 회복량 증가량
     [HideInInspector] public float ParrySpiritWaveRegeneration;
     [HideInInspector] public float GuardSpiritWaveRegeneration;
     [HideInInspector] public float PenetrateSpiritWaveRegeneration;
@@ -89,19 +92,25 @@ public class PlayerStats : MonoBehaviour
     }
     public void InitializeStats()
     {
+        // 체력
         MaxHealth = 100;
-
         DamageReducePercentage = 0;
         GuardDamageReducePercentage = 0.9f;
+        MaxHealthReducePercentage = 0;
+        MaxHealthIncreaseAmount = 0;
 
+        // 공격력
         AttackPower = 10;
+        AttackPowerIncreaseAmount = 0;
+        AttackPowerIncreasePercentage = 0;
 
+        // 타격력(다 공격력에 대한 배율)
         ParryImpactForcePercentage = 0.3f;
         PenetrateImpactForcePercentage = 0.5f;
         SpiritParryImpactForcePercentage = 3f;
 
+        // 영혼의 파동
         MaxSpiritWave = 10;
-
         RegenerationSpiritWavePerSec = 0.05f;
         RegenerationSpiritWaveIncreasePercent = 0;
         GuardSpiritWaveRegeneration = 0.1f;
@@ -117,9 +126,19 @@ public class PlayerStats : MonoBehaviour
         ParryTenacity = TenacityAndGroggyForce.Ultimate;
 
         IsImmune = false;
-        //SpiritAsh = 추후 세이브에서 가져오기
+
+        // 부가적인 것
+        player.PlayerChaliceOfAtonement.RecoveryAmountReducePercentage = 0;
     }
-    public void LoadStatDataWhenQuit()
+    public void CalculateStatsChange()
+    {
+        AttackPower += AttackPowerIncreaseAmount;
+        AttackPower += (AttackPower * AttackPowerIncreasePercentage);
+        MaxHealth += MaxHealthIncreaseAmount;
+        MaxHealth = MaxHealth * GuardDamageReducePercentage;
+        player.PlayerChaliceOfAtonement.LoadCOAData();
+    }
+public void LoadStatDataWhenQuit()
     {
         CurrentHealth = DataManager.Instance.nowPlayer.CurrentHealth;
         CurrentSpiritWave = DataManager.Instance.nowPlayer.CurrentSpiritWave;
@@ -133,6 +152,8 @@ public class PlayerStats : MonoBehaviour
 
         if (isDirectAttack) // 가드를 피해서 직접 플레이어를 때렸을 때(몬스터의 콜라이더에 Player 태그가 바로 닿을 경우)
         {
+            CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
+
             if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
             {
                 player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
@@ -141,8 +162,6 @@ public class PlayerStats : MonoBehaviour
             {
                 player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
             }
-
-            CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
         }
         else 
         {
@@ -151,6 +170,15 @@ public class PlayerStats : MonoBehaviour
                 case AttackType.Normal:
                     if (player.IsParring || player.IsSpiritParring) // 패리
                     {
+                        enemyStats.currentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += ParrySpiritWaveRegeneration + (ParrySpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
+                        player.CallWhenGuarding?.Invoke();
+
+                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
+                        {
+                            enemyStats.currentHealth -= AttackPower * 0.2f;
+                        }
+
                         if (groggyForce >= ParryTenacity) // 위력이 최상인 경우 짧은 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
@@ -159,18 +187,13 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.parryState);
                         }
-
-                        //enemyStats.CurrentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += ParrySpiritWaveRegeneration;
-                        player.CallWhenGuarding?.Invoke();
-
-                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
-                        {
-                            //enemyStats.CurrentHealth -= AttackPower * 0.2f; // 몬스터의 의지력 감소
-                        }
                     }
                     else if (player.IsAttackingParryColliderEnabled) // 패리 능력이 있는 공격
                     {
+                        enemyStats.currentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += ParrySpiritWaveRegeneration + (ParrySpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
+                        player.CallWhenGuarding?.Invoke();
+
                         if (player.IsSpiritSwordDanceSecondAttack) // 영혼 검무의 2번째 공격으로 패리에 성공하면 영혼 가르기 3번째 공격을 바로 할 수 있게 된다.
                         {
                             player.CanSpiritCleave3Combo = true;
@@ -180,13 +203,13 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
-
-                        //enemyStats.CurrentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += ParrySpiritWaveRegeneration;
-                        player.CallWhenGuarding?.Invoke();
                     }
                     else if (IsSteadfast) // 만약 부동의 영원의 영혼낙인 착용 시엔 가드라도 패리처리. 모션은 가드로
                     {
+                        enemyStats.currentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += ParrySpiritWaveRegeneration + (ParrySpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
+                        player.CallWhenGuarding?.Invoke();
+
                         if (groggyForce >= ParryTenacity) // 위력이 최상인 경우 짧은 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
@@ -195,13 +218,13 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardHitState);
                         }
-
-                        //enemyStats.CurrentWillpower -= AttackPower * ParryImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += ParrySpiritWaveRegeneration;
-                        player.CallWhenGuarding?.Invoke();
                     }
                     else if (player.IsGuarding) // 막기
                     {
+                        CurrentHealth -= damage * (1 - GuardDamageReducePercentage) * (1 - DamageReducePercentage); // 감쇠된 데미지만큼 체력 감소
+                        CurrentSpiritWave += GuardSpiritWaveRegeneration + (GuardSpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
+                        player.CallWhenGuarding?.Invoke();
+
                         if (groggyForce > GuardTenacity) // 위력이 최상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
@@ -214,13 +237,11 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardHitState);
                         }
-
-                        CurrentHealth -= damage * (1 - GuardDamageReducePercentage) * (1 - DamageReducePercentage); // 감쇠된 데미지만큼 체력 감소
-                        CurrentSpiritWave += GuardSpiritWaveRegeneration;
-                        player.CallWhenGuarding?.Invoke();
                     }
                     else // 그냥 피격(웬만하면 isDirectAttack에서 피격이 처리되지만 혹시나 생길 상황에 대비)
                     {
+                        CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
+
                         if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
@@ -229,33 +250,32 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
-
-                        CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
                     }
-                    
                     break;
                 case AttackType.Piercing:
                     if (player.CurrentPlayerState == PlayerState.Penetrate)
                     {
-                        //enemyStats.CurrentWillpower -= AttackPower * PenetrateImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += PenetrateSpiritWaveRegeneration;
+                        enemyStats.currentWillpower -= AttackPower * PenetrateImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += PenetrateSpiritWaveRegeneration + (PenetrateSpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
                         player.CallWhenGuarding?.Invoke();
 
-                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
+                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 간파에 데미지 부여
                         {
-                            //enemyStats.CurrentHealth -= AttackPower * 0.2f; // 몬스터의 의지력 감소
+                            enemyStats.currentHealth -= AttackPower * 0.2f; // 패리 시 데미지 부여
                         }
                     }
                     else if (IsSteadfast) // 만약 부동의 영원의 영혼낙인 착용 시엔 가드라도 간파 처리. 모션은 가드로
                     {
-                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardHitState);
-
-                        //enemyStats.CurrentWillpower -= AttackPower * PenetrateImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += PenetrateSpiritWaveRegeneration;
+                        enemyStats.currentWillpower -= AttackPower * PenetrateImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += PenetrateSpiritWaveRegeneration + (PenetrateSpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
                         player.CallWhenGuarding?.Invoke();
+
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardHitState);
                     }
                     else // 간파 중이 아닌데 피격되면 무조건 피격
                     {
+                        CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
+
                         if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
@@ -264,34 +284,32 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
-
-                        CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
-                        
                     }
-                    
                     break;
                 case AttackType.Spirit:
                     if (player.IsSpiritParring)
                     {
-                        //enemyStats.CurrentWillpower -= AttackPower * SpiritParryImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += SpiritParrySpiritWaveRegeneration;
+                        enemyStats.currentWillpower -= AttackPower * SpiritParryImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += SpiritParrySpiritWaveRegeneration + (SpiritParrySpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
                         player.CallWhenGuarding?.Invoke();
 
                         if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
                         {
-                            //enemyStats.CurrentHealth -= AttackPower * 0.2f; // 몬스터의 의지력 감소
+                            enemyStats.currentHealth -= AttackPower * 0.2f;
                         }
                     }
                     else if (IsSteadfast)  // 만약 부동의 영원의 영혼낙인 착용 시엔 가드라도 영혼패리 처리. 모션은 가드로
                     {
-                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardHitState);
-
-                        //enemyStats.CurrentWillpower -= AttackPower * SpiritParryImpactForcePercentage; // 몬스터의 의지력 감소
-                        CurrentSpiritWave += SpiritParrySpiritWaveRegeneration;
+                        enemyStats.currentWillpower -= AttackPower * SpiritParryImpactForcePercentage; // 몬스터의 의지력 감소
+                        CurrentSpiritWave += SpiritParrySpiritWaveRegeneration + (SpiritParrySpiritWaveRegeneration * RegenerationSpiritWaveIncreasePercent);
                         player.CallWhenGuarding?.Invoke();
+
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.guardHitState);
                     }
                     else // 영혼 패리 중이 아니면 무조건 피격
                     {
+                        CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
+
                         if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
@@ -300,16 +318,14 @@ public class PlayerStats : MonoBehaviour
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
                         }
-
-                        CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
                     }
                     break;
                 case AttackType.Grab:
                     if (player.CurrentPlayerState != PlayerState.Grabbed)
                     {
-                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.grabbedState); // 몬스터에서 끝날 때 긴 행동 불능 상태이상 전환을 호출해주면 됨.
-
                         CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
+
+                        player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.grabbedState); // 몬스터에서 끝날 때 긴 행동 불능 상태이상 전환을 호출해주면 됨.
                     }
                     else // 그랩 중일 때도 데미지 입히기 가능
                     {

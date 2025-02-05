@@ -10,7 +10,7 @@ public class ESMInventory : MonoBehaviour
     [HideInInspector] public EternalSpiritMark EquipedESM;
     void Awake()
     {
-        //OwnedESM = DataManager.Instance.nowPlayer.OwnedESM; // 세이브에서 가져오기 
+        OwnedESM = DataManager.Instance.nowPlayer.OwnedESM; // 세이브에서 가져오기 
         EquipedESM = DataManager.Instance.nowPlayer.EquipedESM; // 세이브에서 장착 중인 장비 불러오기
 
         TryGetComponent(out player);
@@ -34,13 +34,11 @@ public class ESMInventory : MonoBehaviour
 
         player.PlayerStats.CurrentSpiritMarkForce = 0; // 영원의 영혼낙인 교체 시 영혼낙인력 초기화
 
+        player.CallWhenDamaging -= RegenerationGaugeOnAction;
+
         if (!EquipedESM.IsNaturalRegeneration)
         {
             player.CallWhenDamaging += RegenerationGaugeOnAction;
-        }
-        else
-        {
-            player.CallWhenDamaging -= RegenerationGaugeOnAction;
         }
 
         SMAndESMUIManager.Instance.SetOwnedESMList();
@@ -51,7 +49,7 @@ public class ESMInventory : MonoBehaviour
         {
             if (EquipedESM.IsNaturalRegeneration) // 자연 회복이라면 초당 회복
             {
-                player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.RegenerationSpiritWaveIncreasePercent) * EquipedESM.Gain * Time.deltaTime;
+                player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.SpiritMarkForceGainIncreasePercentage) * EquipedESM.Gain * Time.deltaTime;
             }
 
             EquipedESM.Ability(player);
@@ -67,7 +65,7 @@ public class ESMInventory : MonoBehaviour
     }
     public void RegenerationGaugeOnAction()
     {
-        player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.RegenerationSpiritWaveIncreasePercent) * EquipedESM.Gain;
+        player.PlayerStats.CurrentSpiritMarkForce += (1 + player.PlayerStats.SpiritMarkForceGainIncreasePercentage) * EquipedESM.Gain;
 
         if (EquipedESM.Equals(new RagingESM()) && player.PlayerStats.IsRagingOn)
         {

@@ -16,7 +16,7 @@ public class SpiritUnboundState : IState
         player.IsAttacking = true;
         player.PlayerStats.CurrentSpiritWave -= 2; // 영혼의 파동 소모량
 
-        player.FireSpiritUnboundProjectile(-1);
+        player.FireSpiritUnboundProjectile();
     }
 
     public void Execute()

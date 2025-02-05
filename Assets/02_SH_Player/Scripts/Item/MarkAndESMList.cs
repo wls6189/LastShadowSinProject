@@ -43,7 +43,9 @@ public class MarkAndESMList
 
 
     PerseveranceMark perseveranceMark = new PerseveranceMark();
-
+    CurseWagesMark curseWagesMark = new CurseWagesMark();
+    DeepWoundMark deepWoundMark = new DeepWoundMark();
+    FocusMark focusMark = new FocusMark();
     public static List<Mark> ChooseMarks(int count)
     {
         MarkAndESMList instance = new MarkAndESMList();
@@ -52,7 +54,10 @@ public class MarkAndESMList
 
         List<Mark> marks = new()
         {
-            instance.perseveranceMark
+            instance.perseveranceMark,
+            instance.curseWagesMark,
+            instance.deepWoundMark,
+            instance.focusMark,
         };
 
         Random random = new Random();

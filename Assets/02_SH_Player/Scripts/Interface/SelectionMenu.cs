@@ -7,19 +7,25 @@ public class SelectionMenu : MonoBehaviour
 {
     PlayerController player;
     EternalSpiritMark eSM;
+    SpiritMark sM;
+    SMAndESMSlot sMAndESMSlot;
 
-    GameObject equipBtn;
-    GameObject unequipBtn;
+    GameObject eSMEquipBtn;
+    GameObject eSMUnequipBtn;
+    GameObject sMEquipBtn;
+    GameObject sMUnequipBtn;
     GameObject cancelBtn;
 
-    Color eSMFrameSelectColor = new Color(1f, 1f, 1f, 1f);
-    Color eSMFrameOriginColor = new Color(0.6f, 0.6f, 0.6f, 1f);
+    Color FrameSelectColor = new Color(1f, 1f, 1f, 1f);
+    Color FrameOriginColor = new Color(0.6f, 0.6f, 0.6f, 1f);
 
     void Awake()
     {
-        equipBtn = transform.GetChild(0).gameObject; // 자식 오브젝트의 순서 중요!!!!!!!!!!!!!!!!!!!
-        unequipBtn = transform.GetChild(1).gameObject;
-        cancelBtn = transform.GetChild(2).gameObject;
+        eSMEquipBtn = transform.GetChild(0).gameObject; // 자식 오브젝트의 순서 중요!!!!!!!!!!!!!!!!!!!
+        eSMUnequipBtn = transform.GetChild(1).gameObject;
+        sMEquipBtn = transform.GetChild(2).gameObject; 
+        sMUnequipBtn = transform.GetChild(3).gameObject;
+        cancelBtn = transform.GetChild(4).gameObject;
     }
     private void Update()
     {
@@ -28,47 +34,92 @@ public class SelectionMenu : MonoBehaviour
         //    DestroyUI();
         //}
     }
-    public void SetBtnIsEquiped(bool isEquiped, PlayerController player, EternalSpiritMark eSM)
+    public void SetESMBtnIsEquiped(bool isEquiped, PlayerController player, EternalSpiritMark eSM)
     {
+        sMEquipBtn.SetActive(false);
+        sMUnequipBtn.SetActive(false);
         if (isEquiped)
         {
-            equipBtn.SetActive(false);
+
+            eSMEquipBtn.SetActive(false);
         }
         else
         {
-            unequipBtn.SetActive(false);
+            eSMUnequipBtn.SetActive(false);
         }
 
         this.player = player;
         this.eSM = eSM;
     }
+    public void SetSMBtnIsEquiped(bool isEquiped, PlayerController player, SpiritMark sM, SMAndESMSlot sMAndESMSlot)
+    {
+        eSMEquipBtn.SetActive(false);
+        eSMUnequipBtn.SetActive(false);
+        if (isEquiped)
+        {
+            sMEquipBtn.SetActive(false);
+        }
+        else
+        {
+            sMUnequipBtn.SetActive(false);
+        }
 
+        this.player = player;
+        this.sM = sM;
+        this.sMAndESMSlot = sMAndESMSlot;
+    }
     public void PointerEnter(GameObject go)
     {
-        go.GetComponent<Image>().color = eSMFrameSelectColor;
+        go.GetComponent<Image>().color = FrameSelectColor;
     }
     public void PointerExit(GameObject go)
     {
-        go.GetComponent<Image>().color = eSMFrameOriginColor;
+        go.GetComponent<Image>().color = FrameOriginColor;
     }
     public void PointerClick(GameObject go)
     {
-        if (go.name == "Equip")
+        bool findSwapSlot = false;
+
+        if (go.name == "ESMEquip")
         {
             player.PlayerESMInventory.SwapESM(eSM);
             DestroyUI();
         }
-        else if (go.name == "Unequip")
+        else if (go.name == "ESMUnequip")
         {
             player.PlayerESMInventory.EquipedESM = null;
             SMAndESMUIManager.Instance.SetOwnedESMList();
             DestroyUI();
         }
-        else if (go.name == "Cancel")
+        else if (go.name == "SMEquip")
         {
+            for (int i = 0; i < 1 + DataManager.Instance.nowPlayer.DecayedStampCount; i++)
+            {
+                if (player.PlayerMarkInventory.EquipedSpiritMark[i] == null)
+                {
+                    player.PlayerMarkInventory.SwapSpiritMark(i, sM);
+                    findSwapSlot = true;
+                    break;
+                }
+            }
+
+            if (findSwapSlot)
+            {
+                DestroyUI();
+                return;
+            }
+
+            SMAndESMUIManager.Instance.IsSMSwap = true;
+            SMAndESMUIManager.Instance.SMSwapGo = sMAndESMSlot.gameObject;
+            SMAndESMUIManager.Instance.SMSwapSelectionMenuGo = gameObject;
+        }
+        else if (go.name == "SMUnequip")
+        {
+            player.PlayerMarkInventory.SwapSpiritMark(sMAndESMSlot.ThisSMIndex, null);
+            SMAndESMUIManager.Instance.SetOwnedSMList();
             DestroyUI();
         }
-        else
+        else if (go.name == "Cancel")
         {
             DestroyUI();
         }

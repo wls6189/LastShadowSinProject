@@ -29876,6 +29876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   IsProjectile: 0
+  ProjectilePercentage: 0
 --- !u!1 &7064233796820976289
 GameObject:
   m_ObjectHideFlags: 0

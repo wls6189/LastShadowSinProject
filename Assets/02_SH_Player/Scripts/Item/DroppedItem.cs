@@ -4,6 +4,7 @@ using UnityEngine;
 public class DroppedItem : MonoBehaviour
 {
     public DropItemData DropItemData;
+    bool IsPickUped = false;
 
     public void SetDroppedItemData(DropItemData dropItemData)
     {
@@ -12,6 +13,7 @@ public class DroppedItem : MonoBehaviour
 
     public void PickUpItem(PlayerController player) // 플레이어 쪽에서 범위 내에서 상호작용 시 이를 호출하도록 하기
     {
+        if (IsPickUped) return;
         // 영혼재 부분
         if (DropItemData.SpiritAsh > 0)
         {
@@ -52,6 +54,8 @@ public class DroppedItem : MonoBehaviour
         }
 
         SMAndESMUIManager.Instance.SetOwnedESMList(); // 아이템 획득 후 ESMList 재설정
+        SMAndESMUIManager.Instance.SetOwnedSMList(); // 아이템 획득 후 ESMList 재설정
+        IsPickUped = true;
         Destroy(gameObject, 0.2f);
     }
 }

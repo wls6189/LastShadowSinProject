@@ -123,7 +123,7 @@ public class AttackCheck : MonoBehaviour
     {
         player.CallWhenDamaging?.Invoke();
         player.IsAttackSucceed = true;
-        player.PlayerStats.CurrentSpiritWave += 0.3f;
+        player.PlayerStats.CurrentSpiritWave += 0.3f + (0.3f * player.PlayerStats.RegenerationSpiritWaveIncreasePercent);
 
 
         if (IsProjectile)
