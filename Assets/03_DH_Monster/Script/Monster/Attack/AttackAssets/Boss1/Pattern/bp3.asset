@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: bp3
   m_EditorClassIdentifier: 
   patternName: 
-  attacks: []
+  attacks:
+  - {fileID: 11400000, guid: ce667ef5c02393f4790039b0340b89f4, type: 2}

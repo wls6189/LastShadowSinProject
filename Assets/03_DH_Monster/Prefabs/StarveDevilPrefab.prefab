@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageMultiplier: 1.2
   groggyForce: 1
-  currentAttackType: 0
+  currentAttackType: 4
 --- !u!65 &6264148015336647737
 BoxCollider:
   m_ObjectHideFlags: 0

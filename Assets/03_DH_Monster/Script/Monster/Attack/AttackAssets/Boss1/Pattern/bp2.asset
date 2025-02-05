@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: bp2
   m_EditorClassIdentifier: 
   patternName: 
-  attacks: []
+  attacks:
+  - {fileID: 11400000, guid: 4091fe46522486d458594baa1f758c4b, type: 2}
+  - {fileID: 11400000, guid: 310084396c6f5da47bfd3387dc249601, type: 2}

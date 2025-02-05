@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 341b01a14c0b4ba4694d2aff14b9e34d, type: 3}
-  m_Name: boss3
+  m_Name: RF2
   m_EditorClassIdentifier: 
-  attackName: boss3
-  attackType: 1
+  attackName: RF2
+  attackType: 4
   attackRange: 3
   indicatorhLevel: 1
   indicatorColor: {r: 1, g: 0, b: 0, a: 1}
