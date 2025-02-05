@@ -6,90 +6,162 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    //BGM 종류들
-    public enum EBgm
+    [Header("#BGM")]
+    public AudioClip bgmClip;
+    public float bgmVolume;
+    AudioSource bgmPlayer;
+
+    [Header("#SFX")]
+    public AudioClip[] sfxClips;
+    public float sfxVolume;
+    public int channels;
+    AudioSource[] sfxPlayers;
+    int channelIndex;
+
+    public enum Sfx { Dead, Hit, Guard }//플레이어나 npc용 사운드이름 추가
+
+
+    [Header("#Monster SFX")]
+    private Dictionary<int, AudioClip[]> monsterSfxDict = new Dictionary<int, AudioClip[]>(); // 몬스터별 효과음 저장
+    private Dictionary<int, AudioSource[]> monsterSfxPlayers = new Dictionary<int, AudioSource[]>(); // 몬스터별 오디오 소스 저장
+    private Dictionary<int, int> monsterChannelIndex = new Dictionary<int, int>(); // 몬스터별 채널 인덱스
+
+
+    void Awake()
     {
-        BGM_TITLE,
-        BGM_GAME,
+        instance = this;
+        Init();
     }
 
-    //SFX 종류들
-    public enum ESfx
+    void Init()
     {
-        SFX_UI,
-        SFX_NPC,
-        SFX_PLAYER
-    }
-
-    //audio clip 담을 수 있는 배열
-    [SerializeField] private AudioClip[] titleBgm;   // 타이틀 화면 음악
-    [SerializeField] private AudioClip[] gameBgm;    // 게임 내 배경 음악
-
-    // SFX 각 카테고리별로 여러 사운드 클립을 담는 배열
-    [SerializeField] private AudioClip[] uiSfx;      // UI 관련 효과음
-    [SerializeField] private AudioClip[] npcSfx;     // NPC 관련 효과음
-    [SerializeField] private AudioClip[] playerSfx;  // 플레이어 관련 효과음
+        //bgm 초기화
+        GameObject bgmObject = new GameObject("BgmPlayer");
+        bgmObject.transform.parent = transform;
+        bgmPlayer = bgmObject.AddComponent<AudioSource>();
+        bgmPlayer.playOnAwake = false;
+        bgmPlayer.loop = true;
+        bgmPlayer.volume = bgmVolume;
+        bgmPlayer.clip = bgmClip;
 
 
-    //플레이하는 AudioSource
-    [SerializeField] AudioSource audioBgm;
-    [SerializeField] AudioSource audioSfx;
+        //sfx 초기화
+        GameObject sfxObject = new GameObject("sfxPlayer");
+        sfxObject.transform.parent = transform;
+        sfxPlayers = new AudioSource[channels];
 
-    private void Awake()
-    {
-        if (instance == null)
+        for (int index = 0; index < sfxPlayers.Length; index++)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    //AudioManager.instance.PlaySFX(AudioManager.ESfx.SFX_UI, 2);  // 세 번째 UI 사운드 효과를 재생
-    public void PlayBGM(EBgm bgmCategory, int index)
-    {
-        switch (bgmCategory)
-        {
-            case EBgm.BGM_TITLE:
-                audioBgm.clip = titleBgm[index];
-                break;
-            case EBgm.BGM_GAME:
-                audioBgm.clip = gameBgm[index];
-                break;
-            default:
-                return;
-        }
-        audioBgm.Play();
-    }
-
-    public void StopBGM()
-    {
-        audioBgm.Stop();//bgm끄기
-    }
-
-    public void PlaySFX(ESfx sfxCategory, int index)
-    {
-        switch (sfxCategory)
-        {
-            case ESfx.SFX_UI:
-                audioSfx.PlayOneShot(uiSfx[index]);
-                break;
-            case ESfx.SFX_NPC:
-                audioSfx.PlayOneShot(npcSfx[index]);
-                break;
-            case ESfx.SFX_PLAYER:
-                audioSfx.PlayOneShot(playerSfx[index]);
-                break;
-
-            default:
-                return;
+            sfxPlayers[index] = sfxObject.AddComponent<AudioSource>();
+            sfxPlayers[index].playOnAwake = false;
+            sfxPlayers[index].volume = sfxVolume;
         }
     }
-    public void StopSFX()
+
+    public void Playsfx(Sfx sfx)
     {
-        audioSfx.Stop();  // 효과음 끄기
+        for (int index = 0; index < sfxPlayers.Length; index++)
+        {
+            int loopIndex = (index + channelIndex) % sfxPlayers.Length;
+
+            if (sfxPlayers[loopIndex].isPlaying)
+                continue;
+
+
+            channelIndex = loopIndex;
+            sfxPlayers[loopIndex].clip = sfxClips[(int)sfx];
+            sfxPlayers[loopIndex].Play();
+            break;
+        }
     }
+     // 몬스터별 효과음을 등록하는 함수
+    public void RegisterMonsterSfx(int monsterNumber, AudioClip[] sfxClips)
+    {
+        if (!monsterSfxDict.ContainsKey(monsterNumber))
+        {
+            monsterSfxDict.Add(monsterNumber, sfxClips);
+
+            // 몬스터별 AudioSource 생성 (동적)
+            GameObject sfxObject = new GameObject($"MonsterSfx_{monsterNumber}");
+            sfxObject.transform.parent = transform;
+            AudioSource[] sfxPlayers = new AudioSource[channels];
+
+            for (int i = 0; i < channels; i++)
+            {
+                sfxPlayers[i] = sfxObject.AddComponent<AudioSource>();
+                sfxPlayers[i].playOnAwake = false;
+                sfxPlayers[i].volume = sfxVolume;
+            }
+
+            monsterSfxPlayers.Add(monsterNumber, sfxPlayers);
+            monsterChannelIndex.Add(monsterNumber, 0);
+        }
+    }
+
+    // 몬스터별 효과음 재생
+    public void PlayMonsterSfx(int monsterNumber, int sfxIndex)
+    {
+        if (!monsterSfxDict.ContainsKey(monsterNumber) || !monsterSfxPlayers.ContainsKey(monsterNumber))
+            return;
+
+        AudioClip[] clips = monsterSfxDict[monsterNumber];
+        if (sfxIndex < 0 || sfxIndex >= clips.Length) return;
+
+        AudioSource[] sfxPlayers = monsterSfxPlayers[monsterNumber];
+        int index = monsterChannelIndex[monsterNumber];
+
+        for (int i = 0; i < sfxPlayers.Length; i++)
+        {
+            int loopIndex = (index + i) % sfxPlayers.Length;
+
+            if (sfxPlayers[loopIndex].isPlaying)
+                continue;
+
+            monsterChannelIndex[monsterNumber] = loopIndex;
+            sfxPlayers[loopIndex].clip = clips[sfxIndex];
+            sfxPlayers[loopIndex].Play();
+            break;
+        }
+    }
+    //  BGM 볼륨 조절
+    public void SetBgmVolume(float volume)
+    {
+        bgmVolume = Mathf.Clamp01(volume);
+        bgmPlayer.volume = bgmVolume;
+    }
+
+    //  SFX 볼륨 조절 (플레이어 & NPC)
+    public void SetSfxVolume(float volume)
+    {
+        sfxVolume = Mathf.Clamp01(volume);
+        foreach (AudioSource source in sfxPlayers)
+        {
+            source.volume = sfxVolume;
+        }
+    }
+
+    //  전체 몬스터의 SFX 볼륨 조절
+    public void SetAllMonsterSfxVolume(float volume)
+    {
+        float clampedVolume = Mathf.Clamp01(volume);
+
+        // 모든 몬스터에 대해 볼륨 조절
+        foreach (var monsterSfx in monsterSfxPlayers.Values)
+        {
+            foreach (AudioSource source in monsterSfx)
+            {
+                source.volume = clampedVolume;
+            }
+        }
+    }
+
+    //  전체 볼륨 조절 (BGM + SFX + 몬스터 SFX)
+    public void SetMasterVolume(float volume)
+    {
+        SetBgmVolume(volume);
+        SetSfxVolume(volume);
+        SetAllMonsterSfxVolume(volume);
+    }
+
 }
+

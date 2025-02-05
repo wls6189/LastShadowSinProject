@@ -424,7 +424,7 @@ public class Enemy : MonoBehaviour
             // 애니메이션 진행 중에 살짝 앞으로 이동
             if (elapsedTime > 0.2f && elapsedTime < 0.8f) // 예: 애니메이션의 중간 부분에 살짝 앞으로 이동
             {
-                Vector3 forwardMovement = transform.forward * 2f * Time.deltaTime; // 살짝 앞으로 이동
+                Vector3 forwardMovement = transform.forward * 1f * Time.deltaTime; // 살짝 앞으로 이동
                 transform.position += forwardMovement; // 이동 적용
             }
 
