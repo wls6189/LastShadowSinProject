@@ -923,7 +923,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d070fde0844d0ec488bca14ba7fab8e2, type: 3}
   maxHealth: 80
   currentHealth: 0
-  maxWillpower: 100
+  maxWillpower: 50
   currentWillpower: 0
   attackPower: 10
   isGroggy: 0

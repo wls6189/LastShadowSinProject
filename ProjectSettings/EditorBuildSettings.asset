@@ -84,6 +84,6 @@ EditorBuildSettings:
     path: Assets/Scenes/KJ_Level/SouthernHaven/10-2_Boss.unity
     guid: 8096b3c93f06d404db733647d2d7cca8
   m_configObjects:
-    com.unity.input.settings: {fileID: 11400000, guid: 1e7e34fb8da43074ea5b179025a26f49, type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: 415668b332b94e940a35b23e84a03806, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

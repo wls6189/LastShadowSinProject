@@ -37,6 +37,9 @@ public class SceneSelect : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI ContinueCheackText;
 
+    [SerializeField]
+    GameObject tempSlider;
+
     private void Start()
     {
         //슬롯별로 저장된 데이터가 존재하는지 판단.
@@ -344,6 +347,15 @@ public class SceneSelect : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public void OptionButton()
+    {
+        tempSlider.SetActive(true);
+    }
+    public void OffOption()
+    {
+        tempSlider.SetActive(false);
     }
 
 }

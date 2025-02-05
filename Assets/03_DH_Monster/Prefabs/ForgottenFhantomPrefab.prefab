@@ -572,14 +572,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 770f99d1f8e03a341b0fbce98da95efc, type: 3}
   maxHealth: 120
   currentHealth: 0
-  maxWillpower: 150
+  maxWillpower: 70
   currentWillpower: 0
   attackPower: 15
   isGroggy: 0
   isDead: 0
   tenacity: 2
   healthBarImage: {fileID: 5131013659406874529}
-  WillpowerBarImage: {fileID: 3361967811443870740}
+  WillpowerBarImage: {fileID: 3050081824581356581}
   guardEffectPrefab: {fileID: 3291244538907713110, guid: 40cce613a56bac44d97776c3d541d76b, type: 3}
 --- !u!114 &7896956480335179329
 MonoBehaviour:
@@ -1073,9 +1073,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35621bf872e6c89468b8caad63e3d81b, type: 3}
---- !u!114 &3361967811443870740 stripped
+--- !u!114 &3050081824581356581 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6414883774757389441, guid: 35621bf872e6c89468b8caad63e3d81b, type: 3}
+  m_CorrespondingSourceObject: {fileID: 6771782598851036336, guid: 35621bf872e6c89468b8caad63e3d81b, type: 3}
   m_PrefabInstance: {fileID: 8623871187081758869}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

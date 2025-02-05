@@ -1815,7 +1815,7 @@ PrefabInstance:
     - target: {fileID: 7025553397616915907, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
       propertyPath: 'monsterPrefabs.Array.data[0]'
       value: 
-      objectReference: {fileID: 6023224693118505241, guid: 4b800d69224ba8640b6716df0cf0fea2, type: 3}
+      objectReference: {fileID: 6023224693118505241, guid: 7df351a3887b7854787179e404f5212c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

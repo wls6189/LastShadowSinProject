@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 954bb7c237744ca42a424b3abb169cc0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfdf499f91194a4e894cbce6794b869, type: 2}
     - target: {fileID: 919132149155446097, guid: 954bb7c237744ca42a424b3abb169cc0, type: 3}
       propertyPath: m_Name
       value: ResentfulFhantomWeaponPrefab

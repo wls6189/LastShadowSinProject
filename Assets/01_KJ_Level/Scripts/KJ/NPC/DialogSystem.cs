@@ -76,12 +76,12 @@ public class DialogSystem : MonoBehaviour
 
     public void MouseOn()
     {
-        Cursor.lockState = CursorLockMode.None; //마우스 보여주기
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None; //마우스 보여주기
+        //Cursor.visible = true;
     }
     public void MouseOff()
     {
-        Cursor.lockState = CursorLockMode.Locked; //마우스 보여주지 않기
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked; //마우스 보여주지 않기
+        //Cursor.visible = false;
     }
 }

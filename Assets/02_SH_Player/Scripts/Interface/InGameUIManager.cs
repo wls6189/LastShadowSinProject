@@ -36,15 +36,7 @@ public class InGameUIManager : MonoBehaviour
     public static InGameUIManager Instance { get { return instance; } }
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        instance = this;
     }
     private void Start()
     {

@@ -207,7 +207,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 101
   m_TargetDisplay: 0
 --- !u!114 &7432947417637042684
 MonoBehaviour:
@@ -917,7 +917,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0f0b838f93d1abe46bcd8114e71ac1ce, type: 3}
   maxHealth: 80
   currentHealth: 0
-  maxWillpower: 100
+  maxWillpower: 50
   currentWillpower: 0
   attackPower: 10
   isGroggy: 0

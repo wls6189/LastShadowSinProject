@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool IsSpiritSwordDanceSecondAttack;
     [HideInInspector] public Action CallWhenDamaging;
     // 공격의 영혼의 파동 소모량
-    int DashSpiritWaveConsume = 1;
+    float DashSpiritWaveConsume = 0.5f;
     int ThrustSpiritWaveConsume = 1;
     int RetreatSpiritWaveConsume = 1;
     int SpiritCleave1SpiritWaveConsume = 1;

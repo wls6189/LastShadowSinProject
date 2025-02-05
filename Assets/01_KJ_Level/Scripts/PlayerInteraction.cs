@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -40,9 +38,11 @@ public class PlayerInteraction : MonoBehaviour
         //}
         transform.position = DataManager.Instance.nowPlayer.Initposition;
 
-        //monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
+        GetComponent<PlayerStats>().CurrentHealth = DataManager.Instance.nowPlayer.CurrentHealth;
+        GetComponent<PlayerStats>().CurrentSpiritWave = DataManager.Instance.nowPlayer.CurrentSpiritWave;
+        GetComponent<PlayerStats>().CurrentSpiritMarkForce = DataManager.Instance.nowPlayer.CurrentSpiritMarkForce;
 
-        LoadStatDataWhenQuit();
+        //monsterSpawner = GameObject.Find("MonsterSpawner").GetComponent<MonsterSpawner>();
     }
 
     private void Update()
@@ -179,12 +179,12 @@ public class PlayerInteraction : MonoBehaviour
         if (other.CompareTag("NextPortal") && isInteractionStart)
         {
             isInteractionStart = false;
-            other.GetComponent<Portal>().LoadScene(true);
+            other.GetComponent<Portal>().LoadScene(true, GetComponent<PlayerStats>());
         } //다음 포탈
         if (other.CompareTag("PreviousPortal") && isInteractionStart)
         {
             isInteractionStart = false;
-            other.GetComponent<Portal>().LoadScene(false);
+            other.GetComponent<Portal>().LoadScene(false, GetComponent<PlayerStats>());
         } //이전 포탈
         if(other.CompareTag("SoulWell") && isInteractionStart)
         {
@@ -286,11 +286,11 @@ public class PlayerInteraction : MonoBehaviour
     public void LoadStatDataWhenQuit()
     {
         //헌신자의 영혼파편과 상호작용하여 세이브하고 나서 다시 로드 했을 때 세이브 했을 때의  CurrentHealth, MaxSpiritWave 저장
-        GetComponent<PlayerStats>().CurrentHealth = DataManager.Instance.nowPlayer.MaxHealth;
+        //GetComponent<PlayerStats>().CurrentHealth = DataManager.Instance.nowPlayer.MaxHealth;
 
-        GetComponent<PlayerStats>().CurrentSpiritWave = DataManager.Instance.nowPlayer.MaxSpiritWave;
+        //GetComponent<PlayerStats>().CurrentSpiritWave = DataManager.Instance.nowPlayer.MaxSpiritWave;
 
-        GetComponent<PlayerStats>().CurrentSpiritMarkForce = DataManager.Instance.nowPlayer.MaxSpiritMarkForce;
+        //GetComponent<PlayerStats>().CurrentSpiritMarkForce = DataManager.Instance.nowPlayer.MaxSpiritMarkForce;
     }
     private void SpriritShardOfTheDevotedSave()
     {
@@ -331,8 +331,8 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.EquipedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.EquipedSpiritMark; // 장착중인 영원의 영혼낙인
         DataManager.Instance.nowPlayer.OwnedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.OwnedSpiritMark; // 보유 중인 영원의 영혼낙인
 
+        GetComponent<PlayerController>().PlayerStats.CurrentHealth = GetComponent<PlayerController>().PlayerStats.MaxHealth;
         DataManager.Instance.SaveData();
-
     }
 
 

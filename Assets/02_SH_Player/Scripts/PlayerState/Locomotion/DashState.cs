@@ -14,7 +14,7 @@ public class DashState : IState
     {
         player.CurrentPlayerState = PlayerState.Dash;
         player.IsDoSomething = true;
-        player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
+        player.PlayerStats.CurrentSpiritWave -= 0.5f; // 영혼의 파동 소모량
 
         if (player.IsLockOn)
         {

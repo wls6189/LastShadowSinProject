@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 5_2_Boss
   m_EditorClassIdentifier: 
   currentSceneName: 5-2_Boss
-  previousScene: 5-1
+  previousScene: LastVillage
   nextScene: 6-1

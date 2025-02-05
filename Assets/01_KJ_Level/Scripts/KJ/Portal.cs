@@ -87,10 +87,12 @@ public class Portal : MonoBehaviour
     }
 
 
-    public void LoadScene(bool isSceneMove)
+    public void LoadScene(bool isSceneMove, PlayerStats playerStats)
     {
-        
-        
+
+        DataManager.Instance.nowPlayer.CurrentHealth = playerStats.CurrentHealth;
+        DataManager.Instance.nowPlayer.CurrentSpiritWave = playerStats.CurrentSpiritWave;
+        DataManager.Instance.nowPlayer.CurrentSpiritMarkForce = playerStats.CurrentSpiritMarkForce;
 
         if (isSceneMove)
         {

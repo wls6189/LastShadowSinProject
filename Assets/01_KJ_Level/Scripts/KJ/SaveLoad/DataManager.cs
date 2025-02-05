@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
-using UnityEngine.SceneManagement;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Overlays;
-using System.Linq;
 
 public class PlayerData
 {
