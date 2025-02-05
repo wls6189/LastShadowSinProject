@@ -20,7 +20,7 @@ public class MarkInventory : MonoBehaviour
         CheckActivatedMark();
         ApplyAbilityToStats();
     }
-    public void LoadSMData() // 문드러진 낙인 상호작용 시 호출
+    public void LoadSMData() // 문드러진 낙인 상호작용 시 저장하고 호출하도록
     {
         EquipedSpiritMark = new SpiritMark[1 + DataManager.Instance.nowPlayer.DecayedStampCount]; // 세이브에서 문드러진 도장과 상호작용한 횟수를 가져와서 추가하기
         // OwnedSpiritMark = JsonConvert // 세이브에서 가져오기

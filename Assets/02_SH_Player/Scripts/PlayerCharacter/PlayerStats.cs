@@ -357,6 +357,7 @@ public void LoadStatDataWhenQuit()
         if (CurrentHealth <= 0)
         {
             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.deadState);
+            player.PlayerCharacterController.enabled = false;
             GetComponent<PlayerInteraction>().PlayerDie();
         }
     }
