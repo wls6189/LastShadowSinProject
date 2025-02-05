@@ -10,7 +10,7 @@ public class RadiantTorch : Interaction
         EffectObject.gameObject.SetActive(false);
     }
 
-    public override void InteractionPlayer()
+    public override void InteractionPlayer( )
     {
         EffectObject.gameObject.SetActive(true);
 

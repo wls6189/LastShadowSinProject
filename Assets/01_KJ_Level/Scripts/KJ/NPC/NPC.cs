@@ -38,7 +38,7 @@ public class NPC : MonoBehaviour
     TextMeshProUGUI BackBtnText; //선택 버튼 2
 
 
-    Button ThirdBtn; //보상 버튼 
+
 
     [SerializeField]
     bool isAccepted;
@@ -90,9 +90,7 @@ public class NPC : MonoBehaviour
           
             BackBtn = DialogSystem.Instance.BackBtn;
             BackBtnText = DialogSystem.Instance.BackBtn.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
-
-
-            ThirdBtn = DialogSystem.Instance.ReceiveBtn;
+         
 
             NpcDialouge = DialogSystem.Instance.NpcDialouge;
             PlayerDialouge = DialogSystem.Instance.PlayerTalkDialouge;
@@ -109,8 +107,6 @@ public class NPC : MonoBehaviour
 
     public void PlayerWithTalk()
     {    
-        NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = "Talk [F]";
-
         StartTalk();
     }
     public void PlayerLookNpc(Vector3 playerPos)
@@ -280,7 +276,7 @@ public class NPC : MonoBehaviour
     private void FirstInteraction()
     {
 
-        ThirdBtn.gameObject.SetActive(false); //보상 버튼 비활성화
+        //ThirdBtn.gameObject.SetActive(false); //보상 버튼 비활성화
 
         npcGiverText.text = currentActiveQuest.questGiver; //퀘스트 제공자 동기화 부분
 
@@ -311,6 +307,8 @@ public class NPC : MonoBehaviour
         {
             if(!DataManager.Instance.nowPlayer.questGivers.Contains(currentActiveQuest.questGiver))
             {
+                NpcTalkImage.GetComponentInChildren<TextMeshProUGUI>().text = " ";
+
                 currentActiveQuest = Quests[ActiveQuestIndex];
 
                 PlayerDialouge.gameObject.SetActive(false);
@@ -332,7 +330,7 @@ public class NPC : MonoBehaviour
 
     private void OpenChaosRiftInteraction()
     {
-        ThirdBtn.gameObject.SetActive(false); //보상 버튼 비활성화
+ 
 
         npcGiverText.text = currentActiveQuest.questGiver; //퀘스트 제공자 동기화 부분
 
@@ -494,9 +492,8 @@ public class NPC : MonoBehaviour
 
         var firstItemCounter = 0; //현재 내가 들고있는 첫번째 요구한 아이템의 개수 0으로 잡고
 
-        Debug.Log(playerInteraction.collectedItems);
 
-        foreach (var item in playerInteraction.collectedItems)
+        foreach (var item in DataManager.Instance.collectedItems)
         {
             Debug.Log($"인벤토리 아이템: {item.Key}, 요구 아이템: {firstRequiredItem}");
 

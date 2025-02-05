@@ -25,8 +25,8 @@ public class SpiritShardOfTheDevoted : MonoBehaviour
         else
         {
             isSave = false;
-          
-            GetComponentInChildren<TextMeshProUGUI>().text = "Save [F]";
+            Debug.Log("세이브 안되어있는 영혼파편");
+            GetComponentInChildren<TextMeshProUGUI>().text = "Save? [F]";
         }
     }
 

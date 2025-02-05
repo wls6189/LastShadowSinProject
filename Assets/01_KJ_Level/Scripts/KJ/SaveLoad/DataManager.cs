@@ -170,6 +170,8 @@ public class DataManager : MonoBehaviour
 
     }
 
+    public Dictionary<string, int> collectedItems = new Dictionary<string, int>();
+
     //헌신자 영혼파편 상호작용 시 현재 구역 세이브하는 부분. -> UI 띄우고 현재 구역 표시하기 위함.
 
     public void SaveSoulFragment(SpiritShardOfTheDevoted soulObj,int id, string sceneName)

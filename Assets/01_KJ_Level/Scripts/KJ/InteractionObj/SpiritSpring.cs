@@ -1,4 +1,5 @@
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class SpiritSpring : Interaction
@@ -11,9 +12,7 @@ public class SpiritSpring : Interaction
     private GameObject EffectPrefab;
 
     void Start()
-    {
-       
-
+    {    
         if (DataManager.Instance.nowPlayer.currentSceneSpiritSpring.Contains(currentSceneSpiritSpring))
         {
             if (DataManager.Instance.nowPlayer.SpiritSpringCount > 0)
@@ -30,7 +29,13 @@ public class SpiritSpring : Interaction
 
     public override void InteractionPlayer()
     {
+        if (DataManager.Instance.nowPlayer.currentSceneSpiritSpring.Contains(currentSceneSpiritSpring))
+        {
+            Debug.Log("이미 데이터 저장되서 카운트 못 올림");
+            return;
+        }
         EffectPrefab.gameObject.SetActive(false);
+      
 
         DataManager.Instance.nowPlayer.SpiritSpringCount += 1;
         DataManager.Instance.nowPlayer.currentSceneSpiritSpring.Add(currentSceneSpiritSpring);

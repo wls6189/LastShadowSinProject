@@ -57,7 +57,7 @@ public class ButtonManager : MonoBehaviour
     {
         buttonImage.sprite = clickSprite;
 
-        Invoke("ResetButtonImage", 0.2f);
+        ResetButtonImage();
     }
 
     private void ResetButtonImage()
