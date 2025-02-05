@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/03_DH_Monster/Script/Monster/Attack/AttackAssets/Boss1.meta
-guid: 1b009bc726d03e44382c354039a628d3
-========
-guid: 19f015b8d4e0a11409e19948390409e0
->>>>>>>> origin/Level_13:Assets/Scenes/KJ_Level/CorpseCape/NavMesh/1-3.meta
+guid: 5d4921a2e0c86b2429bbedfa2312cfd8
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

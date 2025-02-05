@@ -483,7 +483,7 @@ PrefabInstance:
     - target: {fileID: 6894866209967640294, guid: c4809bdb108dbfa40b5438d9790dcefe, type: 3}
       propertyPath: m_NavMeshData
       value: 
-      objectReference: {fileID: 23800000, guid: 7a961ae9c3f185c4cbaecc6c14ce5622, type: 2}
+      objectReference: {fileID: 23800000, guid: bdc1e0394b2de5548bd7dcc91403652c, type: 2}
     - target: {fileID: 7122329995346553869, guid: c4809bdb108dbfa40b5438d9790dcefe, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.922304
@@ -2303,67 +2303,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2488851268311268025, guid: 8cbdf93b8c809414f9f4530785a9c005, type: 3}
   m_PrefabInstance: {fileID: 529216946686058607}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &3653808059848320018
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -17.93
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2585537158275484482, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4157701069842422258, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
-    - target: {fileID: 4157701069842422258, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
-      propertyPath: m_Name
-      value: MonsterSpawner
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8d90ef0de7c46f348ac17f701b312076, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2376,7 +2315,6 @@ SceneRoots:
   - {fileID: 177200132}
   - {fileID: 1195473559}
   - {fileID: 1786036686}
-  - {fileID: 3653808059848320018}
   - {fileID: 715844551}
   - {fileID: 1574374982}
   - {fileID: 317685412}

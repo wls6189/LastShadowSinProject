@@ -53,6 +53,36 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/KJ_Level/CorpseCape/5-2_Boss.unity
     guid: b168d68ff60c4cf458c33f8857b38a1c
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/6-1.unity
+    guid: 6c0164b26a4b7fd4a846dbbccc2d1ca2
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/6-2.unity
+    guid: f24f1c8317008a641997599709684464
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/6-3.unity
+    guid: b0fcfe658e51d0642b6f0a4b21407642
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/SouthernVillage.unity
+    guid: 61b689d3bf69f2c4f83963d413021952
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/7-1.unity
+    guid: c78b4484171fa144aa527a2159217d2f
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/8-1.unity
+    guid: dd46dc0a94f9397488c45b4c65aa3608
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/9-1.unity
+    guid: 4203364d13993834eb0e4fd1d770022b
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/10-1.unity
+    guid: 980806f081c6a0c49bb316728c535143
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/DeapSouthernVillage.unity
+    guid: 886d7dd9c6ec98d4f9342c4bdb3f8cfd
+  - enabled: 1
+    path: Assets/Scenes/KJ_Level/SouthernHaven/10-2_Boss.unity
+    guid: 8096b3c93f06d404db733647d2d7cca8
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 1e7e34fb8da43074ea5b179025a26f49, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
