@@ -261,7 +261,7 @@ public class PlayerController : MonoBehaviour
     void ManageRotate() // 캐릭터의 회전 관리
     {
         if (IsAttacking || IsDoSomething || IsGrogging || CurrentPlayerState == PlayerState.Dash) return; // 공격 중이거나 대쉬 중이라면 회전 금지
-
+        if (targetMonster == null) IsLockOn = false;
         if (IsLockOn)
         {
             if (targetMonster.transform.position.z >= transform.position.z)
@@ -499,6 +499,11 @@ public class PlayerController : MonoBehaviour
             targetMonster = null;
             targetMonsterIndex = -1;
             CameraFocusPosition.localPosition = new Vector3(0, 0, 1);
+        }
+
+        if (targetMonster == null)
+        {
+            IsLockOn = false;
         }
 
         if (IsLockOn) // 락온 중엔 카메라가 플레이어와 타겟 사이를 포커싱

@@ -32,8 +32,7 @@ public class SMAndESMUIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI selectSMMaxHealth;
     [SerializeField] TextMeshProUGUI[] selectSMMarks = new TextMeshProUGUI[3];
     [SerializeField] TextMeshProUGUI[] selectSMMarkDescriptions = new TextMeshProUGUI[3];
-
-
+    [SerializeField] Slider masterSoundSlider;
 
     [SerializeField] GameObject NotifySelectSwapSM;
 
@@ -323,6 +322,10 @@ public class SMAndESMUIManager : MonoBehaviour
                 selectSMMarkDescriptions[i].text = "";
             }
         }
+    }
+    public void SetMasterSound()
+    {
+        AudioManager.instance.SetMasterVolume(masterSoundSlider.value);
     }
 }
 

@@ -125,6 +125,10 @@ public class InGameUIManager : MonoBehaviour
                 eSMImage.sprite = image.Image;
             }
         }
+        if (player.PlayerESMInventory.EquipedESM == null)
+        {
+            eSMImage.sprite = null;
+        }
     }
     public void GeneratePickUpItemText(string log)
     {

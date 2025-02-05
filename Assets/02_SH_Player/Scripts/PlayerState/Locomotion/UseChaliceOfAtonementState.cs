@@ -17,6 +17,7 @@ public class UseChaliceOfAtonementState : IState
         player.PlayerAnimator.SetTrigger("DoUseChaliceOfAtonement");
         player.IsDoSomething = true;
         count = player.PlayerChaliceOfAtonement.CurrentChaliceOfAtonementCount;
+        AudioManager.instance.Playsfx(AudioManager.Sfx.Heal);
     }
 
     public void Execute()

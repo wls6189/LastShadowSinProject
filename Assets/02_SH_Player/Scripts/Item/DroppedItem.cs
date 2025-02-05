@@ -9,6 +9,10 @@ public class DroppedItem : MonoBehaviour
     public void SetDroppedItemData(DropItemData dropItemData)
     {
         DropItemData = dropItemData;
+        if (dropItemData.SpiritAsh <= 0 && dropItemData.SpiritMarks.Count <= 0 && dropItemData.EternalSpiritMark == null)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void PickUpItem(PlayerController player) // 플레이어 쪽에서 범위 내에서 상호작용 시 이를 호출하도록 하기
@@ -56,6 +60,8 @@ public class DroppedItem : MonoBehaviour
         SMAndESMUIManager.Instance.SetOwnedESMList(); // 아이템 획득 후 ESMList 재설정
         SMAndESMUIManager.Instance.SetOwnedSMList(); // 아이템 획득 후 ESMList 재설정
         IsPickUped = true;
+
+        AudioManager.instance.Playsfx(AudioManager.Sfx.GettingItem);
         Destroy(gameObject, 0.2f);
     }
 }

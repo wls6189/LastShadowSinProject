@@ -55,8 +55,16 @@ public class AttackCheck : MonoBehaviour
         OnAttackColllider();
     }
 
+    bool isSound = false;
     void OnAttackColllider()
     {
+        
+        if (!isSound && (player.IsAttackColliderEnabled || player.IsAttackingParryColliderEnabled))
+        {
+            isSound = true;
+            AudioManager.instance.Playsfx(AudioManager.Sfx.PlayerMelee);
+        }
+
         if (IsProjectile)
         {
             gameObject.tag = "Untagged";
@@ -117,6 +125,8 @@ public class AttackCheck : MonoBehaviour
             attackCollider.enabled = false;
             player.IsAttackSucceed = false;
             attackedMonstersByPlayer.Clear();
+
+            isSound = false;
         }
     }
     void Damaging(EnemyStats enemyStats, bool isDirectAttack)
@@ -124,7 +134,6 @@ public class AttackCheck : MonoBehaviour
         player.CallWhenDamaging?.Invoke();
         player.IsAttackSucceed = true;
         player.PlayerStats.CurrentSpiritWave += 0.3f + (0.3f * player.PlayerStats.RegenerationSpiritWaveIncreasePercent);
-
 
         if (IsProjectile)
         {

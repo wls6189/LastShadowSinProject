@@ -11,7 +11,7 @@ public class PenetrateCheck : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<AttackBase>() != null && other.GetComponent<AttackBase>().currentAttackType == AttackType.Piercing) // 피어싱 공격을 날릴 때.
+        if (other.GetComponent<Enemy>() != null && other.GetComponent<Enemy>().isPiercing) // 피어싱 공격을 날릴 때.
         {
             if (player.CurrentPlayerState == PlayerState.Penetrate)
             {
