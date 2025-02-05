@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: boss4
   m_EditorClassIdentifier: 
   attackName: boss4
-  attackType: 0
-  attackRange: 0
-  indicatorhLevel: 0
-  indicatorColor: {r: 0, g: 0, b: 0, a: 0}
+  attackType: 4
+  attackRange: 3
+  indicatorhLevel: 1
+  indicatorColor: {r: 1, g: 0, b: 0, a: 1}
