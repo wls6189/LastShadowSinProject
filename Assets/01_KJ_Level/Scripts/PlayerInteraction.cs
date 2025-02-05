@@ -186,7 +186,9 @@ public class PlayerInteraction : MonoBehaviour
         {
             isInteractionStart = false;
 
-             soulWell = other.GetComponent<SpiritSpring>();
+            GetComponent<PlayerController>().PlayerChaliceOfAtonement.LoadCOAData();
+
+            soulWell = other.GetComponent<SpiritSpring>();
             other.GetComponentInChildren<TextMeshProUGUI>().text = " ";
             soulWell.InteractionPlayer();
 
@@ -195,6 +197,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             isInteractionStart = false;
 
+            GetComponent<PlayerController>().PlayerMarkInventory.LoadSMData();
             crackedSeal = other.GetComponent<DecayedStamp>();
             other.GetComponentInChildren<TextMeshProUGUI>().text = " ";
             crackedSeal.InteractionPlayer();
@@ -305,7 +308,9 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.CurrentSpiritMarkForce = GetComponent<PlayerController>().PlayerStats.CurrentSpiritMarkForce; // 현재 영혼낙인력
         DataManager.Instance.nowPlayer.SpiritAshAmount = GetComponent<PlayerController>().PlayerStats.SpiritAsh; // 영혼재
                                                                                                                  //마지막으로 저장된 것들을 json으로 저장
-        
+        DataManager.Instance.nowPlayer.EquipedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.EquipedSpiritMark; // 장착중인 영원의 영혼낙인
+        DataManager.Instance.nowPlayer.OwnedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.OwnedSpiritMark; // 보유 중인 영원의 영혼낙인
+
         DataManager.Instance.SaveData();
 
     }
