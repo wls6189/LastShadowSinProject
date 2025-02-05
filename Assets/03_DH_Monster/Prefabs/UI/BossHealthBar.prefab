@@ -558,5 +558,5 @@ MonoBehaviour:
   bossHealthBar: {fileID: 2653875843299317417}
   bossWillpowerBar: {fileID: 2297847472885393025}
   bossNameText: {fileID: 6040767024275580839}
-  bossName: 
+  bossName: "\uAC08\uB9DD\uD558\uB294 \uC545\uB9C8"
   bossEnemyStats: {fileID: 0}
