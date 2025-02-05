@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5801149206191443194}
   - component: {fileID: 6200166280790330981}
+  - component: {fileID: 106419101504847504}
   m_Layer: 0
   m_Name: MonsterDrop
   m_TagString: DroppedItem
@@ -53,3 +54,15 @@ MonoBehaviour:
   AzureProbability: 0
   MaxAzure: 0
   ESMProbability: 1
+--- !u!114 &106419101504847504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5264823108212610448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56dc7970dcdcc474f9bcef7fd4f5af29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
