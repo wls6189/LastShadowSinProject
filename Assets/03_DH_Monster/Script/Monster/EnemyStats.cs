@@ -154,7 +154,7 @@ public class EnemyStats : MonoBehaviour
 
     public void EnterKnockdown()//외부호출용
     {
-        if (isGroggy) return;
+        //if (isGroggy) return;
 
         animator.SetTrigger("Knockdown");
         isGroggy = true;
