@@ -14,7 +14,7 @@ public class RetreatSlashState : IState
         player.CurrentPlayerState = PlayerState.RetreatSlash;
         player.PlayerAnimator.SetTrigger("DoRetreatSlash");
         player.IsAttacking = true;
-        player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
+        //player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
     }
 
     public void Execute()

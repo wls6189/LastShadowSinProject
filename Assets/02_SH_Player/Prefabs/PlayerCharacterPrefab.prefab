@@ -929,7 +929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5
+      value: -5.21
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1112,7 +1112,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NearbyMonsterCheck: {fileID: 6549005347744170601}
   CameraFocusPosition: {fileID: 5544254639474283807}
-  SpiritUnboundPrefab: {fileID: 179617693071064624, guid: 60ee5f36c8f4ce44eb5fefd0e1332e8c, type: 3}
   MoveActionValue: 0
   MoveSpeed: 0
   DashSpeed: 0
@@ -1252,8 +1251,11 @@ MonoBehaviour:
   CurrentHealth: 0
   DamageReducePercentage: 0
   GuardDamageReducePercentage: 0
+  MaxHealthReducePercentage: 0
+  MaxHealthIncreaseAmount: 0
   AttackPower: 0
   AttackPowerIncreasePercentage: 0
+  AttackPowerIncreaseAmount: 0
   ParryImpactForcePercentage: 0
   PenetrateImpactForcePercentage: 0
   SpiritParryImpactForcePercentage: 0
@@ -1306,6 +1308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxChaliceOfAtonementCount: 0
   CurrentChaliceOfAtonementCount: 0
+  RecoveryAmountReducePercentage: 0
 --- !u!114 &4288398518465816493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1352,7 +1355,10 @@ MonoBehaviour:
   basicMaterial: {fileID: 2100000, guid: f71f5a4a13d2e2c46bf15d04c9e676f2, type: 2}
   dashTrailPrefab: {fileID: 2370931989479530282}
   characterMesh: {fileID: 7590007255733776452}
-  radicalESMPrefab: {fileID: 6974084246394710616, guid: 57e56a9cad86bea428e9be0e29d64198, type: 3}
+  SpiritUnboundEffectPrefab: {fileID: 179617693071064624, guid: 60ee5f36c8f4ce44eb5fefd0e1332e8c, type: 3}
+  RadicalESMPrefab: {fileID: 6974084246394710616, guid: 57e56a9cad86bea428e9be0e29d64198, type: 3}
+  RampagingESMPrefab: {fileID: 660604078598729712, guid: 6637d3bbf2905f9458c85f65d81e87a2, type: 3}
+  DestructiveESMPrefab: {fileID: 2486735990780404459, guid: 2da6f0f75cab62b4086882ea3f5b4402, type: 3}
 --- !u!1 &7590007255733776452 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8808878123899235148, guid: a0acd42434fc84946b6a82bcae9ec9c8, type: 3}

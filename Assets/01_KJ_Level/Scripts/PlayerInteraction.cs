@@ -110,7 +110,9 @@ public class PlayerInteraction : MonoBehaviour
         if (UIManager.Instance.isPlayerDieUI == false)
         {
             StartCoroutine(UIManager.Instance.PlayerDieUI(this));
-        }      
+        }
+
+        DataManager.Instance.SaveDataWhenDie();
     }
 
     public void RespawnPlayer()
@@ -185,8 +187,10 @@ public class PlayerInteraction : MonoBehaviour
         {
             isInteractionStart = false;
             other.GetComponent<Portal>().LoadScene(false, GetComponent<PlayerStats>());
+            SMAndESMUIManager.Instance.SetOwnedESMList();
+            SMAndESMUIManager.Instance.SetOwnedSMList();
         } //ÀÌÀü Æ÷Å»
-        if(other.CompareTag("SoulWell") && isInteractionStart)
+        if (other.CompareTag("SoulWell") && isInteractionStart)
         {
             isInteractionStart = false;
 
@@ -195,6 +199,8 @@ public class PlayerInteraction : MonoBehaviour
             soulWell.InteractionPlayer();
 
             GetComponent<PlayerController>().PlayerChaliceOfAtonement.LoadCOAData();
+            SMAndESMUIManager.Instance.SetOwnedESMList();
+            SMAndESMUIManager.Instance.SetOwnedSMList();
 
         } //¿µÈ¥»ù
         if(other.CompareTag("CrackedSeal") && isInteractionStart)
@@ -217,6 +223,8 @@ public class PlayerInteraction : MonoBehaviour
 
             chaosRift = other.GetComponent<ChaosRift>();
             chaosRift.InteractionPlayer();
+            SMAndESMUIManager.Instance.SetOwnedESMList();
+            SMAndESMUIManager.Instance.SetOwnedSMList();
         } //È¥µ·ÀÇÆ´»õ
 
         if (other.CompareTag("NPC"))

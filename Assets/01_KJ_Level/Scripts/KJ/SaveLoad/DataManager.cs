@@ -132,7 +132,14 @@ public class DataManager : MonoBehaviour
         //저장하기 - WriteAllText() 사용
         File.WriteAllText(path + nowSlot.ToString(), data); // 경로의 파일이름을 지정한 후 데이터를 저장하고 파일 이름 뒤에 슬롯의 번호까지 추가. Save0,Save1...
     }
+    public void SaveDataWhenDie()
+    {
+        nowPlayer.CurrentHealth = 100;
+        string data = JsonUtility.ToJson(nowPlayer);
 
+        //저장하기 - WriteAllText() 사용
+        File.WriteAllText(path + nowSlot.ToString(), data); // 경로의 파일이름을 지정한 후 데이터를 저장하고 파일 이름 뒤에 슬롯의 번호까지 추가. Save0,Save1...
+    }
     public void LoadData()
     {
 

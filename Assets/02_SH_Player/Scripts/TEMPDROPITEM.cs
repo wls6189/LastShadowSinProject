@@ -13,6 +13,6 @@ public class TEMPDROPITEM : MonoBehaviour
     private void Start()
     {
         m.Drop();
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 }

@@ -15,7 +15,7 @@ public class ThrustState : IState
         player.PlayerAnimator.SetTrigger("DoThrust");
         player.IsAttacking = true;
         player.PlayerStats.Tenacity = TenacityAndGroggyForce.High;
-        player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
+        //player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
     }
 
     public void Execute()

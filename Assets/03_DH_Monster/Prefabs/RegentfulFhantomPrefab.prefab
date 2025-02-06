@@ -783,7 +783,7 @@ MonoBehaviour:
   currentHealth: 0
   maxWillpower: 70
   currentWillpower: 0
-  attackPower: 15
+  attackPower: 25
   isGroggy: 0
   isDead: 0
   tenacity: 2

@@ -894,7 +894,7 @@ MonoBehaviour:
   attackTrail: {fileID: 4078465305620255483}
   spiritattackTrail: {fileID: 8963345656683607596}
   navMeshAgent: {fileID: 0}
-  maxChaseDistance: 15
+  maxChaseDistance: 25
   currentState: 0
   indicatorText: {fileID: 3871657016159109558}
   indicatorDuration: 1

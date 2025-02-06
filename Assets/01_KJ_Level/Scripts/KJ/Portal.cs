@@ -93,6 +93,7 @@ public class Portal : MonoBehaviour
         DataManager.Instance.nowPlayer.CurrentHealth = playerStats.CurrentHealth;
         DataManager.Instance.nowPlayer.CurrentSpiritWave = playerStats.CurrentSpiritWave;
         DataManager.Instance.nowPlayer.CurrentSpiritMarkForce = playerStats.CurrentSpiritMarkForce;
+        DataManager.Instance.SaveData();
 
         if (isSceneMove)
         {

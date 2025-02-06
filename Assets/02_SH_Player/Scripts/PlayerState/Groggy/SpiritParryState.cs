@@ -16,7 +16,7 @@ namespace PlayerPart
             player.CurrentPlayerState = PlayerState.SpiritParry;
             player.PlayerAnimator.SetTrigger("DoSpiritParry");
             player.IsGrogging = true;
-            player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
+            //player.PlayerStats.CurrentSpiritWave -= 1; // 영혼의 파동 소모량
         }
 
         public void Execute()
