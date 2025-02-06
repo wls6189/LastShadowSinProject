@@ -51,14 +51,7 @@ public class EnemyStats : MonoBehaviour
 
             Destroy(gameObject, 5f); // 5초 후 오브젝트 파괴
         }
-        else if (!animator.IsInTransition(0) &&
-        (currentState.IsName("Knockdown") || currentState.IsName("ShortGroggy")) &&
-        currentState.normalizedTime >= 0.9f)
-        {
-          
-            isGroggy = false;
-        }
-        animator.SetFloat("Speed", enemy.navMeshAgent.velocity.magnitude);
+
     }
 
     public void PlayMonsterSfx(int sfxIndex)
@@ -218,6 +211,10 @@ public class EnemyStats : MonoBehaviour
     {
        
         Destroy(gameObject);
+    }
+    public void ExitGroggy()
+    {
+        isGroggy = false;
     }
    
 }
