@@ -265,7 +265,7 @@ public void LoadStatDataWhenQuit()
                         player.CallWhenGuarding?.Invoke();
                         AudioManager.instance.Playsfx(AudioManager.Sfx.Parry2);
 
-                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 간파에 데미지 부여
+                        if (player.PlayerESMInventory.EquipedESM != null && player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 간파에 데미지 부여
                         {
                             enemyStats.currentHealth -= AttackPower * 0.2f; // 패리 시 데미지 부여
                         }
@@ -302,7 +302,7 @@ public void LoadStatDataWhenQuit()
                         player.CallWhenGuarding?.Invoke();
                         AudioManager.instance.Playsfx(AudioManager.Sfx.SpiritParry);
 
-                        if (player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
+                        if (player.PlayerESMInventory.EquipedESM != null && player.PlayerESMInventory.EquipedESM.Equals(new RadicalESM()) && !player.IsRadicalESMAttackPosture) // 극단적인 영원의 영혼낙인 수비 자세 시 패리에 데미지 부여
                         {
                             enemyStats.currentHealth -= AttackPower * 0.2f;
                         }
