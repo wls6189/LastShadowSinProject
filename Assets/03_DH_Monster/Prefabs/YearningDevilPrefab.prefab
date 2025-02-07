@@ -825,6 +825,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiritAttackTrail
       objectReference: {fileID: 0}
+    - target: {fileID: 7356203045360921323, guid: 3dd649bb418905e45ada4f3816319ec2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1162,7 +1166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectionRange: 30
   standoffRange: 5
-  attackRange: 2
+  attackRange: 4
   hitbox: 2
   attackCooldown: 0
   guardDuration: 3
