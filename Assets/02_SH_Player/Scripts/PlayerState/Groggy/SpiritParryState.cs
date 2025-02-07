@@ -28,7 +28,7 @@ namespace PlayerPart
 
             float duration = player.StateInfo.normalizedTime % 1f;
 
-            if (duration >= 11f / frame && duration <= 14f / frame)
+            if (duration >= 9f / frame && duration <= 16f / frame)
             {
                 player.IsSpiritParring = true;
                 player.AttackMoving(7f);

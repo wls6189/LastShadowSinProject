@@ -3063,7 +3063,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uBB34\uAE30\uAC00 \uD478\uB974\uAC8C \uBE5B\uB098\uBA70 \uB290\uB08C\uD45C\uAC00
     \uB728\uBA74 \uC601\uD63C \uACF5\uACA9\uC785\uB2C8\uB2E4.\r\n\uC601\uD63C \uACF5\uACA9\uC740
-    \uC601\uD63C \uD328\uB9AC\uB85C\uB9CC \uB9C9\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    \uC601\uD63C \uD328\uB9AC\uB85C\uB9CC \uB9C9\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4.\n\uB2E8
+    \uC601\uD63C\uD328\uB9AC\uB294 \uC120 \uB51C\uB808\uC774\uAC00 \uC788\uC5B4 \uC2E0\uC911\uD788
+    \uC368\uC57C\uD569\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f1a1f1cb89a658d42a8b643bd15e0ca6, type: 2}
   m_sharedMaterial: {fileID: -5941518229827984025, guid: f1a1f1cb89a658d42a8b643bd15e0ca6, type: 2}

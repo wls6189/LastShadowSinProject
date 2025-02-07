@@ -94,7 +94,7 @@ public class Portal : MonoBehaviour
         DataManager.Instance.nowPlayer.CurrentSpiritWave = playerStats.CurrentSpiritWave;
         DataManager.Instance.nowPlayer.CurrentSpiritMarkForce = playerStats.CurrentSpiritMarkForce;
         DataManager.Instance.SaveData();
-
+        Debug.Log("?");
         if (isSceneMove)
         {
             SceneManager.LoadScene(currentSceneData.nextScene, LoadSceneMode.Single); // ScriptableObject에 저장된 씬으로 이동

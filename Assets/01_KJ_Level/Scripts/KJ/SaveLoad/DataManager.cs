@@ -31,6 +31,8 @@ public class PlayerData
     }
     public List<SpiritMark> OwnedSpiritMark = new();
 
+    public int CurrentChaliceCount = 2;
+
     //퀘스트
     public List<Quest> allActiveQuests = new List<Quest>();
     public List<Quest> allCompletedQuests = new List<Quest>();

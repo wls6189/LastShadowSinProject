@@ -154,11 +154,11 @@ public void LoadStatDataWhenQuit()
         {
             CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
             AudioManager.instance.Playsfx(AudioManager.Sfx.PlayerDamageVoice);
-            if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
+            if (groggyForce > Tenacity && player.CurrentPlayerState != PlayerState.HitLongGroggy) // 위력이 상 이상인 경우 긴 행동 불능
             {
                 player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
             }
-            else if (groggyForce == Tenacity && !player.IsGrogging) // 위력이 중인 경우 짧은 행동 불능
+            else if (groggyForce == Tenacity) // 위력이 중인 경우 짧은 행동 불능
             {
                 player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitShortGroggyState);
             }
@@ -247,7 +247,7 @@ public void LoadStatDataWhenQuit()
                         CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
                         AudioManager.instance.Playsfx(AudioManager.Sfx.PlayerDamageVoice);
 
-                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
+                        if (groggyForce > Tenacity && player.CurrentPlayerState != PlayerState.HitLongGroggy)  // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
                         }
@@ -284,7 +284,7 @@ public void LoadStatDataWhenQuit()
                         CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
                         AudioManager.instance.Playsfx(AudioManager.Sfx.PlayerDamageVoice);
 
-                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
+                        if (groggyForce > Tenacity && player.CurrentPlayerState != PlayerState.HitLongGroggy)  // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
                         }
@@ -321,7 +321,7 @@ public void LoadStatDataWhenQuit()
                         CurrentHealth -= damage * (1 - DamageReducePercentage); // 데미지만큼 체력 감소
                         AudioManager.instance.Playsfx(AudioManager.Sfx.PlayerDamageVoice);
 
-                        if (groggyForce > Tenacity && !player.IsGrogging) // 위력이 상 이상인 경우 긴 행동 불능
+                        if (groggyForce > Tenacity && player.CurrentPlayerState != PlayerState.HitLongGroggy)  // 위력이 상 이상인 경우 긴 행동 불능
                         {
                             player.PlayerStateMachine.TransitionTo(player.PlayerStateMachine.hitLongGroggyState);
                         }

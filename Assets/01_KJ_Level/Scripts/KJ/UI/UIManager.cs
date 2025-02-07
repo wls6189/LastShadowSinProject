@@ -343,7 +343,7 @@ public class UIManager : MonoBehaviour
 
         AudioManager.instance.Playsfx(AudioManager.Sfx.NewLocation);
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSecondsRealtime(2f);
         CurrentSceneUISet();
     }
     private void CurrentSceneUISet()

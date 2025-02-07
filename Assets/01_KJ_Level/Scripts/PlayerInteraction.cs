@@ -64,15 +64,21 @@ public class PlayerInteraction : MonoBehaviour
                 currentNPC.PlayerWithTalk();
                 currentNPC.PlayerLookNpc(transform.position);
             }
-               
-           
         }
-     
 
-
-
+        PressedF();
     }
-
+    public void PressedF()
+    {
+        if (interactAction.WasPressedThisFrame())
+        {
+            DataManager.Instance.nowPlayer.OwnedESM = GetComponent<PlayerController>().PlayerESMInventory.OwnedESM;
+            DataManager.Instance.nowPlayer.EquipedESM = GetComponent<PlayerController>().PlayerESMInventory.EquipedESM;
+            DataManager.Instance.nowPlayer.OwnedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.OwnedSpiritMark;
+            DataManager.Instance.nowPlayer.EquipedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.EquipedSpiritMark;
+            DataManager.Instance.nowPlayer.CurrentChaliceCount = GetComponent<PlayerController>().PlayerChaliceOfAtonement.CurrentChaliceOfAtonementCount;
+        }
+    }
     public void CollectItem(string itemName)
     {
 
@@ -173,10 +179,11 @@ public class PlayerInteraction : MonoBehaviour
             }
             else // 이미 저장된 상태에서 다시 상호작용
             {
+                SpriritShardOfTheDevotedSave();
                 UIManager.Instance.SoulImageOpen(soulfragMent);
             }
             isInteractionStart = false;
-        } //헌신자 영혼파편
+        }
 
         if (other.CompareTag("NextPortal") && isInteractionStart)
         {
@@ -315,8 +322,6 @@ public class PlayerInteraction : MonoBehaviour
             DataManager.Instance.nowPlayer.currentMap = "서쪽 안식처";
         }
 
-     
-
         //영혼파편 세이브 관련
         DataManager.Instance.SaveSoulFragment(soulfragMent, soulfragMent.fragmentID, soulfragMent.sceneflow.currentSceneName);
 
@@ -324,22 +329,24 @@ public class PlayerInteraction : MonoBehaviour
         DataManager.Instance.nowPlayer.position = transform.position; //위치. 
         DataManager.Instance.nowPlayer.currentScene = SceneManager.GetActiveScene().name; //현재씬 
         //플레이어 체력 , 영혼파동 세기 , MaxSpiritMarkForce  저장
-        DataManager.Instance.nowPlayer.MaxHealth = GetComponent<PlayerStats>().CurrentHealth;
-        DataManager.Instance.nowPlayer.MaxSpiritWave = GetComponent<PlayerStats>().CurrentSpiritWave;
-        DataManager.Instance.nowPlayer.MaxSpiritMarkForce = GetComponent<PlayerStats>().CurrentSpiritMarkForce;
+        DataManager.Instance.nowPlayer.MaxHealth = GetComponent<PlayerStats>().MaxHealth;
+        DataManager.Instance.nowPlayer.MaxSpiritWave = GetComponent<PlayerStats>().MaxSpiritWave;
+        DataManager.Instance.nowPlayer.MaxSpiritMarkForce = GetComponent<PlayerStats>().MaxSpiritMarkForce;
 
         DataManager.Instance.nowPlayer.EquipedESM = GetComponent<PlayerController>().PlayerESMInventory.EquipedESM; // 장착중인 영원의 영혼낙인
-
         DataManager.Instance.nowPlayer.OwnedESM = GetComponent<PlayerController>().PlayerESMInventory.OwnedESM; // 보유 중인 영원의 영혼낙인
+        DataManager.Instance.nowPlayer.EquipedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.EquipedSpiritMark; // 장착중인 영원의 영혼낙인
+        DataManager.Instance.nowPlayer.OwnedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.OwnedSpiritMark; // 보유 중인 영원의 영혼낙인
+
         DataManager.Instance.nowPlayer.CurrentHealth = GetComponent<PlayerController>().PlayerStats.CurrentHealth; // 현재 체력
         DataManager.Instance.nowPlayer.CurrentSpiritWave = GetComponent<PlayerController>().PlayerStats.CurrentSpiritWave; // 현재 영혼의 파동
         DataManager.Instance.nowPlayer.CurrentSpiritMarkForce = GetComponent<PlayerController>().PlayerStats.CurrentSpiritMarkForce; // 현재 영혼낙인력
         DataManager.Instance.nowPlayer.SpiritAshAmount = GetComponent<PlayerController>().PlayerStats.SpiritAsh; // 영혼재
                                                                                                                  //마지막으로 저장된 것들을 json으로 저장
-        DataManager.Instance.nowPlayer.EquipedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.EquipedSpiritMark; // 장착중인 영원의 영혼낙인
-        DataManager.Instance.nowPlayer.OwnedSpiritMark = GetComponent<PlayerController>().PlayerMarkInventory.OwnedSpiritMark; // 보유 중인 영원의 영혼낙인
+
 
         GetComponent<PlayerController>().PlayerStats.CurrentHealth = GetComponent<PlayerController>().PlayerStats.MaxHealth;
+        GetComponent<PlayerController>().PlayerChaliceOfAtonement.CurrentChaliceOfAtonementCount = GetComponent<PlayerController>().PlayerChaliceOfAtonement.MaxChaliceOfAtonementCount;
         DataManager.Instance.SaveData();
     }
 

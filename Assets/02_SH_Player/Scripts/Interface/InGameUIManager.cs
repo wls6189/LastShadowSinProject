@@ -110,6 +110,10 @@ public class InGameUIManager : MonoBehaviour
     }
     void ManageESMImage()
     {
+        if (player.PlayerESMInventory.EquipedESM == null)
+        {
+            return;
+        }
         foreach (ESMImage image in markImageSO.ESMImageList)
         {
             if (player.PlayerESMInventory.EquipedESM != null && image.Name == player.PlayerESMInventory.EquipedESM.Name)

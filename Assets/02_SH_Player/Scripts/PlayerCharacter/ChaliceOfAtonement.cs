@@ -14,7 +14,7 @@ public class ChaliceOfAtonement : MonoBehaviour
     {
         TryGetComponent(out player);
         LoadCOAData();
-        CurrentChaliceOfAtonementCount = MaxChaliceOfAtonementCount;
+        CurrentChaliceOfAtonementCount = DataManager.Instance.nowPlayer.CurrentChaliceCount;
     }
     public void LoadCOAData() // 영혼샘 상호작용 시 호출
     {
