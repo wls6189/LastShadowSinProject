@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
 
 
@@ -316,7 +317,7 @@ public class Enemy : MonoBehaviour
     {
 
         if (currentState != State.Chasing) return; // 추격 상태에서만 공격
-
+        if (isAttacking) return;
         // 쿨다운 확인
         if (Time.time - lastAttackTime < attackCooldown) return;
         attackCooldown = Random.Range(2f, 3f);
